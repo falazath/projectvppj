@@ -55,37 +55,15 @@
     </nav>
     <!--navbar-->
     <main>
-        
+
         <div class="row justify-content-center">
-            <div class="col-8 col-xl-3 d-block mx-auto">
-                <p class="text-dark fhead">รายการคำขอปฏิบัติงาน</p>
+            <div class="col col-sm-3 col-xl-3 d-block mx-auto">
+                <p class="text-dark text-center fhead">รายการคำขอปฏิบัติงาน</p>
             </div>
         </div>
-        <div class="row justify-content-start">
-            <div class="col-4 col-sm-2 col-xl-2" id="phone">
-                <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasBottom"
-                    aria-controls="offcanvasBottom">ชื่อพนักงาน</button>
-        
-                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasBottom"
-                    aria-labelledby="offcanvasBottomLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
-                    </div>
-                    <div class="offcanvas-body small">
-                        ...
-                    </div>
-                </div>
-            </div>
-            <div class="col-4 col-sm-2 col-xl-2" id="dsk">
-                <p class="ftitle element">ชื่อพนักงาน</p>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-            </div>
-            <div class="col-4 col-sm-2 col-xl-2" id="phone">
+        <!--Desktop-->
+        <div class="row justify-content-start" id="dsk">
+            <div class="col-4 col-sm-2 col-xl-2">
                 <p class="ftitle element">ชื่อพนักงาน</p>
                 <select class="form-select" aria-label="Default select example">
                     <option selected>Open this select menu</option>
@@ -121,79 +99,138 @@
                 <p class="ftitle">วันที่สิ้นสุด</p>
                 <input type="date" class=" form-control" name="end-date" id="">
             </div>
+
+            <div class="row">
+                <p class="ftitle text-dark">สถานะคำขอ</p>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="status" id="s1" value="รออนุมัติ">
+                        <label class="form-check-label" for="s1">รออนุมัติ</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="status" id="s2" value="แก้ไข">
+                        <label class="form-check-label" for="s2">แก้ไข</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="status" id="s3" value="ยกเลิก">
+                        <label class="form-check-label" for="s3">ยกเลิก</label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="status" id="s4" value="ไม่อนุมัติ">
+                        <label class="form-check-label" for="s4">ไม่อนุมัติ</label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="status" id="s5" value="อนุมัติ">
+                        <label class="form-check-label" for="s5">อนุมัติ</label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="status" id="s6" value="รอตรวจสอบ">
+                        <label class="form-check-label" for="s6">แก้ไข</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="status" id="s7" value="ติดตามงาน">
+                        <label class="form-check-label" for="s7">ติดตามงาน</label>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" name="status" id="s8" value="เสร็จสิ้น">
+                        <label class="form-check-label" for="s8">
+                            <p>เสร็จสิ้น</p>
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="row">
-            <p class="ftitle text-dark">สถานะคำขอ</p>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="status" id="s1" value="รออนุมัติ">
-                    <label class="form-check-label" for="s1">รออนุมัติ</label>
+        <!--Phone-->
+        <div class="row justify-content-start" id="phone">
+            <div class="col col-sm-2 col-xl-2">
+                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#empname" aria-controls="offcanvasBottom">ชื่อพนักงาน</button>
+
+                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
+                    aria-labelledby="offcanvasBottomLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+                    </div>
+                    <div class="offcanvas-body small">
+                        ...
+                    </div>
                 </div>
             </div>
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="status" id="s2" value="แก้ไข">
-                    <label class="form-check-label" for="s2">แก้ไข</label>
-                </div>
-            </div>
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="status" id="s3" value="ยกเลิก">
-                    <label class="form-check-label" for="s3">ยกเลิก</label>
+            <div class="col col-sm-2 col-xl-2">
+                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#empname" aria-controls="offcanvasBottom">หน่วยงาน</button>
+
+                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
+                    aria-labelledby="offcanvasBottomLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+                    </div>
+                    <div class="offcanvas-body small">
+                        ...
+                    </div>
                 </div>
             </div>
 
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="status" id="s4" value="ไม่อนุมัติ">
-                    <label class="form-check-label" for="s4">ไม่อนุมัติ</label>
+            <div class="col col-sm-2 col-xl-2">
+                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#empname" aria-controls="offcanvasBottom">ประเภทงาน</button>
+
+                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
+                    aria-labelledby="offcanvasBottomLabel">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+                    </div>
+                    <div class="offcanvas-body small">
+                        ...
+                    </div>
                 </div>
             </div>
-
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="status" id="s5" value="อนุมัติ">
-                    <label class="form-check-label" for="s5">อนุมัติ</label>
+            <div class="row mt-3">
+                <div class="col-6 col-sm-2 col-xl-2">
+                <label for="start-date">วันที่เริ่มต้น</label>
+                <input type="date" class=" form-control" id="start-date" value="วันที่เริ่มต้น">
+                </div>
+                <div class="col-6 col-sm-2 col-xl-2">
+                    <label for="end-date">วันที่สิ้นสุด</label>
+                    <input type="date" class=" form-control" id="end-date" value="วันที่สิ้นสุด">
                 </div>
             </div>
-
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="status" id="s6" value="รอตรวจสอบ">
-                    <label class="form-check-label" for="s6">แก้ไข</label>
-                </div>
+            
             </div>
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="status" id="s7" value="ติดตามงาน">
-                    <label class="form-check-label" for="s7">ติดตามงาน</label>
-                </div>
-            </div>
-
-            <div class="col">
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="checkbox" name="status" id="s8" value="เสร็จสิ้น">
-                    <label class="form-check-label" for="s8"><p>เสร็จสิ้น</p></label>
-                </div>
-            </div>
-
-
-
+            
         </div>
     </main>
     <script>
         var phone = document.getElementById("phone");
         var dsk = document.getElementById("dsk");
-        if(screen.width<=390){
+        if (screen.width <= 390) {
             dsk.classList.add("d-none");
 
-        }else if(screen.width>=720){
+        } else if (screen.width >= 720) {
             phone.classList.add("d-none");
         }
         document.getElementById("demo").innerHTML =
-        "Screen Width: " + screen.width;
+            "Screen Width: " + screen.width;
     </script>
 </body>
 
