@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src = "https://code.jquery.com/jquery-3.5.0.js"> </script>
+</head>
+<body>
+    <p id="demo"></p>
+
+    <button id="phone"> phone </button>
+    <button id="dsk"> dsk </button>
+
+<p id = "p1" style = "color : red;" > </p>
+    <script>
+        var phone = document.getElementById("phone");
+        var dsk = document.getElementById("dsk");
+        if(screen.width<=390){
+            dsk.classList.add("d-none");
+
+        }else if(screen.width>=720){
+            phone.classList.add("d-none");
+        }
+        document.getElementById("demo").innerHTML =
+        "Screen Width: " + screen.width;
+    </script>
+</body>
+</html>
