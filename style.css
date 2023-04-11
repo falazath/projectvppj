@@ -47,15 +47,6 @@ hr.h-color{
     background: #eee;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator{
-    
-    opacity: 1;
-    display: block;
-    width: 20px;
-    height: 20px;
-    background: url(./asset/icon/Calendar.svg)no-repeat;
-}
-
 #overflowTest {
     background: #F5F5F5; 
     padding: 10px;
