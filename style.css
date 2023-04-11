@@ -9,7 +9,10 @@
     border: 3px solid #4B785E;
     border-radius: 8px;
 }
-
+::placeholder{
+    color: #999;
+    font-size: 14px;
+}
 .fhead{
     font-size: 24px;
 }

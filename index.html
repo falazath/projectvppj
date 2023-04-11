@@ -80,9 +80,11 @@
                     <p class="ftitle">หน่วยงาน</p>
                     <select class="form-select" aria-label="Default select example">
                         <option selected disabled>เลือกหน่วยงาน</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option value="1">KAVE TOWN ISLAND</option>
+                        <option value="2">KAVE SEED KASET</option>
+                        <option value="3">Atmoz Minburi</option>
+                        <option value="2">Origin Plug&Play Srinakarin</option>
+                        <option value="3">Blue Phahonyothin 35</option>
                     </select>
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
@@ -299,6 +301,29 @@
                 </div>
             </div>
         </form>
+
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-date">สร้างคำขอปฏิบัติงาน</button>
+            </div>
+            <form action="create.html" method="post">
+            <div class="modal fade" id="create-date" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-body">
+                    <p class="ftitle fw-bold text-center">วันที่สร้างคำขอปฏิบัติงาน</p>
+                    <div class="col-xl-10 mx-auto">
+                        <input type="date" class="form-control">
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="submit" name="create-date" class="btn btn-primary mx-auto">บันทึก</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+        </div>
         <div class="overflow-x-auto">
             <!--ตาราง-->
             <table class="table table-light table-bordered">
@@ -328,7 +353,7 @@
                         </td>
                         <td class="col-3 col-sm-1" id="status">รออนุมัติ</td>
                         <td class="col-2 col-sm-1">
-                            <a href=""><img src="./asset/icon/Paper.svg" alt=""></a>
+                            <a href="create.html"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
                 </tbody>

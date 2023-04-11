@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="./dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./dist/css/bootstrap.css" rel="stylesheet">
+    <script src="./dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <main>
+        <div class="row justify-content-center">
+            <div class="col col-sm-3 col-xl-3 d-block mx-auto">
+                <p class="text-dark text-center fhead fw-bold">สร้างคำขอปฏิบัติงาน</p>
+            </div>
+        </div>
+        <form action="" method="post">
+            <div class="row justify-content-start mb-3" id="dsk">
+                <div class="col-xl-4">
+                    <p class="ftitle fw-bold">ชื่อผู้ติดต่อ</p>
+                    <input type="text" class="form-control" name="contact" placeholder="กรอกชื่อผู้ติดต่อ">
+                </div>
+                <div class="col-xl-4">
+                    <p class="ftitle fw-bold">หน่วยงาน</p>
+                    <input class="form-select" list="browsers" placeholder="กรอกประเภทงาน">
+                    <datalist id="browsers">
+                        <option value="KAVE TOWN ISLAND">
+                        <option value="KAVE SEED KASET">
+                        <option value="Atmoz Minburi">
+                        <option value="Origin Plug&Play Srinakarin">
+                        <option value="Blue Phahonyothin 35">
+                    </datalist>
+                </div>
+                <div class="col-xl-4">
+                    <p class="ftitle fw-bold">เบอร์โทรศัพท์</p>
+                    <input type="text" class="form-control" placeholder="กรอกชื่อผู้ติดต่อ">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xl-4">
+                    <p class="ftitle fw-bold">ประเภทงาน</p>
+                    <input class="form-select" list="browsers" placeholder="กรอกประเภทงาน">
+                    <datalist id="browsers">
+                        <option value="ติดตั้ง">
+                        <option value="ซ่อมบำรุง">
+                        <option value="บินโดรน">
+                    </datalist>
+                </div>
+                <div class="col-xl-6">
+                    <p class="ftitle fw-bold">หมวดงาน</p>
+                    <div class="col-xl-12 my-auto">
+                        <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1">
+                        <label class="form-check-label" for="inlineCheckbox1">ซอฟต์แวร์</label>
+                      </div>
+                        <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="2">
+                        <label class="form-check-label" for="inlineCheckbox2">ฮาร์ดแวร์</label>
+                      </div>
+                        <div class="form-check form-check-inline my-auto">
+                        <input class="form-check-input" type="checkbox" id="other" onclick="otherCheck()" value="3">
+                        <label class="form-check-label" for="inlineCheckbox3" id="lab-other">อื่นๆ</label>
+                        <input type="text" class="form-control d-none" id="inp-other" name="other">
+                      </div>
+                      </div>
+                </div>
+            </div>
+        </form>
+    </main>
+    <script>
+        function otherCheck(){
+            var check = document.getElementById('other');
+            if(check.checked == true){
+                document.getElementById('lab-other').classList.add('d-none');
+                document.getElementById('inp-other').classList.remove('d-none');
+            }else{
+                document.getElementById('lab-other').classList.remove('d-none');
+                document.getElementById('inp-other').classList.add('d-none');
+            }
+        }
+        
+    </script>
+</body>
+
+</html>
