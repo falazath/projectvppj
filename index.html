@@ -65,238 +65,242 @@
         </div>
         <!--Desktop-->
         <!--ตัวกรอง-->
-        <div class="row justify-content-start" id="dsk">
-            <div class="col-4 col-sm-2 col-xl-2">
-                <p class="ftitle element">ชื่อพนักงาน</p>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
+        <form action="" method="post">
+            <div class="row justify-content-start mb-3" id="dsk">
+                <div class="col-4 col-sm-2 col-xl-2">
+                    <p class="ftitle element">ชื่อพนักงาน</p>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected disabled>เลือกพนักงาน</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="col-2 col-sm-2 col-xl-2">
+                    <p class="ftitle">หน่วยงาน</p>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected disabled>เลือกหน่วยงาน</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="col-2 col-sm-2 col-xl-2">
+                    <p class="ftitle">ประเภทงาน</p>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected disabled>เลือกประเภทงาน</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                </div>
+                <div class="col-2 col-sm-2 col-xl-2">
+                    <p class="ftitle">วันที่เริ่มต้น</p>
+                    <input type="date" placeholder="dd-mm-yyyy" min="1997-01-01" max="2030-12-31" value=""
+                        class=" form-control" name="start-date" id="">
+                </div>
+                <div class="col-2 col-sm-2 col-xl-2">
+                    <p class="ftitle">วันที่สิ้นสุด</p>
+                    <input type="date" class=" form-control" name="end-date" id="">
+                </div>
+                <div class="col-2 col-sm-2 col-xl-2">
+                    <p class="ftitle">สถานะ</p>
+                    <select class="form-select" aria-label="Default select example">
+                        <option selected disabled>เลือกสถานะ</option>
+                        <option value="1">รออนุมัติ</option>
+                        <option value="2">แก้ไข</option>
+                        <option value="3">ยกเลิก</option>
+                        <option value="4">ไม่อนุมัติ</option>
+                        <option value="5">อนุมัติ</option>
+                        <option value="6">ติดตามงาน</option>
+                        <option value="7">รอตรวจสอบ</option>
+                        <option value="8">เสร็จสิ้น</option>
+                    </select>
+                </div>
+                <div class="row justify-content-center mt-3">
+                    <div class="col-3 my-auto">
+                        <button type="submit" class="btn btn-primary d-block mx-auto px-5" name="submit">ค้นหา</button>
+                    </div>
+                </div>
             </div>
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">หน่วยงาน</p>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-            </div>
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">ประเภทงาน</p>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected>Open this select menu</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-            </div>
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">วันที่เริ่มต้น</p>
-                <input type="date" placeholder="dd-mm-yyyy" min="1997-01-01" max="2030-12-31" value=""
-                    class=" form-control" name="start-date" id="">
-            </div>
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">วันที่สิ้นสุด</p>
-                <input type="date" class=" form-control" name="end-date" id="">
-            </div>
+        </form>
 
-            <div class="row">
-                <p class="ftitle text-dark">สถานะคำขอ</p>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s1" value="รออนุมัติ">
-                        <label class="form-check-label" for="s1">รออนุมัติ</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s2" value="แก้ไข">
-                        <label class="form-check-label" for="s2">แก้ไข</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s3" value="ยกเลิก">
-                        <label class="form-check-label" for="s3">ยกเลิก</label>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s4" value="ไม่อนุมัติ">
-                        <label class="form-check-label" for="s4">ไม่อนุมัติ</label>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s5" value="อนุมัติ">
-                        <label class="form-check-label" for="s5">อนุมัติ</label>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s6" value="รอตรวจสอบ">
-                        <label class="form-check-label" for="s6">แก้ไข</label>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s7" value="ติดตามงาน">
-                        <label class="form-check-label" for="s7">ติดตามงาน</label>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s8" value="เสร็จสิ้น">
-                        <label class="form-check-label" for="s8">
-                            <p>เสร็จสิ้น</p>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
         <!--Phone-->
         <!--ตัวกรอง-->
-        <div class="row justify-content-start" id="phone">
-            <div class="col col-sm-2 col-xl-2">
-                <!--ปุ่มชื่อพนักงาน-->
-                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#empname"
-                    aria-controls="offcanvasBottom">ชื่อพนักงาน</button>
-
-                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
-                    aria-labelledby="offcanvasBottomLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
-                    </div>
-                    <div class="offcanvas-body small">
-                        ...
+        <form action="" method="post">
+            <div class="row justify-content-start" id="phone">
+                <div class="col col-sm-2 col-xl-2">
+                    <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#department" aria-controls="offcanvasBottom">ตัวกรอง</button>
+                    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="department"
+                        aria-labelledby="offcanvasBottomLabel">
+                        <div class="offcanvas-body small">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <p class="ftitle fw-bold my-auto">เลือกพนักงาน</p>
+                                </div>
+                                <div class="col-11">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>เลือกพนักงาน</option>
+                                        <option value="1">คุณตั้ม</option>
+                                        <option value="2">คุณเอ</option>
+                                        <option value="3">คุณชาช่า</option>
+                                        <option value="4">คุณหน่อง</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <p class="ftitle fw-bold my-auto ">เลือกหน่วยงาน</p>
+                                </div>
+                                <div class="col-11">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>เลือกหน่วยงาน</option>
+                                        <option value="1">KAVE TOWN ISLAND</option>
+                                        <option value="2">KAVE SEED KASET</option>
+                                        <option value="3">Atmoz Minburi</option>
+                                        <option value="2">Origin Plug&Play Srinakarin</option>
+                                        <option value="3">Blue Phahonyothin 35</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <p class="ftitle fw-bold my-auto ">เลือกประเภทงาน</p>
+                                </div>
+                                <div class="col-11">
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>เลือกประเภทงาน</option>
+                                        <option value="1">ติดตั้ง</option>
+                                        <option value="2">ซ่อมบำรุง</option>
+                                        <option value="3">บินโดรน</option>
+                                        <option value="4">อื่นๆ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-6 col-sm-2 col-xl-2">
+                                    <label for="start-date">วันที่เริ่มต้น</label>
+                                    <input type="date" class=" form-control" id="start-date" value="วันที่เริ่มต้น">
+                                </div>
+                                <div class="col-6 col-sm-2 col-xl-2">
+                                    <label for="end-date">วันที่สิ้นสุด</label>
+                                    <input type="date" class=" form-control" id="end-date" value="วันที่สิ้นสุด">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <p class="ftitle fw-bold my-auto">สถานะ</p>
+                                    <select class="form-select" aria-label="Default select example">
+                                        <option selected disabled>เลือกสถานะ</option>
+                                        <option value="1">รออนุมัติ</option>
+                                        <option value="2">แก้ไข</option>
+                                        <option value="3">ยกเลิก</option>
+                                        <option value="4">ไม่อนุมัติ</option>
+                                        <option value="5">อนุมัติ</option>
+                                        <option value="6">ติดตามงาน</option>
+                                        <option value="7">รอตรวจสอบ</option>
+                                        <option value="8">เสร็จสิ้น</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="offcanvas-footer">
+                            <button type="submit" class="btn btn-primary d-block mx-auto my-2"
+                                name="submit">ค้นหา</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="col col-sm-2 col-xl-2">
-                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#department" aria-controls="offcanvasBottom">หน่วยงาน</button>
 
-                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="department"
-                    aria-labelledby="offcanvasBottomLabel">
-                    <div class="offcanvas-header">
-                        <p class="offcanvas-title ftitle fw-bold" id="offcanvasBottomLabel">เลือกหน่วยงาน</p>
+                <div class="col col-sm-2 col-xl-2">
+                    <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#cate-work" aria-controls="offcanvasBottom">ประเภทงาน</button>
+
+                    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="cate-work"
+                        aria-labelledby="offcanvasBottomLabel">
+                        <div class="offcanvas-header">
+                            <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+                        </div>
+                        <div class="offcanvas-body">
+                            ...
+                        </div>
                     </div>
-                    <div class="offcanvas-body small">
-                        <div class="btn-group-vertical d-block mx-auto" role="group" aria-label="Vertical button group">
-                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio1">KAVE TOWN ISLAND</label>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6 col-sm-2 col-xl-2">
+                        <label for="start-date">วันที่เริ่มต้น</label>
+                        <input type="date" class=" form-control" id="start-date" value="วันที่เริ่มต้น">
+                    </div>
+                    <div class="col-6 col-sm-2 col-xl-2">
+                        <label for="end-date">วันที่สิ้นสุด</label>
+                        <input type="date" class=" form-control" id="end-date" value="วันที่สิ้นสุด">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col align-self-center">
+                        <p class="my-auto text-start text-dark">สถานะคำขอ</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input form-control-color" type="checkbox" name="status" id="s1"
+                                value="รออนุมัติ">
+                            <label class="form-check-label fsub" for="s1">รออนุมัติ</label>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="status" id="s2" value="แก้ไข">
+                            <label class="form-check-label fsub" for="s2">แก้ไข</label>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="status" id="s3" value="ยกเลิก">
+                            <label class="form-check-label fsub" for="s3">ยกเลิก</label>
+                        </div>
+                    </div>
 
-                            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio2">KAVE SEED KASET</label>
+                    <div class="col-5">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="status" id="s4" value="ไม่อนุมัติ">
+                            <label class="form-check-label fsub" for="s4">ไม่อนุมัติ</label>
+                        </div>
+                    </div>
 
-                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio3">Atmoz Minburi</label>
+                    <div class="col-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="status" id="s5" value="อนุมัติ">
+                            <label class="form-check-label fsub" for="s5">อนุมัติ</label>
+                        </div>
+                    </div>
 
-                            <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio4">Origin Plug&Play Srinakarin</label>
-
-                            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
-                            <label class="btn btn-outline-primary" for="btnradio5">Blue Phahonyothin 35</label>
+                    <div class="col">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="status" id="s6" value="รอตรวจสอบ">
+                            <label class="form-check-label fsub" for="s6">แก้ไข</label>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="status" id="s7" value="ติดตามงาน">
+                            <label class="form-check-label fsub" for="s7">ติดตามงาน</label>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="status" id="s8" value="เสร็จสิ้น">
+                            <label class="form-check-label fsub" for="s8">
+                                <p>เสร็จสิ้น</p>
+                            </label>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="col col-sm-2 col-xl-2">
-                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#cate-work"
-                    aria-controls="offcanvasBottom">ประเภทงาน</button>
-
-                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="cate-work"
-                    aria-labelledby="offcanvasBottomLabel">
-                    <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
-                    </div>
-                    <div class="offcanvas-body">
-                        ...
-                    </div>
-                </div>
-            </div>
-            <div class="row mt-3">
-                <div class="col-6 col-sm-2 col-xl-2">
-                    <label for="start-date">วันที่เริ่มต้น</label>
-                    <input type="date" class=" form-control" id="start-date" value="วันที่เริ่มต้น">
-                </div>
-                <div class="col-6 col-sm-2 col-xl-2">
-                    <label for="end-date">วันที่สิ้นสุด</label>
-                    <input type="date" class=" form-control" id="end-date" value="วันที่สิ้นสุด">
-                </div>
-            </div>
-            <div class="row mt-2">
-                <div class="col align-self-center">
-                    <p class="my-auto text-start text-dark">สถานะคำขอ</p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-5">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input form-control-color" type="checkbox" name="status" id="s1" value="รออนุมัติ">
-                        <label class="form-check-label fsub" for="s1">รออนุมัติ</label>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s2" value="แก้ไข">
-                        <label class="form-check-label fsub" for="s2">แก้ไข</label>
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s3" value="ยกเลิก">
-                        <label class="form-check-label fsub" for="s3">ยกเลิก</label>
-                    </div>
-                </div>
-
-                <div class="col-5">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s4" value="ไม่อนุมัติ">
-                        <label class="form-check-label fsub" for="s4">ไม่อนุมัติ</label>
-                    </div>
-                </div>
-
-                <div class="col-3">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s5" value="อนุมัติ">
-                        <label class="form-check-label fsub" for="s5">อนุมัติ</label>
-                    </div>
-                </div>
-
-                <div class="col">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s6" value="รอตรวจสอบ">
-                        <label class="form-check-label fsub" for="s6">แก้ไข</label>
-                    </div>
-                </div>
-                <div class="col-5">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s7" value="ติดตามงาน">
-                        <label class="form-check-label fsub" for="s7">ติดตามงาน</label>
-                    </div>
-                </div>
-                <div class="col-5">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s8" value="เสร็จสิ้น">
-                        <label class="form-check-label fsub" for="s8">
-                            <p>เสร็จสิ้น</p>
-                        </label>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </form>
         <div class="overflow-x-auto">
+            <!--ตาราง-->
             <table class="table table-light table-bordered">
                 <thead>
                     <tr class="d-flex text-center fsub">
