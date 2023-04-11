@@ -41,11 +41,13 @@
                             <p class="fhead text-start my-auto">คุณอิทธิกร กลิ่นไธสง</p>
                         </div>
                         <div class="col-2 align-self-center">
-                            <a href="login.html"><img src="./asset/icon/Password.svg" class=" d-block float-end me-3"></a>
+                            <a href="login.html"><img src="./asset/icon/Password.svg"
+                                    class=" d-block float-end me-3"></a>
                         </div>
                     </div>
                     <ul>
-                        <li class="list-unstyled active"><a class="btn btn-primary ftitle" href="login.html">รายการคำขอปฏิบัติงาน</a>
+                        <li class="list-unstyled active"><a class="btn btn-primary ftitle "
+                                href="login.html">รายการคำขอปฏิบัติงาน</a>
                         </li>
                         <li class="list-unstyled"><a class="btn btn-primary ftitle" href="index.html">หน่วยงาน</a></li>
                     </ul>
@@ -58,7 +60,7 @@
 
         <div class="row justify-content-center">
             <div class="col col-sm-3 col-xl-3 d-block mx-auto">
-                <p class="text-dark text-center fhead">รายการคำขอปฏิบัติงาน</p>
+                <p class="text-dark text-center fhead fw-bold">รายการคำขอปฏิบัติงาน</p>
             </div>
         </div>
         <!--Desktop-->
@@ -163,8 +165,8 @@
         <!--Phone-->
         <div class="row justify-content-start" id="phone">
             <div class="col col-sm-2 col-xl-2">
-                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#empname" aria-controls="offcanvasBottom">ชื่อพนักงาน</button>
+                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#empname"
+                    aria-controls="offcanvasBottom">ชื่อพนักงาน</button>
 
                 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
                     aria-labelledby="offcanvasBottomLabel">
@@ -177,8 +179,8 @@
                 </div>
             </div>
             <div class="col col-sm-2 col-xl-2">
-                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#empname" aria-controls="offcanvasBottom">หน่วยงาน</button>
+                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#empname"
+                    aria-controls="offcanvasBottom">หน่วยงาน</button>
 
                 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
                     aria-labelledby="offcanvasBottomLabel">
@@ -192,8 +194,8 @@
             </div>
 
             <div class="col col-sm-2 col-xl-2">
-                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
-                    data-bs-target="#empname" aria-controls="offcanvasBottom">ประเภทงาน</button>
+                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#empname"
+                    aria-controls="offcanvasBottom">ประเภทงาน</button>
 
                 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
                     aria-labelledby="offcanvasBottomLabel">
@@ -207,8 +209,8 @@
             </div>
             <div class="row mt-3">
                 <div class="col-6 col-sm-2 col-xl-2">
-                <label for="start-date">วันที่เริ่มต้น</label>
-                <input type="date" class=" form-control" id="start-date" value="วันที่เริ่มต้น">
+                    <label for="start-date">วันที่เริ่มต้น</label>
+                    <input type="date" class=" form-control" id="start-date" value="วันที่เริ่มต้น">
                 </div>
                 <div class="col-6 col-sm-2 col-xl-2">
                     <label for="end-date">วันที่สิ้นสุด</label>
@@ -216,8 +218,8 @@
                 </div>
             </div>
             <div class="row mt-2">
-                <div class="col">
-                    <p class="text-start text-dark">สถานะคำขอ</p>
+                <div class="col align-self-center">
+                    <p class="my-auto text-start text-dark">สถานะคำขอ</p>
                 </div>
             </div>
             <div class="row">
@@ -266,7 +268,6 @@
                         <label class="form-check-label fsub" for="s7">ติดตามงาน</label>
                     </div>
                 </div>
-
                 <div class="col-5">
                     <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" name="status" id="s8" value="เสร็จสิ้น">
@@ -277,8 +278,41 @@
                 </div>
             </div>
         </div>
-            
+        <div class="overflow-x-auto">
+            <table class="table table-light">
+                <thead>
+                    <tr class="d-flex text-center fsub">
+                        <th class="col-3">วันที่</th>
+                        <th class="col-4">หน่วยงาน</th>
+                        <th class="col-4">เจ้าหน้าที่</th>
+                        <th class="col-4">ประเภทงาน</th>
+                        <th class="col-8">รายละเอียดงาน</th>
+                        <th class="col-3">สถานะ</th>
+                        <th class="col-2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="d-flex text-center fbody">
+                        <td class="col-3">24/03/2023</td>
+                        <td class="col-4 ">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4">คุณตั้ม</td>
+                        <td class="col-4">ติดตั้ง</td>
+                        <td class="col-8 text-start">
+                            -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
+                            <br>
+                            -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
+                            <br>
+                            -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
+                        </td>
+                        <td class="col-3">รออนุมัติ</td>
+                        <td class="col-2">
+                            <a href=""><img src="./asset/icon/Paper.svg" alt=""></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
+        
     </main>
     <script>
         var phone = document.getElementById("phone");
@@ -289,8 +323,6 @@
         } else if (screen.width >= 720) {
             phone.classList.add("d-none");
         }
-        document.getElementById("demo").innerHTML =
-            "Screen Width: " + screen.width;
     </script>
 </body>
 
