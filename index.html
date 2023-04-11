@@ -64,6 +64,7 @@
             </div>
         </div>
         <!--Desktop-->
+        <!--ตัวกรอง-->
         <div class="row justify-content-start" id="dsk">
             <div class="col-4 col-sm-2 col-xl-2">
                 <p class="ftitle element">ชื่อพนักงาน</p>
@@ -163,8 +164,10 @@
             </div>
         </div>
         <!--Phone-->
+        <!--ตัวกรอง-->
         <div class="row justify-content-start" id="phone">
             <div class="col col-sm-2 col-xl-2">
+                <!--ปุ่มชื่อพนักงาน-->
                 <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#empname"
                     aria-controls="offcanvasBottom">ชื่อพนักงาน</button>
 
@@ -179,30 +182,45 @@
                 </div>
             </div>
             <div class="col col-sm-2 col-xl-2">
-                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#empname"
-                    aria-controls="offcanvasBottom">หน่วยงาน</button>
+                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
+                    data-bs-target="#department" aria-controls="offcanvasBottom">หน่วยงาน</button>
 
-                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
+                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="department"
                     aria-labelledby="offcanvasBottomLabel">
                     <div class="offcanvas-header">
-                        <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
+                        <p class="offcanvas-title ftitle fw-bold" id="offcanvasBottomLabel">เลือกหน่วยงาน</p>
                     </div>
                     <div class="offcanvas-body small">
-                        ...
+                        <div class="btn-group-vertical d-block mx-auto" role="group" aria-label="Vertical button group">
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio1">KAVE TOWN ISLAND</label>
+
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio2">KAVE SEED KASET</label>
+
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio3">Atmoz Minburi</label>
+
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio4">Origin Plug&Play Srinakarin</label>
+
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio5" autocomplete="off">
+                            <label class="btn btn-outline-primary" for="btnradio5">Blue Phahonyothin 35</label>
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="col col-sm-2 col-xl-2">
-                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#empname"
+                <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas" data-bs-target="#cate-work"
                     aria-controls="offcanvasBottom">ประเภทงาน</button>
 
-                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="empname"
+                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="cate-work"
                     aria-labelledby="offcanvasBottomLabel">
                     <div class="offcanvas-header">
                         <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
                     </div>
-                    <div class="offcanvas-body small">
+                    <div class="offcanvas-body">
                         ...
                     </div>
                 </div>
@@ -225,7 +243,7 @@
             <div class="row">
                 <div class="col-5">
                     <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" name="status" id="s1" value="รออนุมัติ">
+                        <input class="form-check-input form-control-color" type="checkbox" name="status" id="s1" value="รออนุมัติ">
                         <label class="form-check-label fsub" for="s1">รออนุมัติ</label>
                     </div>
                 </div>
@@ -279,40 +297,40 @@
             </div>
         </div>
         <div class="overflow-x-auto">
-            <table class="table table-light">
+            <table class="table table-light table-bordered">
                 <thead>
                     <tr class="d-flex text-center fsub">
-                        <th class="col-3">วันที่</th>
-                        <th class="col-4">หน่วยงาน</th>
-                        <th class="col-4">เจ้าหน้าที่</th>
-                        <th class="col-4">ประเภทงาน</th>
-                        <th class="col-8">รายละเอียดงาน</th>
-                        <th class="col-3">สถานะ</th>
-                        <th class="col-2"></th>
+                        <th class="col-3 col-sm-1">วันที่</th>
+                        <th class="col-4 col-sm-2">หน่วยงาน</th>
+                        <th class="col-4 col-sm-2">เจ้าหน้าที่</th>
+                        <th class="col-4 col-sm-1">ประเภทงาน</th>
+                        <th class="col-8 col-sm-4">รายละเอียดงาน</th>
+                        <th class="col-3 col-sm-1">สถานะ</th>
+                        <th class="col-2 col-sm-1"></th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="d-flex text-center fbody">
-                        <td class="col-3">24/03/2023</td>
-                        <td class="col-4 ">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4">คุณตั้ม</td>
-                        <td class="col-4">ติดตั้ง</td>
-                        <td class="col-8 text-start">
+                    <tr class="d-flex text-center fsub">
+                        <td class="col-3 col-sm-1" id="date">24/03/2023</td>
+                        <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4 col-sm-2" id="user">คุณตั้ม</td>
+                        <td class="col-4 col-sm-1" id="cate-work">ติดตั้ง</td>
+                        <td class="col-8 col-sm-4 text-start">
                             -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
                             <br>
                             -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
                             <br>
                             -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
                         </td>
-                        <td class="col-3">รออนุมัติ</td>
-                        <td class="col-2">
+                        <td class="col-3 col-sm-1" id="status">รออนุมัติ</td>
+                        <td class="col-2 col-sm-1">
                             <a href=""><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        
+
     </main>
     <script>
         var phone = document.getElementById("phone");
