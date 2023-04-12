@@ -67,3 +67,19 @@ hr.h-color{
     bottom: 0;
     right: 0;
 }
+
+input:disabled{
+    background-color: #5F7769;
+    color: #999;
+}
+.form-control:disabled{
+    color: #fff;
+}
+.form-check-input{
+    width: 24px;
+    height: 24px;
+}
+
+.btn{
+    font-size: 18px;
+}
