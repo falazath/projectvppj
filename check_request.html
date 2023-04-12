@@ -19,14 +19,14 @@
         <p id="show"></p>
         <div class="row justify-content-center mt-5 ">
             <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
-                <p class="text-dark text-center fhead fw-bold">สร้างคำขอปฏิบัติงาน</p>
+                <p class="text-dark text-center fhead fw-bold">คำขอปฏิบัติงาน</p>
             </div>
         </div>
         <form action="" method="post">
             <div class="row justify-content-start mb-0 mb-xl-3" id="dsk">
                 <div class="col-10 col-xl-4 mb-3 mb-xl-0">
-                    <p class="ftitle fw-bold mb-1">ชื่อผู้ติดต่อ</p>
-                    <input type="text" class="data form-control ftitle" name="contact" value="คุณสุดใจ"  disabled>
+                    <p class="ftitle fw-bold mb-1" id="demo">ชื่อผู้ติดต่อ</p>
+                    <input type="text" class="data form-control ftitle" name="contact" id="contact" value="คุณสุดใจ"  disabled>
                 </div>
                 <div class="col-10 col-xl-4 mb-3 mb-xl-0">
                     <p class="ftitle fw-bold mb-1">หน่วยงาน</p>
@@ -41,7 +41,6 @@
                 <div class="col-10 col-xl-4 mb-3 mb-xl-0">
                     <p class="ftitle fw-bold mb-1">ประเภทงาน</p>
                     <input type="text" class="data form-control ftitle" name="cate-work" value="ติดตั้ง"  disabled>
-                    </datalist>
                 </div>
                 <div class="col-xl-6 mb-3 mb-xl-0">
                     <p class="ftitle fw-bold mb-1">หมวดงาน</p>
@@ -122,6 +121,11 @@
                 
             }
         }
+        var url_str = window.location.href;
+        document.getElementById("demo").innerHTML = url_str;
+        var url = new URL(url_str);
+        var edit = url.searchParams.get("rqid");
+        document.getElementById("contact").value = edit;
     </script>
 </body>
 

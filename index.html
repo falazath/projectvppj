@@ -45,12 +45,15 @@
                                     class=" d-block float-end me-3"></a>
                         </div>
                     </div>
-                    <ul>
-                        <li class="list-unstyled active"><a class="btn btn-primary ftitle "
-                                href="login.html">รายการคำขอปฏิบัติงาน</a>
-                        </li>
-                        <li class="list-unstyled"><a class="btn btn-primary ftitle" href="index.html">หน่วยงาน</a></li>
-                    </ul>
+                    <div class="row">
+                        <div class="col-12 mb-2 mt-5">
+                            <a class="btn btn-primary ftitle d-block text-start active" href="index.html">รายการคำขอปฏิบัติงาน</a>
+                        </div>
+                        <div class="col-12">
+                            <a class="btn btn-secondary ftitle d-block text-start" href="create.html">หน่วยงาน</a>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -83,17 +86,19 @@
                         <option value="1">KAVE TOWN ISLAND</option>
                         <option value="2">KAVE SEED KASET</option>
                         <option value="3">Atmoz Minburi</option>
-                        <option value="2">Origin Plug&Play Srinakarin</option>
-                        <option value="3">Blue Phahonyothin 35</option>
+                        <option value="4">Origin Plug&Play Srinakarin</option>
+                        <option value="5">Blue Phahonyothin 35</option>
+                        <option value="6">อื่นๆ</option>
                     </select>
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">ประเภทงาน</p>
                     <select class="form-select" aria-label="Default select example">
                         <option selected disabled>เลือกประเภทงาน</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                        <option value="1">ติดตั้ง</option>
+                        <option value="2">ซ่อมบำรุง</option>
+                        <option value="3">บินโดรน</option>
+                        <option value="4">อื่นๆ</option>
                     </select>
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
@@ -227,7 +232,7 @@
                     <div class="modal-body">
                     <p class="ftitle fw-bold text-center">วันที่สร้างคำขอปฏิบัติงาน</p>
                     <div class="col-xl-10 mx-auto">
-                        <input type="date">
+                        <input type="date" class="form-control">
                     </div>
                     </div>
                     <div class="modal-footer">
@@ -253,6 +258,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <!--สถานะ:รออนุมัติ-->
                     <tr class="d-flex text-center fsub">
                         <td class="col-3 col-sm-1" id="date">24/03/2023</td>
                         <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
@@ -270,12 +276,31 @@
                             <a href="check_request.html"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
+                    <!--สถานะ:แก้ไข-->
+                    <tr class="d-flex text-center fsub">
+                        <td class="col-3 col-sm-1" id="date">24/03/2023</td>
+                        <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4 col-sm-2" id="user">คุณตั้ม</td>
+                        <td class="col-4 col-sm-1" id="cate-work">ติดตั้ง</td>
+                        <td class="col-8 col-sm-4 text-start">
+                            -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
+                            <br>
+                            -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
+                            <br>
+                            -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
+                        </td>
+                        <td class="col-3 col-sm-1" id="status">แก้ไข</td>
+                        <td class="col-2 col-sm-1">
+                            <a href="check_request.html?rqid=2&edit=1"><img src="./asset/icon/Paper.svg" alt=""></a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
     </main>
     <script>
+
         var phone = document.getElementById("phone");
         var dsk = document.getElementById("dsk");
         if (screen.width <= 576) {
@@ -284,6 +309,8 @@
         } else if (screen.width >= 720) {
             phone.classList.add("d-none");
         }
+
+        
     </script>
 </body>
 
