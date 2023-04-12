@@ -62,9 +62,12 @@ hr.h-color{
 #filter{
     border-radius: 100%;
     padding: 10px;
-    margin: 10px;
+    margin: 20px;
     position: fixed;
     bottom: 0;
     right: 0;
 }
 
+input[type="date"]{
+    display: inline-flex
+}
