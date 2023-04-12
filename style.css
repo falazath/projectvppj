@@ -67,7 +67,3 @@ hr.h-color{
     bottom: 0;
     right: 0;
 }
-
-input[type="date"]{
-    display: inline-flex
-}
