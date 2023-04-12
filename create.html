@@ -14,18 +14,18 @@
 
 <body>
     <main>
-        <div class="row justify-content-center">
-            <div class="col col-sm-3 col-xl-3 d-block mx-auto">
+        <div class="row justify-content-center mt-5 ">
+            <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
                 <p class="text-dark text-center fhead fw-bold">สร้างคำขอปฏิบัติงาน</p>
             </div>
         </div>
         <form action="" method="post">
             <div class="row justify-content-start mb-3" id="dsk">
-                <div class="col-xl-4">
+                <div class="col-10 col-xl-4">
                     <p class="ftitle fw-bold">ชื่อผู้ติดต่อ</p>
                     <input type="text" class="form-control" name="contact" placeholder="กรอกชื่อผู้ติดต่อ">
                 </div>
-                <div class="col-xl-4">
+                <div class="col-10 col-xl-4">
                     <p class="ftitle fw-bold">หน่วยงาน</p>
                     <input class="form-select" list="browsers" placeholder="กรอกประเภทงาน">
                     <datalist id="browsers">
@@ -36,13 +36,13 @@
                         <option value="Blue Phahonyothin 35">
                     </datalist>
                 </div>
-                <div class="col-xl-4">
+                <div class="col-10 col-xl-4">
                     <p class="ftitle fw-bold">เบอร์โทรศัพท์</p>
                     <input type="text" class="form-control" placeholder="กรอกชื่อผู้ติดต่อ">
                 </div>
             </div>
-            <div class="row">
-                <div class="col-xl-4">
+            <div class="row mb-3">
+                <div class="col-10 col-xl-4 mb-3">
                     <p class="ftitle fw-bold">ประเภทงาน</p>
                     <input class="form-select" list="browsers" placeholder="กรอกประเภทงาน">
                     <datalist id="browsers">
@@ -53,7 +53,7 @@
                 </div>
                 <div class="col-xl-6">
                     <p class="ftitle fw-bold">หมวดงาน</p>
-                    <div class="col-xl-12 my-auto">
+                    <div class="col-10 col-xl-12 my-auto">
                         <div class="form-check form-check-inline">
                         <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="1">
                         <label class="form-check-label" for="inlineCheckbox1">ซอฟต์แวร์</label>
@@ -69,6 +69,26 @@
                       </div>
                       </div>
                 </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-11 col-xl-12">
+                    <p class="ftitle fw-bold">รายละเอียดงาน</p>
+                    <textarea class=" form-control" name="detail" id="detail" cols="30" rows="10"></textarea>
+                </div>
+            </div>
+            <div class="row mb-5">
+                <div class="col-10 col-xl-3 mx-xl-auto">
+                    <p class="ftitle fw-bold">เจ้าหน้าที่ผู้รับผิดชอบ</p>
+                    <input type="text" class="ftitle form-control" id="name-user" style="background-color: #5F7769;" value="คุณตั้ม" disabled>
+                </div>
+            </div>
+            <div class="row justify-content-around mb-5 mt-xl-5">
+                <div class="col col-xl-4 ms-auto">
+                    <button class="btn btn-secondary d-block ms-auto me-2 me-xl-5" type="reset" name="clear-rq">ยกเลิก</button>
+                </div>
+                <div class="col col-xl-4 me-auto">
+                <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5" type="submit" name="create-rq">บันทึก</button>
+            </div>
             </div>
         </form>
     </main>

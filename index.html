@@ -132,8 +132,8 @@
         <form action="" method="post">
             <div class="row justify-content-start" id="phone">
                 <div class="col col-sm-2 col-xl-2">
-                    <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#department" aria-controls="offcanvasBottom">ตัวกรอง</button>
+                    <button class="btn btn-light border border-2 fsub" id="filter" type="button" data-bs-toggle="offcanvas"
+                        data-bs-target="#department" aria-controls="offcanvasBottom"><img src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt=""></button>
                     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="department"
                         aria-labelledby="offcanvasBottomLabel">
                         <div class="offcanvas-body small">
@@ -213,98 +213,12 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="col col-sm-2 col-xl-2">
-                    <button class="btn btn-primary fsub" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#cate-work" aria-controls="offcanvasBottom">ประเภทงาน</button>
-
-                    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="cate-work"
-                        aria-labelledby="offcanvasBottomLabel">
-                        <div class="offcanvas-header">
-                            <h5 class="offcanvas-title" id="offcanvasBottomLabel">Offcanvas bottom</h5>
-                        </div>
-                        <div class="offcanvas-body">
-                            ...
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-6 col-sm-2 col-xl-2">
-                        <label for="start-date">วันที่เริ่มต้น</label>
-                        <input type="date" class=" form-control" id="start-date" value="วันที่เริ่มต้น">
-                    </div>
-                    <div class="col-6 col-sm-2 col-xl-2">
-                        <label for="end-date">วันที่สิ้นสุด</label>
-                        <input type="date" class=" form-control" id="end-date" value="วันที่สิ้นสุด">
-                    </div>
-                </div>
-                <div class="row mt-2">
-                    <div class="col align-self-center">
-                        <p class="my-auto text-start text-dark">สถานะคำขอ</p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-5">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input form-control-color" type="checkbox" name="status" id="s1"
-                                value="รออนุมัติ">
-                            <label class="form-check-label fsub" for="s1">รออนุมัติ</label>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="status" id="s2" value="แก้ไข">
-                            <label class="form-check-label fsub" for="s2">แก้ไข</label>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="status" id="s3" value="ยกเลิก">
-                            <label class="form-check-label fsub" for="s3">ยกเลิก</label>
-                        </div>
-                    </div>
-
-                    <div class="col-5">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="status" id="s4" value="ไม่อนุมัติ">
-                            <label class="form-check-label fsub" for="s4">ไม่อนุมัติ</label>
-                        </div>
-                    </div>
-
-                    <div class="col-3">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="status" id="s5" value="อนุมัติ">
-                            <label class="form-check-label fsub" for="s5">อนุมัติ</label>
-                        </div>
-                    </div>
-
-                    <div class="col">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="status" id="s6" value="รอตรวจสอบ">
-                            <label class="form-check-label fsub" for="s6">แก้ไข</label>
-                        </div>
-                    </div>
-                    <div class="col-5">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="status" id="s7" value="ติดตามงาน">
-                            <label class="form-check-label fsub" for="s7">ติดตามงาน</label>
-                        </div>
-                    </div>
-                    <div class="col-5">
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="status" id="s8" value="เสร็จสิ้น">
-                            <label class="form-check-label fsub" for="s8">
-                                <p>เสร็จสิ้น</p>
-                            </label>
-                        </div>
-                    </div>
-                </div>
             </div>
         </form>
-
+<!--ปุ่มสร้างคำขอ-->
         <div class="row">
-            <div class="col">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#create-date">สร้างคำขอปฏิบัติงาน</button>
+            <div class="col mb-3">
+                <button type="button" class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-date">สร้างคำขอปฏิบัติงาน</button>
             </div>
             <form action="create.html" method="post">
             <div class="modal fade" id="create-date" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

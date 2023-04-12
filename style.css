@@ -58,3 +58,13 @@ hr.h-color{
     overflow-y: scroll;
     overflow-x: hidden;
 }
+
+#filter{
+    border-radius: 100%;
+    padding: 10px;
+    margin: 10px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+}
+
