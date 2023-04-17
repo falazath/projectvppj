@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+  <!--navbar-->
     <nav class="navbar">
         <div class="container-fluid">
           <button class="navbar-toggler position-absolute top-0 start-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarLight" aria-controls="offcanvasNavbarLight">
@@ -43,4 +44,61 @@
           </div>
         </div>
       </nav>
+<!--navbar-->
+      <main>
+        <div class="row justify-content-center mt-5 ">
+          <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
+              <p class="text-dark text-center fhead fw-bold">หน่วยงาน</p>
+          </div>
+        </div>
+
+        <p id="demo"></p>
+        <div class="row">
+          <div class="col-8 mx-auto">
+            <table class="table table-bordered">
+              <thead>
+                <tr class="d-flex ftitle">
+                  <th class="col-8">ชื่อหน่วยงาน</th>
+                  <th class="col-4">สถานะ</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="part d-flex fsub">
+                  <td class="col-8">KAVE TOWN ISLAND</td>
+                  <td class="status col-4">เปิด</td>
+                </tr>
+                <tr class="part d-flex fsub">
+                  <td class="col-8">KAVE SEED KASET</td>
+                  <td class="status col-4">เปิด</td>
+                </tr>
+                <tr class="part d-flex fsub">
+                  <td class="col-8">Atmoz Minburi</td>
+                  <td class="status col-4">เปิด</td>
+                </tr>
+                <tr class="part d-flex fsub">
+                  <td class="col-8">Origin Plug&play Srinakarin</td>
+                  <td class="status col-4">ปิด</td>
+                </tr>
+                <tr class="part d-flex fsub">
+                  <td class="col-8">Blue Phahonyothin</td>
+                  <td class="status col-4 ">ปิด</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+
+      <script>
+        const row = document.getElementsByClassName('part');
+        const col = document.getElementsByClassName('status');
+        for(i=0;i<row.length;i++){
+            if(!(col[i].textContent).localeCompare('ปิด')){
+                row[i].classList.add('bg-danger','text-light')
+            }
+        }
+        
+      </script>
 </body>
+</html>

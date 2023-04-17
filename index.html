@@ -47,13 +47,12 @@
                     </div>
                     <div class="row">
                         <div class="col-12 mb-2 mt-5">
-                            <a class="btn btn-primary ftitle d-block text-start active" href="index.html">รายการคำขอปฏิบัติงาน</a>
+                            <a class="btn ftitle d-block text-start" id="index" href="index.html">รายการคำขอปฏิบัติงาน</a>
                         </div>
                         <div class="col-12">
-                            <a class="btn btn-secondary ftitle d-block text-start" href="create.html">หน่วยงาน</a>
+                            <a class="btn ftitle d-block text-start" id="department" href="department.html">หน่วยงาน</a>
                         </div>
                     </div>
-                    
                 </div>
             </div>
         </div>
@@ -244,6 +243,7 @@
             </form>
         </div>
         <div class="overflow-x-auto">
+            <p id="demo"></p>
             <!--ตาราง-->
             <table class="table table-light table-bordered">
                 <thead>
@@ -273,7 +273,7 @@
                         </td>
                         <td class="col-3 col-sm-1" id="status">รออนุมัติ</td>
                         <td class="col-2 col-sm-1">
-                            <a href="check_request.html"><img src="./asset/icon/Paper.svg" alt=""></a>
+                            <a href="check_request.html?pid=1"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
                     <!--สถานะ:แก้ไข-->
@@ -300,7 +300,6 @@
 
     </main>
     <script>
-
         var phone = document.getElementById("phone");
         var dsk = document.getElementById("dsk");
         if (screen.width <= 576) {
@@ -310,7 +309,22 @@
             phone.classList.add("d-none");
         }
 
-        
+        var url_str = window.location.href;
+        const index = document.getElementById('index');
+        const department = document.getElementById('department');
+        if(url_str.search('index')){
+            index.classList.add('btn-primary');
+            index.classList.remove('btn-secondary');
+
+            department.classList.add('btn-secondary');
+            department.classList.remove('btn-primary');
+        }else if(url_str.search('department')){
+            index.classList.add('btn-secondary');
+            index.classList.remove('btn-primary');
+
+            department.classList.add('btn-primary');
+            department.classList.remove('btn-secondary');
+        }
     </script>
 </body>
 

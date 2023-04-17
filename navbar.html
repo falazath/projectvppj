@@ -1,4 +1,23 @@
 <!--navbar-->
+<script>
+    var url_str = window.location.href;
+        const index = document.getElementById('index');
+        const department = document.getElementById('department');
+        if(url_str.search('index')){
+            index.classList.add('btn-primary');
+            index.classList.remove('btn-secondary');
+
+            department.classList.add('btn-secondary');
+            department.classList.remove('btn-primary');
+        }else if(url_str.search('department')){
+            index.classList.add('btn-secondary');
+            index.classList.remove('btn-primary');
+
+            department.classList.add('btn-primary');
+            department.classList.remove('btn-secondary');
+        }
+</script>
+
 <nav class="navbar">
     <div class="container-fluid">
         <button class="navbar-toggler position-absolute top-0 start-0" type="button" data-bs-toggle="offcanvas"
@@ -26,14 +45,18 @@
                         <p class="fhead text-start my-auto">คุณอิทธิกร กลิ่นไธสง</p>
                     </div>
                     <div class="col-2 align-self-center">
-                        <a href="login.html"><img src="./asset/icon/Password.svg" class=" d-block float-end me-3"></a>
+                        <a href="login.html"><img src="./asset/icon/Password.svg"
+                                class=" d-block float-end me-3"></a>
                     </div>
                 </div>
-                <ul>
-                    <li class=" list-unstyled active"><a class="btn btn-primary" href="login.html">Login</a>
-                    </li>
-                    <li class=" list-unstyled"><a class="btn btn-primary" href="index.html">Login</a></li>
-                </ul>
+                <div class="row">
+                    <div class="col-12 mb-2 mt-5">
+                        <a class="btn ftitle d-block text-start" id="index" href="index.html">รายการคำขอปฏิบัติงาน</a>
+                    </div>
+                    <div class="col-12">
+                        <a class="btn ftitle d-block text-start" id="department" href="department.html">หน่วยงาน</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
