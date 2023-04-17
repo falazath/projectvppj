@@ -1,21 +1,21 @@
 <!--navbar-->
 <script>
     var url_str = window.location.href;
-        const index = document.getElementById('index');
-        const department = document.getElementById('department');
-        if(url_str.search('index')){
-            index.classList.add('btn-primary');
-            index.classList.remove('btn-secondary');
+    const index = document.getElementById('index');
+    const department = document.getElementById('department');
+    if(url_str.search('index')){
+        index.classList.add('btn-primary');
+        index.classList.remove('btn-secondary');
 
-            department.classList.add('btn-secondary');
-            department.classList.remove('btn-primary');
-        }else if(url_str.search('department')){
-            index.classList.add('btn-secondary');
-            index.classList.remove('btn-primary');
+        department.classList.add('btn-secondary');
+        department.classList.remove('btn-primary');
+    }else if(url_str.search('department')){
+        index.classList.add('btn-secondary');
+        index.classList.remove('btn-primary');
 
-            department.classList.add('btn-primary');
-            department.classList.remove('btn-secondary');
-        }
+        department.classList.add('btn-primary');
+        department.classList.remove('btn-secondary');
+    }
 </script>
 
 <nav class="navbar">

@@ -5,45 +5,78 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="./dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./dist/css/bootstrap.css" rel="stylesheet">
+    <script src="./dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-  <!--navbar-->
-    <nav class="navbar">
-        <div class="container-fluid">
-          <button class="navbar-toggler position-absolute top-0 start-0" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbarLight" aria-controls="offcanvasNavbarLight">
+  
+  <nav class="navbar">
+    <div class="container-fluid">
+        <button class="navbar-toggler position-absolute top-0 start-0" type="button" data-bs-toggle="offcanvas"
+            data-bs-target="#offcanvasNavbarLight" aria-controls="offcanvasNavbarLight">
             <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarLight" aria-labelledby="offcanvasNavbarLightLabel">
+        </button>
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarLight"
+            aria-labelledby="offcanvasNavbarLightLabel">
             <div class="offcanvas-header">
-              <a href="index.html"><img src="./asset/Logo/VP.svg" alt="logo"></a>
-              <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                <a href="index.html"><img src="./asset/Logo/VP.svg" alt="logo"></a>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
                 <div class="row">
                     <div class="col">
                         <p class="ftitle text-start">ยินดีต้อนรับ</p>
+                        <p id="demo"></p>
                     </div>
-                    <div class="col">
-                        <a href="login.html" class="text-end"><img src="./asset/icon/Logout.svg" class="d-block float-end me-3" alt=""></a>
+                    <div class="col-2">
+                        <a href="login.html" class="text-end"><img src="./asset/icon/Logout.svg"
+                                class=" d-block float-end me-3" alt=""></a>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col"><p class="fhead text-start">คุณอิทธิกร กลิ่นไธสง</p></div>
-                    <div class="col-1">
-                        <a href="login.html" class="text-end"><img src="./asset/icon/Password.svg" class="d-block float-end me-3" alt=""></a>
+                    <div class="col align-self-center">
+                        <p class="fhead text-start my-auto">คุณอิทธิกร กลิ่นไธสง</p>
+                    </div>
+                    <div class="col-2 align-self-center">
+                        <a href="changepass.html"><img src="./asset/icon/Password.svg"
+                                class=" d-block float-end me-3"></a>
                     </div>
                 </div>
-                <ul>
-                    <li class=" list-unstyled"><a class="btn btn-primary" href="login.html">Login</a></li>
-                    <li class=" list-unstyled active"><a class="btn btn-primary active" href="index.html">Login</a></li>
-                </ul>
+                <div class="row">
+                    <div class="col-12 mb-2 mt-5">
+                        <a class="btn ftitle d-block text-start" id="index"
+                            href="index.html">รายการคำขอปฏิบัติงาน</a>
+                    </div>
+                    <div class="col-12">
+                        <a class="btn ftitle d-block text-start" id="department" href="department.html">หน่วยงาน</a>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </nav>
+    </div>
+</nav>
+
+<script>
+    var url_str = window.location.href;
+    document.getElementById('demo').innerText = url_str.search('index');
+    const index = document.getElementById('index');
+    const department = document.getElementById('department');
+    if (url_str.search('index')) {
+        index.classList.add('btn-primary');
+        index.classList.remove('btn-secondary');
+
+        department.classList.add('btn-secondary');
+        department.classList.remove('btn-primary');
+    } else if (url_str.search('department')) {
+        index.classList.add('btn-secondary');
+        index.classList.remove('btn-primary');
+
+        department.classList.add('btn-primary');
+        department.classList.remove('btn-secondary');
+    }
+</script>
 <!--navbar-->
       <main>
         <div class="row justify-content-center mt-5 ">

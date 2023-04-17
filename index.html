@@ -41,13 +41,14 @@
                             <p class="fhead text-start my-auto">คุณอิทธิกร กลิ่นไธสง</p>
                         </div>
                         <div class="col-2 align-self-center">
-                            <a href="login.html"><img src="./asset/icon/Password.svg"
+                            <a href="changepass.html"><img src="./asset/icon/Password.svg"
                                     class=" d-block float-end me-3"></a>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 mb-2 mt-5">
-                            <a class="btn ftitle d-block text-start" id="index" href="index.html">รายการคำขอปฏิบัติงาน</a>
+                            <a class="btn ftitle d-block text-start" id="index"
+                                href="index.html">รายการคำขอปฏิบัติงาน</a>
                         </div>
                         <div class="col-12">
                             <a class="btn ftitle d-block text-start" id="department" href="department.html">หน่วยงาน</a>
@@ -57,7 +58,27 @@
             </div>
         </div>
     </nav>
+
+    <script>
+        var url_str = window.location.href;
+        const index = document.getElementById('index');
+        const department = document.getElementById('department');
+        if (url_str.search('index')) {
+            index.classList.add('btn-primary');
+            index.classList.remove('btn-secondary');
+
+            department.classList.add('btn-secondary');
+            department.classList.remove('btn-primary');
+        } else if (url_str.search('department')) {
+            index.classList.add('btn-secondary');
+            index.classList.remove('btn-primary');
+
+            department.classList.add('btn-primary');
+            department.classList.remove('btn-secondary');
+        }
+    </script>
     <!--navbar-->
+
     <main>
 
         <div class="row justify-content-center">
@@ -136,8 +157,9 @@
         <form action="" method="post">
             <div class="row justify-content-start" id="phone">
                 <div class="col col-sm-2 col-xl-2">
-                    <button class="btn btn-light border border-2 fsub" id="filter" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#department" aria-controls="offcanvasBottom"><img src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt=""></button>
+                    <button class="btn btn-light border border-2 fsub" id="filter" type="button"
+                        data-bs-toggle="offcanvas" data-bs-target="#department" aria-controls="offcanvasBottom"><img
+                            src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt=""></button>
                     <div class="offcanvas offcanvas-bottom" tabindex="-1" id="department"
                         aria-labelledby="offcanvasBottomLabel">
                         <div class="offcanvas-body small">
@@ -219,27 +241,29 @@
                 </div>
             </div>
         </form>
-<!--ปุ่มสร้างคำขอ-->
+        <!--ปุ่มสร้างคำขอ-->
         <div class="row">
             <div class="col mb-3">
-                <button type="button" class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-date">สร้างคำขอปฏิบัติงาน</button>
+                <button type="button" class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal"
+                    data-bs-target="#create-date">สร้างคำขอปฏิบัติงาน</button>
             </div>
             <form action="create.html" method="post">
-            <div class="modal fade" id="create-date" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-body">
-                    <p class="ftitle fw-bold text-center">วันที่สร้างคำขอปฏิบัติงาน</p>
-                    <div class="col-xl-10 mx-auto">
-                        <input type="date" class="form-control">
+                <div class="modal fade" id="create-date" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">
+                                <p class="ftitle fw-bold text-center">วันที่สร้างคำขอปฏิบัติงาน</p>
+                                <div class="col-xl-10 mx-auto">
+                                    <input type="date" class="form-control">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" name="create-date" class="btn btn-primary mx-auto">บันทึก</button>
+                            </div>
+                        </div>
                     </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="submit" name="create-date" class="btn btn-primary mx-auto">บันทึก</button>
-                    </div>
-                  </div>
                 </div>
-              </div>
             </form>
         </div>
         <div class="overflow-x-auto">
@@ -308,24 +332,8 @@
         } else if (screen.width >= 720) {
             phone.classList.add("d-none");
         }
-
-        var url_str = window.location.href;
-        const index = document.getElementById('index');
-        const department = document.getElementById('department');
-        if(url_str.search('index')){
-            index.classList.add('btn-primary');
-            index.classList.remove('btn-secondary');
-
-            department.classList.add('btn-secondary');
-            department.classList.remove('btn-primary');
-        }else if(url_str.search('department')){
-            index.classList.add('btn-secondary');
-            index.classList.remove('btn-primary');
-
-            department.classList.add('btn-primary');
-            department.classList.remove('btn-secondary');
-        }
     </script>
+
 </body>
 
 </html>
