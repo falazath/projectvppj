@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="col">
                         <p class="ftitle text-start">ยินดีต้อนรับ</p>
-                        <p id="demo"></p>
+      
                     </div>
                     <div class="col-2">
                         <a href="login.html" class="text-end"><img src="./asset/icon/Logout.svg"
@@ -60,16 +60,15 @@
 
 <script>
     var url_str = window.location.href;
-    document.getElementById('demo').innerText = url_str.search('index');
     const index = document.getElementById('index');
     const department = document.getElementById('department');
-    if (url_str.search('index')) {
+    if ((url_str.search('index') != -1)) {
         index.classList.add('btn-primary');
         index.classList.remove('btn-secondary');
 
         department.classList.add('btn-secondary');
         department.classList.remove('btn-primary');
-    } else if (url_str.search('department')) {
+    } else if ((url_str.search('department')) != -1) {
         index.classList.add('btn-secondary');
         index.classList.remove('btn-primary');
 
