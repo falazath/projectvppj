@@ -5,11 +5,9 @@ include('connect.php');
 include('header.html');
 include('navbar.html');
 
-$sql = $conn->prepare("SELECT * FROM itoss_form");
+$sql = $conn->prepare("SELECT * FROM itoss_form WHERE  itoss_form.Form_id = ".$_GET['pid']." ");
 $sql->execute();
-$data = $sql->fetchAll();
-echo $data[1]['Form_id'];
-
+$data = $sql->fetch();
 ?>
     <main>
         <div class="row justify-content-center mt-5 ">
@@ -92,36 +90,93 @@ echo $data[1]['Form_id'];
                     <input type="text" class="ftitle form-control" id="name-user" value="คุณตั้ม" disabled>
                 </div>
             </div>
-            <div class="row justify-content-around mb-5 mt-xl-5">
+<hr>
+<div class="row justify-content-center mt-5 ">
+    <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
+        <p class="text-dark text-center fhead fw-bold">รายงานการปฏิบัติงาน</p>
+    </div>
+</div>
+<div class="row mb-0 mb-xl-3 mb-xl-0">
+    <div class="col-11 col-xl-12 mb-3">
+        <p class="ftitle fw-bold mb-1">รายละเอียดงาน</p>
+        <textarea class="data form-control" name="detail" id="detail-report" cols="30" rows="10">                    </textarea>
+    </div>
+</div>
+<div class="row mb-5 mb-xl-5">
+    <div class="col-xl-4">
+        <p class="ftilte fw-bold">เวลาเริ่มดำเนินงาน</p>
+        <input class=" form-control" type="date" name="start-time">
+    </div>
+    <div class="col-xl-4">
+        <p class="ftilte fw-bold">เวลาเสร็จสิ้นการดำเนินงาน</p>
+        <input class=" form-control" type="date" name="end-time">
+    </div>
+    <div class="col-xl-3">
+        <p class="ftilte fw-bold">สถานะ:</p>
+        <div class="row">
+            <div class="col-6 col-xl form-check">
+                <input class="form-check-input mx-auto me-2" type="radio" name="status" id="status1">
+                <label class="form-check-label ftitle" for="flexRadioDefault1">
+                    ปิดงาน
+                </label>
+            </div>
+            <div class="col-6 col-xl form-check">
+                <input class="form-check-input me-2" type="radio" name="status" id="status2" checked>
+                <label class="form-check-label ftitle" for="flexRadioDefault2">
+                    ติดตามงาน
+                </label>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6 mx-auto">
+        <p class="ftilte fw-bold text-center">ผู้ใช้บริการ</p>
+    </div>
+    </div>
+    <div class="row mb-0 mb-xl-3">
+        <div class="col-xl-6 mx-auto">
+            <img src="./asset/signature.png" class="d-block mb-3 mx-auto mb-xl-3" width="300px" height="300px" alt="">
+            <!--กดบันทึกลายเซ็นเสร็จให้ลายเซ็นขึ้นตรงนี้-->
+            <button type="button" class="btn btn-primary d-block mx-auto mb-3" data-bs-toggle="modal" data-bs-target="#signatureBox"> ลายเซ็น </button>
+        </div>
+        <div class="modal fade" id="signatureBox" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <!--ใส่ลายเซ็น-->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="create-date" class="btn btn-primary mx-auto">บันทึก</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center mb-5">
+        <div class="col-3 col-xl-1 me-0 align-self-center">
+            <p class="ftilte fw-bold text-end mb-0 mt-0">วันที่</p>
+        </div>
+        <div class="col-6 col-xl-3 ms-0">
+            <input class="form-control ms-0" type="date" name="start-time">
+        </div>
+    </div>
+    <div class="row justify-content-around mb-5 mt-xl-5">
                 <div class="col-6 col-xl-6 ms-auto" id="homeCol">
                     <a class="col-xl-3 btn btn-secondary d-block ms-auto me-2 me-xl-5 ftitle" href="index.html"
                         id="home">กลับสู่หน้าหลัก</a>
                 </div>
                 <div class="col-6 col-xl-6 me-auto" id="saveCol">
-                    <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5 d-none" type="submit" name="save"
+                    <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5" type="submit" name="create-report"
                         id="save">บันทึก</button>
-                    <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5 ftitle" type="button" id="edit"
-                        onclick="disableFalse()">แก้ไข</button>
                 </div>
             </div>
         </form>
         
     </main>
     <script>
-        function disableFalse() {
-            var data = document.getElementsByClassName('data');
-            var editbtn = document.getElementById('edit');
-            var homebtn = document.getElementById('home');
-            var savebtn = document.getElementById('save');
-            for (var i = 0; i < data.length; i++) {
-                data[i].disabled = false;
-            }
-            editbtn.classList.add('d-none');
-            homebtn.innerText = "ยกเลิก";
-            savebtn.classList.remove('d-none');
-            CKEDITOR.replace('detail');
-        }
-
         function otherCheck() {
             var check = document.getElementById('other');
             if (check.checked == true) {
@@ -133,44 +188,8 @@ echo $data[1]['Form_id'];
             }
         }
         CKEDITOR.replace('detail-report');
-        var url_str = window.location.href;
-        var url = new URL(url_str);
-        var edit = url.searchParams.get("id");
 
-        const status = <?php echo $data['Status_form_id']?>; //ค่า status 
-        const box = document.getElementById('editBox');
-        const topic = box.getElementsByTagName('p');
-        var str;
-        if (status != null) {
-            if(status == 2){
-            box.classList.remove('d-none');
-                topic[0].innerText = 'รายละเอียดที่ต้องการแก้ไข โดย ';
-            }else if(status == 3){
-            box.classList.remove('d-none');
-                topic[0].innerText = 'สาเหตุที่ยกเลิก โดย ';
-                document.getElementById('homeCol').classList.remove('ms-auto');
-                document.getElementById('home').classList.add('mx-auto');
-                document.getElementById('home').classList.remove('ms-auto','me-xl-5','me-2');
-                document.getElementById('home').classList.add('btn-primary');
-                document.getElementById('home').classList.remove('btn-secondary');
-                
-                document.getElementById('saveCol').classList.add('d-none');
-            }else if(status == 4){   
-                box.classList.remove('d-none');
-                topic[0].innerText = 'สาเหตุที่ไม่อนุมัติ โดย';
-                document.getElementById('homeCol').classList.remove('ms-auto');
-                document.getElementById('home').classList.add('mx-auto');
-                document.getElementById('home').classList.remove('ms-auto','me-xl-5','me-2');
-                document.getElementById('home').classList.add('btn-primary');
-                document.getElementById('home').classList.remove('btn-secondary');
-                
-                document.getElementById('saveCol').classList.add('d-none');
-
-            }
-        }else{
-            
-        }
-
+        
     </script>
 </body>
 

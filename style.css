@@ -68,7 +68,7 @@ hr.h-color{
     right: 0;
 }
 
-input:disabled , #detail, #Detail{
+input:disabled ,div#detail, #Detail{
     background-color: #5F7769;
     color: #999;
 }
