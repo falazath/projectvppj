@@ -123,16 +123,6 @@ $data = $sql->fetch();
             
             document.getElementById('showDetail').classList.add('d-none');
             document.getElementById('detail').classList.remove('d-none');
-            /*var val = document.getElementById('detail');
-            alert(val.textContent);
-            var attribute = { };
-             $.each($("#detail")[0].attributes, function(id, atr) {
-                 attribute[atr.nodeName] = atr.nodeValue;
-             });
-             $("#detail").replaceWith(function () {
-                 return $("<textarea />",
-                     attribute).append($(this).contents());
-             });*/
 
             editbtn.classList.add('d-none');
             homebtn.innerText = "ยกเลิก";
@@ -185,10 +175,7 @@ $data = $sql->fetch();
                 document.getElementById('saveCol').classList.add('d-none');
 
             }
-        }else{
-            
         }
-
     </script>
 </body>
 
