@@ -297,7 +297,7 @@
                         </td>
                         <td class="col-3 col-sm-1" id="status">รออนุมัติ</td>
                         <td class="col-2 col-sm-1">
-                            <a href="check_request.php?pid=5"><img src="./asset/icon/Paper.svg" alt=""></a>
+                            <a href="#" onclick="create_report(1)"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
                     <!--สถานะ:แก้ไข-->
@@ -315,7 +315,43 @@
                         </td>
                         <td class="col-3 col-sm-1" id="status">แก้ไข</td>
                         <td class="col-2 col-sm-1">
-                            <a href="check_request.html?rqid=2&edit=1"><img src="./asset/icon/Paper.svg" alt=""></a>
+                            <a href="#" onclick="create_report(2)"><img src="./asset/icon/Paper.svg" alt=""></a>
+                        </td>
+                    </tr>
+                    <!--สถานะ:อนุมัติ-->
+                    <tr class="d-flex text-center fsub">
+                        <td class="col-3 col-sm-1" id="date">24/03/2023</td>
+                        <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4 col-sm-2" id="user">คุณตั้ม</td>
+                        <td class="col-4 col-sm-1" id="cate-work">ติดตั้ง</td>
+                        <td class="col-8 col-sm-4 text-start">
+                            -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
+                            <br>
+                            -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
+                            <br>
+                            -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
+                        </td>
+                        <td class="col-3 col-sm-1" id="status">อนุมัติ</td>
+                        <td class="col-2 col-sm-1">
+                            <a href="#" onclick="create_report(5)"><img src="./asset/icon/Paper.svg" alt=""></a>
+                        </td>
+                    </tr>
+                    <!--สถานะ:รอตรวจสอบ-->
+                    <tr class="d-flex text-center fsub">
+                        <td class="col-3 col-sm-1" id="date">24/03/2023</td>
+                        <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4 col-sm-2" id="user">คุณตั้ม</td>
+                        <td class="col-4 col-sm-1" id="cate-work">ติดตั้ง</td>
+                        <td class="col-8 col-sm-4 text-start">
+                            -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
+                            <br>
+                            -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
+                            <br>
+                            -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
+                        </td>
+                        <td class="col-3 col-sm-1" id="status">รอตรวจสอบ</td>
+                        <td class="col-2 col-sm-1">
+                            <a href="#" onclick="create_report(6)"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
                 </tbody>
@@ -332,8 +368,18 @@
         } else if (screen.width >= 720) {
             phone.classList.add("d-none");
         }
-    </script>
 
+        function create_report(status){
+            let id = 5;
+            if(status < 5){
+                location.href = "check_request.php?pid="+id;
+            }else if(status == 5){
+                location.href = "create_report.php?pid="+id;
+            }else{
+                location.href = "check_report.php?pid="+id;
+            }
+        }
+    </script>
 </body>
 
 </html>

@@ -68,9 +68,9 @@ hr.h-color{
     right: 0;
 }
 
-input:disabled ,div#detail, #Detail{
+input:disabled ,div#showDetail, #detail{
     background-color: #5F7769;
-    color: #999;
+    color: #fff;
 }
 .form-control:disabled{
     color: #fff;

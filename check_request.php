@@ -7,8 +7,7 @@ include('navbar.html');
 
 $sql = $conn->prepare("SELECT * FROM itoss_form");
 $sql->execute();
-$data = $sql->fetchAll();
-echo $data[1]['Form_id'];
+$data = $sql->fetch();
 
 ?>
     <main>
@@ -18,7 +17,7 @@ echo $data[1]['Form_id'];
             </div>
         </div>
 
-        <form action="" method="post">
+        <form action="" method="get">
             <div class="row mb-0 mb-xl-3 mb-xl-0 d-none" id="editBox">
                 <div class="col-11 col-xl-12 mb-3">
                     <p class="ftitle fw-bold mb-1 d-inline"></p>
@@ -81,10 +80,14 @@ echo $data[1]['Form_id'];
             <div class="row mb-0 mb-xl-3 mb-xl-0">
                 <div class="col-11 col-xl-12 mb-3">
                     <p class="ftitle fw-bold mb-1">รายละเอียดงาน</p>
-                    <div class="data form-control text-light" name="detail" id="detail" cols="30" rows="10">
+                    <div class="data form-control text-light" name="detail" id="showDetail" cols="30" rows="10">
                     <?=$data['Form_Work']?>
                     </div>
+                    <textarea class="data form-control text-light d-none" name="detail" id="detail" cols="30" rows="10">
+                    <?=$data['Form_Work']?>
+                    </textarea>
                 </div>
+                
             </div>
             <div class="row mb-5">
                 <div class="col-10 col-xl-3 mx-xl-auto mb-3">
@@ -113,9 +116,24 @@ echo $data[1]['Form_id'];
             var editbtn = document.getElementById('edit');
             var homebtn = document.getElementById('home');
             var savebtn = document.getElementById('save');
+
             for (var i = 0; i < data.length; i++) {
                 data[i].disabled = false;
             }
+            
+            document.getElementById('showDetail').classList.add('d-none');
+            document.getElementById('detail').classList.remove('d-none');
+            /*var val = document.getElementById('detail');
+            alert(val.textContent);
+            var attribute = { };
+             $.each($("#detail")[0].attributes, function(id, atr) {
+                 attribute[atr.nodeName] = atr.nodeValue;
+             });
+             $("#detail").replaceWith(function () {
+                 return $("<textarea />",
+                     attribute).append($(this).contents());
+             });*/
+
             editbtn.classList.add('d-none');
             homebtn.innerText = "ยกเลิก";
             savebtn.classList.remove('d-none');
@@ -137,7 +155,7 @@ echo $data[1]['Form_id'];
         var url = new URL(url_str);
         var edit = url.searchParams.get("id");
 
-        const status = <?php echo $data['Status_form_id']?>; //ค่า status 
+        const status = 5; //ค่า status 
         const box = document.getElementById('editBox');
         const topic = box.getElementsByTagName('p');
         var str;
