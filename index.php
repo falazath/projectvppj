@@ -3,7 +3,32 @@ include('connect.php');
 include('header.html');
 include('navbar.html');
 
-$filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
+if(isset($_POST['search'])){
+    $filter = $conn->prepare("SELECT * FROM itoss_form
+    LEFT JOIN itoss_agency ON itoss_agency.Agency_id = itoss_form.Agency_id
+    LEFT JOIN itoss_jobtype ON itoss_jobtype.Jobtype_id = itoss_form.Jobtype_id
+    LEFT JOIN itoss_status_form ON itoss_status_form.Status_form_id = itoss_form.Status_form_id
+    LEFT JOIN itoss_user ON itoss_user.User_id = itoss_form.User_id
+    WHERE itoss_form.Agency_id LIKE ? OR itoss_form.User_id LIKE ? OR  itoss_form.Jobtype_id LIKE ?
+    OR itoss_form.Form_date_id LIKE ? OR itoss_form.Form_date_end LIKE ? OR itoss_form.Status_form_id LIKE ?
+    ;");
+    $filter->bindParam(1 , $_POST['sector']);
+    $filter->bindParam(2 , $_POST['user']);
+    $filter->bindParam(3 , $_POST['type']);
+    $filter->bindParam(4 , $_POST['start-date']);
+    $filter->bindParam(5 , $_POST['end-date']);
+    $filter->bindParam(6 , $_POST['status']);
+    $filter->execute();
+    $row = $filter->fetchAll();
+}else{
+    $filter = $conn->prepare("SELECT * FROM itoss_form,itoss_agency,itoss_jobtype,itoss_status_form,itoss_user 
+    WHERE itoss_form.Agency_id = itoss_agency.Agency_id AND itoss_form.Jobtype_id = itoss_jobtype.Jobtype_id 
+    AND itoss_form.Status_form_id = itoss_status_form.Status_form_id AND itoss_form.User_id = itoss_user.User_id
+    AND itoss_agency.state = 1 AND itoss_user.state = 1;");
+    $filter->execute();
+    $row = $filter->fetchAll();
+}
+
 
 ?>
     <main>
@@ -15,12 +40,12 @@ $filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
         </div>
         <!--Desktop-->
         <!--ตัวกรอง-->
-        <form action="" method="post">
+        <form action="<?=$_SERVER['PHP_SELF']?>" method="post">
             <div class="row justify-content-start mb-3" id="dsk">
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">หน่วยงาน</p>
-                    <select class="form-select" id="filterSector">
-                        <option selected value="all">ทั้งหมด</option>
+                    <select class="filter form-select" name="sector" onchange="disReq()" id="filterSector" required>
+                        <option selected value="">ทั้งหมด</option>
                         <option value="1">KAVE TOWN ISLAND</option>
                         <option value="2">KAVE SEED KASET</option>
                         <option value="3">Atmoz Minburi</option>
@@ -31,8 +56,8 @@ $filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
                 </div>
                 <div class="col-4 col-sm-2 col-xl-2">
                     <p class="ftitle element">ชื่อพนักงาน</p>
-                    <select class="form-select" id="filterEmp">
-                        <option selected value="all">ทั้งหมด</option>
+                    <select class="filter form-select" name="user" onchange="disReq()" id="filterEmp" required>
+                        <option selected value="">ทั้งหมด</option>
                         <option value="1">คุณเอ</option>
                         <option value="2">คุณชาช่า</option>
                         <option value="3">คุณตั้ม</option>
@@ -40,8 +65,8 @@ $filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">ประเภทงาน</p>
-                    <select class="form-select" id="filterType">
-                        <option selected value="all">ทั้งหมด</option>
+                    <select class="filter form-select" name="type" onchange="disReq()" id="filterType" required>
+                        <option selected value="">ทั้งหมด</option>
                         <option value="1">ติดตั้ง</option>
                         <option value="2">ซ่อมบำรุง</option>
                         <option value="3">บินโดรน</option>
@@ -50,15 +75,15 @@ $filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">วันที่เริ่มต้น</p>
-                    <input type="date" placeholder="dd-mm-yyyy" min="1997-01-01" max="2030-12-31" value="<?=date('Y-m-d')?>" class=" form-control" name="start-date" id="">
+                    <input type="date" class="filter form-control" onclick="disReq()" name="start-date" min="2000-01-01" value=""  required>
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">วันที่สิ้นสุด</p>
-                    <input type="date" class=" form-control" name="end-date" id="">
+                    <input type="date" class="filter form-control" onclick="disReq()" name="end-date" id="" min="2000-01-01" value="" required>
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">สถานะ</p>
-                    <select class="form-select" id="filterStatus">
+                    <select class="filter form-select" name="status" onchange="disReq()" id="filterStatus" required>
                         <option selected value="">ทั้งหมด</option>
                         <option value="1">รออนุมัติ</option>
                         <option value="2">แก้ไข</option>
@@ -142,7 +167,7 @@ $filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
                                 <div class="col-6">
                                     <p class="ftitle fw-bold my-auto">สถานะ</p>
                                     <select class="form-select" aria-label="Default select example">
-                                        <option selected disabled>เลือกสถานะ</option>
+                                        <option selected value="">ทั้งหมด</option>
                                         <option value="1">รออนุมัติ</option>
                                         <option value="2">แก้ไข</option>
                                         <option value="3">ยกเลิก</option>
@@ -201,78 +226,29 @@ $filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
                     </tr>
                 </thead>
                 <tbody>
+                    <?php
+                        for($i=0; $i<count($row);$i++){
+                            
+                           ?>
+                           
                     <!--สถานะ:รออนุมัติ-->
                     <tr class="d-flex text-center fsub">
-                        <td class="col-3 col-sm-1 date" id="1">24/03/2023</td>
-                        <td class="col-4 col-sm-2 sector" id="1">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4 col-sm-2 user" id="1">คุณตั้ม</td>
-                        <td class="col-4 col-sm-1 category" id="1">ติดตั้ง</td>
+                        <td class="col-3 col-sm-1 date" id="1"><?=$row[$i]['Form_date_id']?></td>
+                        <td class="col-4 col-sm-2 sector" id="1"><?=$row[$i]['Agency_Name']?></td>
+                        <td class="col-4 col-sm-2 user" id="1"><?=$row[$i]['User_Name']?></td>
+                        <td class="col-4 col-sm-1 category" id="1"><?=$row[$i]['Jobtype_name']?></td>
                         <td class="col-8 col-sm-4 text-start">
-                            -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
-                            <br>
-                            -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
-                            <br>
-                            -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
-                        </td>
-                        <td class="col-3 col-sm-1 status" id="1">รออนุมัติ</td>
+                        <?=$row[$i]['Form_Work']?>
+                    </td>
+                    <td class="col-3 col-sm-1 status" id="1"><?=$row[$i]['Status_form_name']?></td>
+                    
                         <td class="col-2 col-sm-1">
-                            <a href="#" onclick="create_report(1)"><img src="./asset/icon/Paper.svg" alt=""></a>
+                            <a href="#" onclick="create_report(<?=$row[$i]['Status_form_id']?>)"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
-                    <!--สถานะ:แก้ไข-->
-                    <tr class="d-flex text-center fsub">
-                        <td class="col-3 col-sm-1 date" id="2">24/03/2023</td>
-                        <td class="col-4 col-sm-2 sector" id="2">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4 col-sm-2 user" id="2">คุณตั้ม</td>
-                        <td class="col-4 col-sm-1 category" id="2">ติดตั้ง</td>
-                        <td class="col-8 col-sm-4 text-start">
-                            -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
-                            <br>
-                            -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
-                            <br>
-                            -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
-                        </td>
-                        <td class="col-3 col-sm-1 status" id="2">แก้ไข</td>
-                        <td class="col-2 col-sm-1">
-                            <a href="#" onclick="create_report(2)"><img src="./asset/icon/Paper.svg" alt=""></a>
-                        </td>
-                    </tr>
-                    <!--สถานะ:อนุมัติ-->
-                    <tr class="d-flex text-center fsub">
-                        <td class="col-3 col-sm-1 date" id="5">24/03/2023</td>
-                        <td class="col-4 col-sm-2 sector" id="5">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4 col-sm-2 user" id="5">คุณตั้ม</td>
-                        <td class="col-4 col-sm-1 cate-work" id="5">ติดตั้ง</td>
-                        <td class="col-8 col-sm-4 text-start">
-                            -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
-                            <br>
-                            -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
-                            <br>
-                            -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
-                        </td>
-                        <td class="col-3 col-sm-1 status" id="5">อนุมัติ</td>
-                        <td class="col-2 col-sm-1">
-                            <a href="#" onclick="create_report(5)"><img src="./asset/icon/Paper.svg" alt=""></a>
-                        </td>
-                    </tr>
-                    <!--สถานะ:รอตรวจสอบ-->
-                    <tr class="d-flex text-center fsub">
-                        <td class="col-3 col-sm-1 date" id="5">24/03/2023</td>
-                        <td class="col-4 col-sm-2 sector" id="5">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4 col-sm-2 user" id="5">คุณตั้ม</td>
-                        <td class="col-4 col-sm-1 category" id="5">ติดตั้ง</td>
-                        <td class="col-8 col-sm-4 text-start">
-                            -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
-                            <br>
-                            -ติดตั้งกล้องวงจรปิดสำนักงาน 1 ตัว
-                            <br>
-                            -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
-                        </td>
-                        <td class="col-3 col-sm-1 status" id="7">ติดตามงาน</td>
-                        <td class="col-2 col-sm-1">
-                            <a href="#" onclick="create_report(6)"><img src="./asset/icon/Paper.svg" alt=""></a>
-                        </td>
-                    </tr>
+                    <?php 
+                        }
+                    ?>
                 </tbody>
             </table>
         </div>
@@ -288,16 +264,12 @@ $filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
             phone.classList.add("d-none");
         }
 
-        $('#filterStatus').change(function() {
-            alert('input');
-            
-            if (a == "4") {
-                $('#Jobtype_orther_name').removeClass('d-none');
-            } else {
-                $('#Jobtype_orther_name').addClass('d-none');
+        function disReq(){
+            var filter = document.getElementsByClassName('filter');
+            for(i=0;i<filter.length;i++){
+                filter[i].required = false;
             }
-        });
-
+        }   
         function create_report(status) {
             let id = 5;
             if (status < 5) {

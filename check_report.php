@@ -240,7 +240,6 @@ $detail = "<p>ติดตั้งกล้องวงจรปิดรอบ
         } else {
             document.getElementsByClassName('follow')[i].checked = true;
             document.getElementById('inp-other'+i).classList.remove('d-none');
-
         }
     }
 
