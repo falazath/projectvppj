@@ -1,84 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+include('connect.php');
+include('header.html');
+include('navbar.html');
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=, initial-scale=1.0">
-    <title>Document</title>
-    <link href="./dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="./dist/css/bootstrap.css" rel="stylesheet">
-    <script src="./dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="./style.css">
-</head>
+$filter = $conn->prepare("SELECT * FROM itoss_agency,itoss_user,itoss_form,")
 
-<body>
-    <!--navbar-->
-    <nav class="navbar">
-        <div class="container-fluid">
-            <button class="navbar-toggler position-absolute top-0 start-0" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbarLight" aria-controls="offcanvasNavbarLight">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarLight"
-                aria-labelledby="offcanvasNavbarLightLabel">
-                <div class="offcanvas-header">
-                    <a href="index.html"><img src="./asset/Logo/VP.svg" alt="logo"></a>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <div class="row">
-                        <div class="col">
-                            <p class="ftitle text-start">ยินดีต้อนรับ</p>
-                        </div>
-                        <div class="col-2">
-                            <a href="login.html" class="text-end"><img src="./asset/icon/Logout.svg"
-                                    class=" d-block float-end me-3" alt=""></a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col align-self-center">
-                            <p class="fhead text-start my-auto">คุณอิทธิกร กลิ่นไธสง</p>
-                        </div>
-                        <div class="col-2 align-self-center">
-                            <a href="changepass.html"><img src="./asset/icon/Password.svg"
-                                    class=" d-block float-end me-3"></a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 mb-2 mt-5">
-                            <a class="btn ftitle d-block text-start" id="index"
-                                href="index.html">รายการคำขอปฏิบัติงาน</a>
-                        </div>
-                        <div class="col-12">
-                            <a class="btn ftitle d-block text-start" id="department" href="department.html">หน่วยงาน</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <script>
-        var url_str = window.location.href;
-        const index = document.getElementById('index');
-        const department = document.getElementById('department');
-        if (url_str.search('index')) {
-            index.classList.add('btn-primary');
-            index.classList.remove('btn-secondary');
-
-            department.classList.add('btn-secondary');
-            department.classList.remove('btn-primary');
-        } else if (url_str.search('department')) {
-            index.classList.add('btn-secondary');
-            index.classList.remove('btn-primary');
-
-            department.classList.add('btn-primary');
-            department.classList.remove('btn-secondary');
-        }
-    </script>
-    <!--navbar-->
-
+?>
     <main>
 
         <div class="row justify-content-center">
@@ -90,19 +17,10 @@
         <!--ตัวกรอง-->
         <form action="" method="post">
             <div class="row justify-content-start mb-3" id="dsk">
-                <div class="col-4 col-sm-2 col-xl-2">
-                    <p class="ftitle element">ชื่อพนักงาน</p>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected disabled>เลือกพนักงาน</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
-                    </select>
-                </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">หน่วยงาน</p>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected disabled>เลือกหน่วยงาน</option>
+                    <select class="form-select" id="filterSector">
+                        <option selected value="all">ทั้งหมด</option>
                         <option value="1">KAVE TOWN ISLAND</option>
                         <option value="2">KAVE SEED KASET</option>
                         <option value="3">Atmoz Minburi</option>
@@ -111,10 +29,19 @@
                         <option value="6">อื่นๆ</option>
                     </select>
                 </div>
+                <div class="col-4 col-sm-2 col-xl-2">
+                    <p class="ftitle element">ชื่อพนักงาน</p>
+                    <select class="form-select" id="filterEmp">
+                        <option selected value="all">ทั้งหมด</option>
+                        <option value="1">คุณเอ</option>
+                        <option value="2">คุณชาช่า</option>
+                        <option value="3">คุณตั้ม</option>
+                    </select>
+                </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">ประเภทงาน</p>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected disabled>เลือกประเภทงาน</option>
+                    <select class="form-select" id="filterType">
+                        <option selected value="all">ทั้งหมด</option>
                         <option value="1">ติดตั้ง</option>
                         <option value="2">ซ่อมบำรุง</option>
                         <option value="3">บินโดรน</option>
@@ -123,8 +50,7 @@
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">วันที่เริ่มต้น</p>
-                    <input type="date" placeholder="dd-mm-yyyy" min="1997-01-01" max="2030-12-31" value=""
-                        class=" form-control" name="start-date" id="">
+                    <input type="date" placeholder="dd-mm-yyyy" min="1997-01-01" max="2030-12-31" value="<?=date('Y-m-d')?>" class=" form-control" name="start-date" id="">
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">วันที่สิ้นสุด</p>
@@ -132,8 +58,8 @@
                 </div>
                 <div class="col-2 col-sm-2 col-xl-2">
                     <p class="ftitle">สถานะ</p>
-                    <select class="form-select" aria-label="Default select example">
-                        <option selected disabled>เลือกสถานะ</option>
+                    <select class="form-select" id="filterStatus">
+                        <option selected value="">ทั้งหมด</option>
                         <option value="1">รออนุมัติ</option>
                         <option value="2">แก้ไข</option>
                         <option value="3">ยกเลิก</option>
@@ -146,22 +72,17 @@
                 </div>
                 <div class="row justify-content-center mt-3">
                     <div class="col-3 my-auto">
-                        <button type="submit" class="btn btn-primary d-block mx-auto px-5" name="submit">ค้นหา</button>
+                        <button type="submit" class="btn btn-primary d-block mx-auto px-5" name="search">ค้นหา</button>
                     </div>
                 </div>
             </div>
         </form>
 
-        <!--Phone-->
-        <!--ตัวกรอง-->
-        <form action="" method="post">
+        <form action="" method="post"><!--ตัวกรองPhone-->
             <div class="row justify-content-start" id="phone">
                 <div class="col col-sm-2 col-xl-2">
-                    <button class="btn btn-light border border-2 fsub" id="filter" type="button"
-                        data-bs-toggle="offcanvas" data-bs-target="#department" aria-controls="offcanvasBottom"><img
-                            src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt=""></button>
-                    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="department"
-                        aria-labelledby="offcanvasBottomLabel">
+                    <button class="btn btn-light border border-2 fsub" id="filterBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#department" aria-controls="offcanvasBottom"><img src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt=""></button>
+                    <div class="offcanvas offcanvas-bottom" tabindex="-1" id="department" aria-labelledby="offcanvasBottomLabel">
                         <div class="offcanvas-body small">
                             <div class="row mb-3">
                                 <div class="col-6">
@@ -197,14 +118,15 @@
                                     <p class="ftitle fw-bold my-auto ">เลือกประเภทงาน</p>
                                 </div>
                                 <div class="col-11">
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected disabled>เลือกประเภทงาน</option>
+                                    <select class="form-select" name="category" required>
+                                        <option value="" selected disabled>เลือกประเภทงาน</option>
                                         <option value="1">ติดตั้ง</option>
                                         <option value="2">ซ่อมบำรุง</option>
                                         <option value="3">บินโดรน</option>
                                         <option value="4">อื่นๆ</option>
                                     </select>
                                 </div>
+
                             </div>
                             <div class="row mb-3">
                                 <div class="col-6 col-sm-2 col-xl-2">
@@ -234,22 +156,19 @@
                             </div>
                         </div>
                         <div class="offcanvas-footer">
-                            <button type="submit" class="btn btn-primary d-block mx-auto my-2"
-                                name="submit">ค้นหา</button>
+                            <button type="submit" class="btn btn-primary d-block mx-auto my-2" name="submit">ค้นหา</button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
-        <!--ปุ่มสร้างคำขอ-->
-        <div class="row">
+
+        <div class="row"><!--ปุ่มสร้างคำขอ-->
             <div class="col mb-3">
-                <button type="button" class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal"
-                    data-bs-target="#create-date">สร้างคำขอปฏิบัติงาน</button>
+                <button type="button" class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-date">สร้างคำขอปฏิบัติงาน</button>
             </div>
             <form action="create.html" method="post">
-                <div class="modal fade" id="create-date" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
+                <div class="modal fade" id="create-date" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-body">
@@ -266,10 +185,10 @@
                 </div>
             </form>
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto"><!--ตาราง-->
             <p id="demo"></p>
-            <!--ตาราง-->
-            <table class="table table-light table-bordered">
+
+            <table class="table table-light table-bordered" >
                 <thead>
                     <tr class="d-flex text-center fsub">
                         <th class="col-3 col-sm-1">วันที่</th>
@@ -284,10 +203,10 @@
                 <tbody>
                     <!--สถานะ:รออนุมัติ-->
                     <tr class="d-flex text-center fsub">
-                        <td class="col-3 col-sm-1" id="date">24/03/2023</td>
-                        <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4 col-sm-2" id="user">คุณตั้ม</td>
-                        <td class="col-4 col-sm-1" id="cate-work">ติดตั้ง</td>
+                        <td class="col-3 col-sm-1 date" id="1">24/03/2023</td>
+                        <td class="col-4 col-sm-2 sector" id="1">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4 col-sm-2 user" id="1">คุณตั้ม</td>
+                        <td class="col-4 col-sm-1 category" id="1">ติดตั้ง</td>
                         <td class="col-8 col-sm-4 text-start">
                             -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
                             <br>
@@ -295,17 +214,17 @@
                             <br>
                             -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
                         </td>
-                        <td class="col-3 col-sm-1" id="status">รออนุมัติ</td>
+                        <td class="col-3 col-sm-1 status" id="1">รออนุมัติ</td>
                         <td class="col-2 col-sm-1">
                             <a href="#" onclick="create_report(1)"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
                     <!--สถานะ:แก้ไข-->
                     <tr class="d-flex text-center fsub">
-                        <td class="col-3 col-sm-1" id="date">24/03/2023</td>
-                        <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4 col-sm-2" id="user">คุณตั้ม</td>
-                        <td class="col-4 col-sm-1" id="cate-work">ติดตั้ง</td>
+                        <td class="col-3 col-sm-1 date" id="2">24/03/2023</td>
+                        <td class="col-4 col-sm-2 sector" id="2">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4 col-sm-2 user" id="2">คุณตั้ม</td>
+                        <td class="col-4 col-sm-1 category" id="2">ติดตั้ง</td>
                         <td class="col-8 col-sm-4 text-start">
                             -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
                             <br>
@@ -313,17 +232,17 @@
                             <br>
                             -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
                         </td>
-                        <td class="col-3 col-sm-1" id="status">แก้ไข</td>
+                        <td class="col-3 col-sm-1 status" id="2">แก้ไข</td>
                         <td class="col-2 col-sm-1">
                             <a href="#" onclick="create_report(2)"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
                     <!--สถานะ:อนุมัติ-->
                     <tr class="d-flex text-center fsub">
-                        <td class="col-3 col-sm-1" id="date">24/03/2023</td>
-                        <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4 col-sm-2" id="user">คุณตั้ม</td>
-                        <td class="col-4 col-sm-1" id="cate-work">ติดตั้ง</td>
+                        <td class="col-3 col-sm-1 date" id="5">24/03/2023</td>
+                        <td class="col-4 col-sm-2 sector" id="5">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4 col-sm-2 user" id="5">คุณตั้ม</td>
+                        <td class="col-4 col-sm-1 cate-work" id="5">ติดตั้ง</td>
                         <td class="col-8 col-sm-4 text-start">
                             -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
                             <br>
@@ -331,17 +250,17 @@
                             <br>
                             -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
                         </td>
-                        <td class="col-3 col-sm-1" id="status">อนุมัติ</td>
+                        <td class="col-3 col-sm-1 status" id="5">อนุมัติ</td>
                         <td class="col-2 col-sm-1">
                             <a href="#" onclick="create_report(5)"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
                     </tr>
                     <!--สถานะ:รอตรวจสอบ-->
                     <tr class="d-flex text-center fsub">
-                        <td class="col-3 col-sm-1" id="date">24/03/2023</td>
-                        <td class="col-4 col-sm-2" id="sector">Origin Plug&Play Srinakarin</td>
-                        <td class="col-4 col-sm-2" id="user">คุณตั้ม</td>
-                        <td class="col-4 col-sm-1" id="cate-work">ติดตั้ง</td>
+                        <td class="col-3 col-sm-1 date" id="5">24/03/2023</td>
+                        <td class="col-4 col-sm-2 sector" id="5">Origin Plug&Play Srinakarin</td>
+                        <td class="col-4 col-sm-2 user" id="5">คุณตั้ม</td>
+                        <td class="col-4 col-sm-1 category" id="5">ติดตั้ง</td>
                         <td class="col-8 col-sm-4 text-start">
                             -ติดตั้งกล้องวงจรปิดหน้างาน 5 ตัว
                             <br>
@@ -349,7 +268,7 @@
                             <br>
                             -ติดตั้ง firewall และ set ระบบอินเตอร์เน็ต
                         </td>
-                        <td class="col-3 col-sm-1" id="status">รอตรวจสอบ</td>
+                        <td class="col-3 col-sm-1 status" id="7">ติดตามงาน</td>
                         <td class="col-2 col-sm-1">
                             <a href="#" onclick="create_report(6)"><img src="./asset/icon/Paper.svg" alt=""></a>
                         </td>
@@ -369,14 +288,24 @@
             phone.classList.add("d-none");
         }
 
-        function create_report(status){
+        $('#filterStatus').change(function() {
+            alert('input');
+            
+            if (a == "4") {
+                $('#Jobtype_orther_name').removeClass('d-none');
+            } else {
+                $('#Jobtype_orther_name').addClass('d-none');
+            }
+        });
+
+        function create_report(status) {
             let id = 5;
-            if(status < 5){
-                location.href = "check_request.php?pid="+id;
-            }else if(status == 5){
-                location.href = "create_report.php?pid="+id;
-            }else{
-                location.href = "check_report.php?pid="+id;
+            if (status < 5) {
+                location.href = "check_request.php?pid=" + id;
+            } else if (status == 5) {
+                location.href = "create_report.php?pid=" + id;
+            } else {
+                location.href = "check_report.php?pid=" + id;
             }
         }
     </script>

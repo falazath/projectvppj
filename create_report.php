@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('Asia/Bangkok');
 session_start();
 $_SESSION['id'] = 2;
 include('connect.php');
@@ -61,9 +62,9 @@ $data = $sql->fetch();
                         <label class="form-check-label" for="software">ฮาร์ดแวร์</label>
                     </div>
                     <div class="form-check form-check-inline">
-                        <input class="data form-check-input my-0" type="checkbox" id="other" onclick="otherCheck()" value="3" disabled>
+                        <input class="data form-check-input my-0" type="checkbox" id="other" value="3" disabled>
                         <label class="form-check-label ms-1" for="inlineCheckbox3" id="lab-other">อื่นๆ</label>
-                        <input type="text" class="form-control d-none ms-1" id="inp-other" name="other">
+                        <input type="text" class="form-control d-none ms-1"  name="other">
                     </div>
                     <div class="col">
 
@@ -94,33 +95,36 @@ $data = $sql->fetch();
         <div class="row mb-0 mb-xl-3 mb-xl-0">
             <div class="col-11 col-xl-12 mb-3">
                 <p class="ftitle fw-bold mb-1">รายละเอียดงาน</p>
-                <textarea class="data form-control" name="detail" id="detail-report" cols="30" rows="10">                    </textarea>
+                <textarea class="data form-control" name="detail" id="detail-report" cols="30" rows="10"></textarea>
             </div>
         </div>
         <div class="row mb-5 mb-xl-5">
             <div class="col-xl-4">
                 <p class="ftilte fw-bold">เวลาเริ่มดำเนินงาน</p>
-                <input class=" form-control" type="date" name="start-time">
+                <input class=" form-control" type="datetime" name="start-time" value="<?=date('d-m-Y H:i')?>">
             </div>
             <div class="col-xl-4">
                 <p class="ftilte fw-bold">เวลาเสร็จสิ้นการดำเนินงาน</p>
-                <input class=" form-control" type="date" name="end-time">
+                <input class=" form-control" type="datetime" name="end-time" value="<?=date('d-m-Y H:i')?>">
             </div>
             <div class="col-xl-3">
                 <p class="ftilte fw-bold">สถานะ:</p>
                 <div class="row">
                     <div class="col-6 col-xl form-check">
-                        <input class="form-check-input mx-auto me-2" type="radio" name="status" id="status1">
+                        <input class="form-check-input mx-auto me-2" type="radio" name="status" onclick="followCheck()" id="finish" checked>
                         <label class="form-check-label ftitle" for="flexRadioDefault1">
                             ปิดงาน
                         </label>
                     </div>
                     <div class="col-6 col-xl form-check">
-                        <input class="form-check-input me-2" type="radio" name="status" id="status2" checked>
+                        <input class="form-check-input me-2" type="radio" name="status" onclick="followCheck()" id="follow">
                         <label class="form-check-label ftitle" for="flexRadioDefault2">
                             ติดตามงาน
                         </label>
                     </div>
+                    <div class="col-xl-12">
+                            <input type="date" class="form-control d-none mt-xl-2" name="dateFollow" id="inp-other" value="<?=date('Y-m-d')?>">
+                        </div>
                 </div>
 
             </div>
@@ -132,50 +136,48 @@ $data = $sql->fetch();
             </div>
         </div>
         <div class="row mb-xl-5">
-            <div class="col-xl-6 mx-auto">
-            <a href="#" data-bs-target="#signatureBox" data-bs-toggle="modal"><img src="./asset/signature.svg" class="d-block mb-3 mx-auto mb-xl-3 w-50 h-100" alt=""></a>    
+            <div class="col-xl-4 mx-auto">
+                <a href="#" data-bs-target="#signatureBox" data-bs-toggle="modal"><img src="./asset/signature.svg" class="d-block mb-3 mx-auto mb-xl-3 w-100 h-100" alt=""></a>
                 <!--กดบันทึกลายเซ็นเสร็จให้ลายเซ็นขึ้นตรงนี้-->
-                
-            </div>
-            <div class="modal fade" id="signatureBox" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-body">
-                            <!--ใส่ลายเซ็น-->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" name="create-date" onclick="" class="btn btn-primary mx-auto">บันทึก</button>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </div>
         <div class="row justify-content-center">
             <div class="col-3 col-xl-3 me-0 align-self-center">
                 <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
-                <input class="form-control ms-0  col-xl-1" type="date" name="start-time" id="start">
+                <input class="form-control ms-0  col-xl-1" type="date" name="dateClient" id="start" value="<?=date('Y-m-d')?>">
             </div>
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">
-            <div class="col-6 col-xl-6 ms-auto" id="homeCol">
-                <a class="col-xl-3 btn btn-secondary d-block ms-auto me-2 me-xl-5 ftitle" href="index.html" id="home">กลับสู่หน้าหลัก</a>
+            <div class="col-6 col-xl-4" id="homeCol">
+                <a class="col-xl-6 btn btn-secondary d-block ms-auto" href="index.html" id="home">กลับสู่หน้าหลัก</a>
             </div>
-            <div class="col-6 col-xl-6 me-auto" id="saveCol">
-                <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5" type="submit" name="create-report" id="save">บันทึก</button>
+            <div class="col-6 col-xl-4" id="saveCol">
+                <button class="btn btn-primary d-block mx-auto" type="submit" name="create-report" id="save">บันทึก</button>
             </div>
-        </div>
     </form>
+    <div class="col-6 col-xl-4 ms-auto" id="homeCol">
+        <div class="upload-btn-wrapper">
+            <button type="button" class="btn btn-secondary">อัพโหลดรูปภาพ</button>
+            <input type="file" id="imgInp[]" name="img" accept="image/*" multiple/>
+        </div>
+    </div>
+    </div>
 
 </main>
 <script>
-    function otherCheck() {
-        var check = document.getElementById('other');
-        if (check.checked == true) {
-            document.getElementById('lab-other').classList.add('d-none');
-            document.getElementById('inp-other').classList.remove('d-none');
-        } else {
-            document.getElementById('lab-other').classList.remove('d-none');
-            document.getElementById('inp-other').classList.add('d-none');
+    /*function send(){
+        alert('');
+        var $fileUpload = $("input[type='file'] #imgInp[]");
+        if (parseInt($fileUpload.get(0).files.length)>2){
+         alert("You can only upload a maximum of 2 files");
+        }
+    };*/
+    function followCheck() {
+        if(document.getElementById('follow').checked){
+            document.getElementById('inp-other').classList.remove('d-none'); 
+        }else{
+        document.getElementById('inp-other').classList.add('d-none'); 
         }
     }
     CKEDITOR.replace('detail-report');

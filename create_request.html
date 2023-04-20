@@ -91,12 +91,13 @@
             <div class="row mb-3">
                 <div class="col-10 col-xl-4 mb-3">
                     <p class="ftitle fw-bold">ประเภทงาน</p>
-                    <input class="form-select" list="browsers" placeholder="กรอกประเภทงาน" required>
-                    <datalist id="browsers">
-                        <option value="ติดตั้ง">
-                        <option value="ซ่อมบำรุง">
-                        <option value="บินโดรน">
-                    </datalist>
+                    <select class="form-select" name="category" id="browsers" required>
+                        <option value="" selected disabled>เลือกประเภทงาน</option>
+                        <option value="1">ติดตั้ง</option>
+                        <option value="2">ซ่อมบำรุง</option>
+                        <option value="3">บินโดรน</option>
+                        <option value="4">อื่นๆ</option>
+                    </select>
                 </div>
                 <div class="col-xl-6">
                     <p class="ftitle fw-bold">หมวดงาน</p>
