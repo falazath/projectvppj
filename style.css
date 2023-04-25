@@ -80,7 +80,7 @@ hr.h-color{
     font-size: 18px;
 }
 
-input:disabled ,div#show-detail, #detail, #Detail, #showDetail{
+input:disabled ,#show-detail, #detail, #Detail, #showDetail{
     background-color: #5F7769;
     color: #999;
 }

@@ -24,7 +24,7 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
     LEFT JOIN itoss_user ON itoss_user.User_id = itoss_form.User_id
     WHERE itoss_form.Agency_id LIKE ? OR itoss_form.User_id LIKE ? OR  itoss_form.Jobtype_id LIKE ?
     OR itoss_form.Form_date LIKE ? OR itoss_form.Form_date_end LIKE ? OR itoss_form.Status_form_id LIKE ?
-    ;");
+    ORDER BY itoss_form.Form_date DESC;");
     $data->bindParam(1, $_POST['sector']);
     $data->bindParam(2, $_POST['user']);
     $data->bindParam(3, $_POST['type']);
@@ -37,7 +37,7 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
     $data = $conn->prepare("SELECT * FROM itoss_form,itoss_agency,itoss_jobtype,itoss_status_form,itoss_user
     WHERE itoss_form.Agency_id = itoss_agency.Agency_id AND itoss_form.Jobtype_id = itoss_jobtype.Jobtype_id 
     AND itoss_form.Status_form_id = itoss_status_form.Status_form_id AND itoss_form.User_id = itoss_user.User_id
-    AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1;");
+    AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1 ORDER BY itoss_form.Form_date DESC ");
     $data->execute();
     $row = $data->fetchAll();
 }
@@ -61,8 +61,8 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
                 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="filterPhone" aria-labelledby="offcanvasBottomLabel">
                     <div class="offcanvas-body small">
                         <div class="row justify-content-start mb-3">
-                            <div class="col-12 col-sm-2 col-xl-2"><!--เลือกหน่วยงาน-->
-                                <p class="ftitle">หน่วยงาน</p>
+                            <div class="col-12 col-sm-2 col-xl-2 mb-2"><!--เลือกหน่วยงาน-->
+                                <p class="ftitle mb-0">หน่วยงาน</p>
                                 <select class="filter form-select" name="sector" id="filterSector" >
                                     <option selected value="all">ทั้งหมด</option>
                                     <?php
@@ -75,8 +75,8 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
                                 </select>
                             </div>
 
-                            <div class="col-12 col-sm-2 col-xl-2"> <!--เลือกชื่อพนักงาน-->
-                                <p class="ftitle element">ชื่อพนักงาน</p>
+                            <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกชื่อพนักงาน-->
+                                <p class="ftitle mb-0">ชื่อพนักงาน</p>
                                 <select class="filter form-select" name="user" id="filterEmp" >
                                     <option selected value="all">ทั้งหมด</option>
                                     <?php
@@ -88,8 +88,8 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
                                 </select>
                             </div>
 
-                            <div class="col-12 col-sm-2 col-xl-2"> <!--เลือกประเภทงาน-->
-                                <p class="ftitle">ประเภทงาน</p>
+                            <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกประเภทงาน-->
+                                <p class="ftitle mb-0">ประเภทงาน</p>
                                 <select class="filter form-select" name="type" id="filterType" >
                                     <option selected value="all">ทั้งหมด</option>
                                     <?php
@@ -102,17 +102,17 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
                                 </select>
                             </div>
 
-                            <div class="col-12 col-sm-2 col-xl-2"> <!--เลือกวันที่เริ่มต้น-->
-                                <p class="ftitle">วันที่เริ่มต้น</p>
+                            <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกวันที่เริ่มต้น-->
+                                <p class="ftitle mb-0">วันที่เริ่มต้น</p>
                                 <input type="date" class="filter form-control" name="start-date" min="2000-01-01" value="" >
                             </div>
-                            <div class="col-12 col-sm-2 col-xl-2"> <!--เลือกวันที่สิ้นสุด-->
-                                <p class="ftitle">วันที่สิ้นสุด</p>
+                            <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกวันที่สิ้นสุด-->
+                                <p class="ftitle mb-0">วันที่สิ้นสุด</p>
                                 <input type="date" class="filter form-control" name="end-date" id="" min="2000-01-01" value="" >
                             </div>
                             
-                            <div class="col-12 col-sm-2 col-xl-2"> <!--เลือกสถานะ-->
-                                <p class="ftitle">สถานะ</p>
+                            <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกสถานะ-->
+                                <p class="ftitle mb-0">สถานะ</p>
                                 <select class="filter form-select" name="status" id="filterStatus" >
                                     <option selected value="all">ทั้งหมด</option>
                                     <?php
@@ -160,7 +160,7 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
         if (isset($_POST['create-date'])) {
             $_SESSION['date'] = $_POST["Form_date"];
             echo '<script language="javascript">';
-            echo 'alert("บันทึกวันที่แล้ว"); location.href="create.php"';
+            echo 'location.href="create.php"';
             echo '</script>';
         }
         ?>
@@ -192,11 +192,25 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
                     $Form_Work = $row[$j]['Form_Work'];
                     $Form_id = $row[$j]['Form_id'];
                     echo '<tr class="d-flex text-center fsub">
-                                <td class="col-3 col-sm-1" id="date">' . $Form_date . '</td>
-                                <td class="col-4 col-sm-2" id="sector">' . $Agency_Name . '</td>
-                                <td class="col-4 col-sm-2" id="user">' . $User_Name . '</td>
-                                <td class="col-4 col-sm-1" id="cate-work">' . $Jobtype_name . '</td>
-                                <td class="col-8 col-sm-4 text-start">
+                                <td class="col-3 col-sm-1" id="date">' . $Form_date . '</td>';
+                                if($row[$j]['Agency_id'] == 0){
+                                    $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id'");
+                                    $agency = $sql->fetch();
+                                    echo  '<td class="col-4 col-sm-2" id="sector">' . $agency['name'] . '</td>';
+                                }else{
+                                    echo  '<td class="col-4 col-sm-2" id="sector">' . $Agency_Name . '</td>';
+                                }
+                           echo '<td class="col-4 col-sm-2" id="user">' . $User_Name . '</td>';
+                           if($row[$j]['Jobtype_id'] == 0){
+                                    $sql = $conn->query("SELECT * FROM itoss_jobtype_orther WHERE Form_id = '$Form_id'");
+                                    $job = $sql->fetch();
+                               echo  '<td class="col-4 col-sm-1" id="cate-work">' . $job['Jobtype_orther_name'] . '</td>';
+                               
+                        }else{
+                            echo  '<td class="col-4 col-sm-1" id="cate-work">' . $Jobtype_name . '</td>';
+
+                        }
+                            echo    '<td class="col-8 col-sm-4 text-start">
                                 ' . $Form_Work . '
                                 </td>
                                 <td class="col-3 col-sm-1" id="status">' . $Status_form_name . '</td>

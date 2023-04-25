@@ -15,7 +15,7 @@ if ((isset($_POST['sign-in']))) {
     $_SESSION['name'] = $row['User_Name'];
     $User_id = $row['User_id'];
     $_SESSION['id'] = $row['User_id'];
-    $_SESSION['Status_id'] = $row['Status_id'];
+    $_SESSION['status'] = $row['Status_id'];
     $stmt1 = $conn->query("SELECT * FROM itoss_sign where User_id = '$User_id'");
     $row1 = $stmt1->fetch();
     if($_SESSION['Status_id'] == 1){

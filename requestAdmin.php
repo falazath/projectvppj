@@ -142,14 +142,7 @@
                           <div class="col-10 col-xl-8 mb-3">
                             <input class="d-none form-control" type="text" name="Task_orther_name" id="Task_orther_name" value="<?=$row2['Task_orther_name']?>">
                           </div>
-                            <?php
-                            //$stmt = $conn->query("SELECT * FROM itoss_task_format where Form_id = '$Form_id'");
-                            //while($row1 = $stmt->fetch()){
-                            //echo '
-                            //    <input class="data form-check-input my-3 me-4" type="checkbox" id="software" value="'.$row1['Task_Format_id'].'"  checked disabled>
-                            //    <label class="form-check-label my-3 me-4" for="software">'.$row1['Task_Format_name'].'</label>
-                            //</div>';
-                            //}?>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -305,16 +298,7 @@
             savebtn.classList.remove('d-none');
             CKEDITOR.replace( 'detail' );
         }
-    
-        function otherCheck(){
-            var check = document.getElementById('other');
-            if(check.checked == true){
-                document.getElementById('Task_orther_name').classList.remove('d-none');
-            }else{
-                document.getElementById('Task_orther_name').classList.add('d-none');
-            }
-        }
-
+        
         $(document).ready(function(){
             $("#edit").click(function(){
                 alert();
