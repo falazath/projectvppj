@@ -53,86 +53,18 @@ if (isset($_POST['search'])) {
     <!--Desktop-->
     <!--ตัวกรอง-->
     <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
-        <div class="row justify-content-start mb-3" id="dsk">
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">หน่วยงาน</p>
-                <select class="filter form-select" name="sector" onchange="disReq()" id="filterSector" required>
-                    <option selected value="">ทั้งหมด</option>
-                    <?php
-                    for ($i = 0; $i < count($filter[0]); $i++) {
-
-                        echo '<option value="' . $filter[0][$i]['Agency_id'] . '">' . $filter[0][$i]['Agency_Name'] . '</option>';
-                    }
-                    ?>
-                    <option value="6">อื่นๆ</option>
-                </select>
-            </div>
-            <div class="col-4 col-sm-2 col-xl-2">
-                <p class="ftitle element">ชื่อพนักงาน</p>
-                <select class="filter form-select" name="user" onchange="disReq()" id="filterEmp" required>
-                    <option selected value="">ทั้งหมด</option>
-                    <?php
-                    for ($i = 0; $i < count($filter[1]); $i++) {
-
-                        echo '<option value="' . $filter[1][$i]['User_id'] . '">' . $filter[1][$i]['User_Name'] . '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">ประเภทงาน</p>
-                <select class="filter form-select" name="type" onchange="disReq()" id="filterType" required>
-                    <option selected value="">ทั้งหมด</option>
-                    <?php
-                    for ($i = 0; $i < count($filter[2]); $i++) {
-
-                        echo '<option value="' . $filter[2][$i]['Jobtype_id'] . '">' . $filter[2][$i]['Jobtype_name'] . '</option>';
-                    }
-                    ?>
-                    <option value="4">อื่นๆ</option>
-                </select>
-            </div>
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">วันที่เริ่มต้น</p>
-                <input type="date" class="filter form-control" onclick="disReq()" name="start-date" min="2000-01-01" value="" required>
-            </div>
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">วันที่สิ้นสุด</p>
-                <input type="date" class="filter form-control" onclick="disReq()" name="end-date" id="" min="2000-01-01" value="" required>
-            </div>
-            <div class="col-2 col-sm-2 col-xl-2">
-                <p class="ftitle">สถานะ</p>
-                <select class="filter form-select" name="status" onchange="disReq()" id="filterStatus" required>
-                    <option selected value="">ทั้งหมด</option>
-                    <?php
-                    for ($i = 0; $i < count($filter[3]); $i++) {
-
-                        echo '<option value="' . $filter[3][$i]['Status_form_id'] . '">' . $filter[3][$i]['Status_form_name'] . '</option>';
-                    }
-                    ?>
-                </select>
-            </div>
-            <div class="row justify-content-center mt-3">
-                <div class="col-3 my-auto">
-                    <button type="submit" class="btn btn-primary d-block mx-auto px-5" name="search">ค้นหา</button>
-                </div>
-            </div>
-        </div>
-    </form>
-
-    <form action="" method="post"><!--ตัวกรองPhone-->
-        <div class="row justify-content-start" id="phone">
-            <div class="col col-sm-2 col-xl-2">
-                <button class="btn btn-light border border-2 fsub" id="filterBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPhone" aria-controls="offcanvasBottom"><img src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt=""></button>
+        <div class="navbar fixed-top">
+            <div class="container-fluid">
+                <button class="navbar-toggler btn btn-success border border-2 fsub " id="filterBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPhone" aria-controls="filterPhone" aria-label="Toggle navigation">
+                    <img src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt="">
+                </button>
                 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="filterPhone" aria-labelledby="offcanvasBottomLabel">
                     <div class="offcanvas-body small">
-                        <div class="row mb-3">
-                            <div class="col">
-                                <p class="ftitle fw-bold my-auto ">เลือกหน่วยงาน</p>
-                            </div>
-                            <div class="col-11">
-                                <select class="form-select" aria-label="Default select example">
-                                    <option selected disabled>เลือกหน่วยงาน</option>
+                        <div class="row justify-content-start mb-3" id="dsk">
+                            <div class="col-2 col-sm-2 col-xl-2"><!--เลือกหน่วยงาน-->
+                                <p class="ftitle">หน่วยงาน</p>
+                                <select class="filter form-select" name="sector" onchange="disReq()" id="filterSector" required>
+                                    <option selected value="">ทั้งหมด</option>
                                     <?php
                                     for ($i = 0; $i < count($filter[0]); $i++) {
 
@@ -142,13 +74,10 @@ if (isset($_POST['search'])) {
                                     <option value="6">อื่นๆ</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <p class="ftitle fw-bold my-auto">เลือกพนักงาน</p>
-                            </div>
-                            <div class="col-11">
-                                <select class="filter form-select" name="type" onchange="disReq()" id="filterType" required>
+
+                            <div class="col-4 col-sm-2 col-xl-2"> <!--เลือกชื่อพนักงาน-->
+                                <p class="ftitle element">ชื่อพนักงาน</p>
+                                <select class="filter form-select" name="user" onchange="disReq()" id="filterEmp" required>
                                     <option selected value="">ทั้งหมด</option>
                                     <?php
                                     for ($i = 0; $i < count($filter[1]); $i++) {
@@ -158,13 +87,10 @@ if (isset($_POST['search'])) {
                                     ?>
                                 </select>
                             </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col">
-                                <p class="ftitle fw-bold my-auto ">เลือกประเภทงาน</p>
-                            </div>
-                            <div class="col-11">
-                                <select class="form-select" name="category" required>
+
+                            <div class="col-2 col-sm-2 col-xl-2"> <!--เลือกประเภทงาน-->
+                                <p class="ftitle">ประเภทงาน</p>
+                                <select class="filter form-select" name="type" onchange="disReq()" id="filterType" required>
                                     <option selected value="">ทั้งหมด</option>
                                     <?php
                                     for ($i = 0; $i < count($filter[2]); $i++) {
@@ -176,21 +102,18 @@ if (isset($_POST['search'])) {
                                 </select>
                             </div>
 
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-6 col-sm-2 col-xl-2">
-                                <label for="start-date">วันที่เริ่มต้น</label>
-                                <input type="date" class=" form-control" id="start-date" value="วันที่เริ่มต้น">
+                            <div class="col-2 col-sm-2 col-xl-2"> <!--เลือกวันที่เริ่มต้น-->
+                                <p class="ftitle">วันที่เริ่มต้น</p>
+                                <input type="date" class="filter form-control" onclick="disReq()" name="start-date" min="2000-01-01" value="" required>
                             </div>
-                            <div class="col-6 col-sm-2 col-xl-2">
-                                <label for="end-date">วันที่สิ้นสุด</label>
-                                <input type="date" class=" form-control" id="end-date" value="วันที่สิ้นสุด">
+                            <div class="col-2 col-sm-2 col-xl-2"> <!--เลือกวันที่สิ้นสุด-->
+                                <p class="ftitle">วันที่สิ้นสุด</p>
+                                <input type="date" class="filter form-control" onclick="disReq()" name="end-date" id="" min="2000-01-01" value="" required>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-11">
-                                <p class="ftitle fw-bold my-auto">สถานะ</p>
-                                <select class="form-select" aria-label="Default select example">
+                            
+                            <div class="col-2 col-sm-2 col-xl-2"> <!--เลือกสถานะ-->
+                                <p class="ftitle">สถานะ</p>
+                                <select class="filter form-select" name="status" onchange="disReq()" id="filterStatus" required>
                                     <option selected value="">ทั้งหมด</option>
                                     <?php
                                     for ($i = 0; $i < count($filter[3]); $i++) {
@@ -200,14 +123,18 @@ if (isset($_POST['search'])) {
                                     ?>
                                 </select>
                             </div>
+                            <div class="row justify-content-center mt-3">
+                                <div class="col-3 my-auto">
+                                    <button type="submit" class="btn btn-primary d-block mx-auto px-5" name="search">ค้นหา</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="offcanvas-footer">
-                        <button type="submit" class="btn btn-primary d-block mx-auto my-2" name="submit">ค้นหา</button>
                     </div>
                 </div>
             </div>
         </div>
+
+
     </form>
 
     <div class="row"><!--ปุ่มสร้างคำขอ-->
@@ -303,7 +230,7 @@ if (isset($_POST['search'])) {
         }
     }
 
-    function create_report(status,id) {
+    function create_report(status, id) {
         if (status < 5) {
             location.href = "check_request.php?pid=" + id;
         } else if (status == 5) {
