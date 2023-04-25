@@ -5,10 +5,9 @@
     INNER JOIN itoss_status_form ON itoss_form.Status_form_id = itoss_status_form.Status_form_id
     INNER JOIN itoss_agency ON itoss_form.Agency_id = itoss_agency.Agency_id 
     WHERE Form_id = ?");
-    $stmt->bindParam(1, $_SESSION['Form_id']);
+    $stmt->bindParam(1, $Form_id);
     $stmt->execute();
     $row = $stmt->fetch();
-	$Form_id = $_SESSION['Form_id'];
 	$UserName = $row['User_Name'];
 	$UserJop = $row['User_Jop'];
 	$Status = $row['Status_form_name'];

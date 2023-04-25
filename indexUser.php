@@ -2,7 +2,6 @@
 session_start();
 include("connect.php");
 include("header.html");
-include("navbar.html");
 
 //Value filter
 $sql = $conn->query("SELECT * FROM itoss_agency WHERE state_id =1;");
@@ -40,6 +39,9 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
     AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1 ORDER BY itoss_form.Form_date DESC ");
     $data->execute();
     $row = $data->fetchAll();
+
+    include($_SESSION['navbar']);
+
 }
 ?>
 <main>
@@ -215,13 +217,22 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
                                 </td>
                                 <td class="col-3 col-sm-1" id="status">' . $Status_form_name . '</td>
                                 <td class="col-2 col-sm-1">';
-                    if ($Status_form_id < 5) {
+                                if($row[$j]['User_id'] == $_SESSION['id']){
+                                    if ($Status_form_id < 5) {
                         echo '<a href="requestUser.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
-                    } else if ($Status_form_id > 5) {
+                    } else if ($Status_form_id > 5 ) {
                         echo '<a href="check_report.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
-                    } else {
+                    } else if ($Status_form_id == 5 ){
                         echo '<a href="create_report.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
                     }
+                                }else{
+                                    if ($Status_form_id <= 5) {
+                                        echo '<a href="requestUser.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
+                                    } else if ($Status_form_id > 5 ) {
+                                        echo '<a href="check_report.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
+                                    }
+                                }
+                    
 
                     echo ' </td>
                             </tr>';

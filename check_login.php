@@ -18,7 +18,8 @@ if ((isset($_POST['sign-in']))) {
     $_SESSION['status'] = $row['Status_id'];
     $stmt1 = $conn->query("SELECT * FROM itoss_sign where User_id = '$User_id'");
     $row1 = $stmt1->fetch();
-    if($_SESSION['Status_id'] == 1){
+    if($_SESSION['status'] == 1){
+      $_SESSION['navbar'] = 'navbarAdmin.php';
       if($row1['Sign_image'] == NULL){
         header('location: sent.php');
       }
@@ -27,7 +28,8 @@ if ((isset($_POST['sign-in']))) {
         header('location: indexAdmin.php');
       }
     }
-    else if($_SESSION['Status_id'] == 2){
+    else if($_SESSION['status'] == 2){
+      $_SESSION['navbar'] = 'navbar.php';
       if($row1['Sign_image'] == NULL){
         header('location: sent.php');
       }
