@@ -9,58 +9,49 @@
     border: 3px solid #4B785E;
     border-radius: 8px;
 }
-
-::placeholder {
+::placeholder{
     color: #999;
     font-size: 14px;
 }
-
-.fhead {
+.fhead{
     font-size: 24px;
 }
-
-.ftitle {
+.ftitle{
     font-size: 18px;
 }
 
-.fsub {
+.fsub{
     font-size: 14px;
 }
-
-.fbody,
-.flink {
+.fbody, .flink{
     font-size: 12px;
 }
-
-.fnote {
+.fnote{
     font-size: 10px;
 }
-
-main {
+main{
     margin-left: 20px;
 }
-
-body {
+body{
     background-color: #eee;
     width: 97%;
     height: 100%;
 }
 
-#side_nav {
+#side_nav{
     background: #F5F5F5;
 }
 
-.content {
+.content{
     min-height: 100vh;
     width: 100%;
 }
-
-hr.h-color {
+hr.h-color{
     background: #eee;
 }
 
 #overflowTest {
-    background: #F5F5F5;
+    background: #F5F5F5; 
     padding: 10px;
     width: 100%;
     height: 65%;
@@ -68,7 +59,7 @@ hr.h-color {
     overflow-x: hidden;
 }
 
-#filter {
+#filter{
     border-radius: 100%;
     padding: 10px;
     margin: 20px;
@@ -77,36 +68,28 @@ hr.h-color {
     right: 0;
 }
 
-input:disabled,
-div#showDetail,
-#detail {
-    background-color: #5F7769;
+.form-control:disabled{
     color: #fff;
 }
-
-.form-control:disabled {
-    color: #fff;
-}
-
-.form-check-input {
+.form-check-input{
     width: 24px;
     height: 24px;
 }
 
-.btn {
+.btn{
     font-size: 18px;
 }
 
-.upload-btn-wrapper {
-    position: relative;
-    overflow: hidden;
-    display: inline-block;
+input:disabled ,div#show-detail, #detail, #Detail, #showDetail{
+    background-color: #5F7769;
+    color: #999;
 }
 
-.upload-btn-wrapper input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
+#signature {
+    background-color:#FFFF;
+    color:#000000;
+}
+
+#filterBtn{
+    
 }
