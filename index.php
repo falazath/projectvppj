@@ -21,7 +21,6 @@ if (isset($_POST['search'])) {
     LEFT JOIN itoss_jobtype ON itoss_jobtype.Jobtype_id = itoss_form.Jobtype_id
     LEFT JOIN itoss_status_form ON itoss_status_form.Status_form_id = itoss_form.Status_form_id
     LEFT JOIN itoss_user ON itoss_user.User_id = itoss_form.User_id
-    LEFT JOIN itoss_jobtype_other ON itoss_jobtype_other.Form_id = itoss_form.Form_id;
     WHERE itoss_form.Agency_id LIKE ? OR itoss_form.User_id LIKE ? OR  itoss_form.Jobtype_id LIKE ?
     OR itoss_form.Form_date_id LIKE ? OR itoss_form.Form_date_end LIKE ? OR itoss_form.Status_form_id LIKE ?
     ;");
