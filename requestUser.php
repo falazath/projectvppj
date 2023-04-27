@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+}
 include('header.html');
 include("connect.php");
 
@@ -78,7 +81,7 @@ $row3 = $stmt3->fetch();
 isset($row3['Text_name']) ? $text = $row3['Text_name'] : $text = "";
 isset($row3['Status_form_id']) ? $Status = $row3['Status_form_id'] : $Status = $row['Status_form_id'];
 
-$stmt4 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $_SESSION['id'] . "");
+$stmt4 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $row['User_id'] . "");
 $row4 = $stmt4->fetch();
 include($_SESSION['navbar']);
 ?>
@@ -95,7 +98,7 @@ include($_SESSION['navbar']);
             <div class="col-11 col-xl-12 mb-3">
                 <p class="ftitle fw-bold mb-0">รายละเอียดการแก้ไขงาน</p>
                 <div class="form-control text-light" id="Detail" cols="30" rows="10">
-
+                    <?= $text ?>
                 </div>
             </div>
             <hr>
@@ -178,14 +181,7 @@ include($_SESSION['navbar']);
     </form>
 </main>
 <script>
-    $(document).ready(function() {
-        let a = $('#Jobtype_id').val();
-        if (a == "4") {
-            $('#Jobtype_orther_name').removeClass('d-none');
-        } else {
-            $('#Jobtype_orther_name').addClass('d-none');
-        }
-    });
+    alert(1);
 
     function disableFalse() {
         var data = document.getElementsByClassName('data');
@@ -203,18 +199,17 @@ include($_SESSION['navbar']);
         savebtn.classList.remove('d-none');
         CKEDITOR.replace('detail');
     }
-
     const status = <?= $Status ?>;
     const box = document.getElementById('editBox');
     const topic = box.getElementsByTagName('p');
     var user = <?= $row['User_id'] ?>;
     var id = <?= $_SESSION['id'] ?>;
     var str;
+    
     if (user == id) {
         if (status == 2) {
             box.classList.remove('d-none');
             topic[0].innerText = 'รายละเอียดที่ต้องการแก้ไข โดย ';
-            document.getElementById('Detail').innerText = "<?= $text ?>";
 
         } else if (status == 3) {
             document.getElementById('homeCol').classList.remove('ms-auto');
@@ -228,7 +223,6 @@ include($_SESSION['navbar']);
         } else if (status == 4) {
             box.classList.remove('d-none');
             topic[0].innerText = 'สาเหตุที่ไม่อนุมัติ โดย';
-            document.getElementById('Detail').innerText = "<?= $text ?>";
             document.getElementById('homeCol').classList.remove('ms-auto');
             document.getElementById('home').classList.add('mx-auto');
             document.getElementById('home').classList.remove('ms-auto', 'me-xl-5', 'me-2');

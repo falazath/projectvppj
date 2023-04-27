@@ -1,6 +1,9 @@
 <?php
 
 session_start();
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+}
 include('header.html');
 include("connect.php");
 
@@ -14,28 +17,7 @@ $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
 $Form_id = $_GET["Form_id"];
 
-if (isset($_POST['save'])) {
-    $stmt = $conn->prepare("UPDATE itoss_form SET Form_date=?, Form_Name=?, Agency_id=?, Form_Phone=?, Jobtype_id=?, Form_Work=?, Status_form_id=?, User_id=? WHERE Form_id=?"); // เตรยีมคา สง่ั SQL ส าหรบัแกไ้ข
-    $stmt->bindParam(1, $_SESSION['date']);
-    $stmt->bindParam(2, $_POST["Form_Name"]);
-    $stmt->bindParam(3, $_POST["Agency_id"]);
-    $stmt->bindParam(4, $_POST["Form_Phone"]);
-    $stmt->bindParam(5, $_POST["Jobtype_id"]);
-    $stmt->bindParam(6, $_POST["Form_Work"]);
-    $stmt->bindParam(7, $_POST["Status_form_id"]);
-    $stmt->bindParam(8, $_SESSION['id']);
-    $stmt->bindParam(9, $Form_id);
-    $stmt->execute();
-
-    $stmt = $conn->prepare("UPDATE itoss_jobtype_orther SET Jobtype_orther_name=? WHERE Form_id=?");
-    $stmt->bindParam(1, $_POST["Jobtype_orther_name"]);
-    $stmt->bindParam(2, $Form_id);
-    $stmt->execute();
-
-    echo '<script language="javascript">';
-    echo 'alert("แก้ไขข้อมูลแล้ว"); location.href="requestAdmin.php.php?Form_id=' . $Form_id . '"';
-    echo '</script>';
-} else if (isset($_POST['create-text'])) {
+if (isset($_POST['create-text'])) {
 
     $Status_form_id = $_POST["create-text"];
     echo 'alert(' . $Status_form_id . ');';
@@ -78,11 +60,15 @@ $row = $stmt->fetch();
 
 $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id' ORDER BY id DESC LIMIT 1");
 $data = $sql->fetch();
-$agency = isset($data['name'])?$data['name']:$row['Agency_Name'];
+$agency = isset($data['name']) ? $data['name'] : $row['Agency_Name'];
 
 $stmt1 = $conn->query("SELECT * FROM itoss_jobtype_orther where Form_id = '$Form_id'");
 $row1 = $stmt1->fetch();
-isset($row1['Jobtype_orther_name'])?$job_other=$row1['Jobtype_orther_name']:$job_other='';
+isset($row1['Jobtype_orther_name'])?$job_other=$row1['Jobtype_orther_name']:$job_other=$row['Jobtype_name'];
+
+$stmt2 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = ".$row['User_id']." ");
+$row2 = $stmt2->fetch();
+
 
 $stmt3 = $conn->query("SELECT * FROM itoss_text where Form_id = '$Form_id' ORDER BY Text_id DESC");
 $row3 = $stmt3->fetch();
@@ -93,7 +79,7 @@ isset($row3['Text_name'])?$text=$row3['Text_name']:$text="";
 $stmt4 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = 1");
 $row4 = $stmt4->fetch();
 
-include('navbar.html');
+include($_SESSION['navbar']);
 
 ?>
 <main>
@@ -132,7 +118,7 @@ include('navbar.html');
             <div class="col-11 col-xl-12 mb-3">
                 <p class="ftitle fw-bold mb-1">รายละเอียดการแก้ไขงาน</p>
                 <div class="form-control text-light" id="Detail" cols="30" rows="10">
-
+                <?= $text ?>
                 </div>
             </div>
             <hr>
@@ -143,13 +129,13 @@ include('navbar.html');
                 <p class="ftitle fw-bold mb-1" id="demo">ชื่อผู้ติดต่อ</p>
                 <input type="hidden" name="Form_date" value="<?= $row['Form_date'] ?>">
                 <input type="text" class="data form-control ftitle" name="Form_Name" id="contact" value="<?= $row["Form_Name"] ?>" disabled>
-                <input type="hidden" name="Status_form_id" value="1">
             </div>
             <div class="col-10 col-xl-4 mb-3 mb-xl-0">
                 <p class="ftitle fw-bold mb-1">หน่วยงาน</p>
                 <select class="form-select data form-control ftitle" id="Agency_id" name="Agency_id" disabled>
                 <option selected value="<?= $row["Agency_id"] ?>"><?= $agency ?></option>
                     <?php
+                    echo $row["Agency_id"];
                     for ($i = 1; $i < count($filter[0]); $i++) {
 
                         echo '<option value="' . $filter[0][$i]['Agency_id'] . '">' . $filter[0][$i]['Agency_Name'] . '</option>';
@@ -203,7 +189,7 @@ include('navbar.html');
             <div class="row">
             <div class="col-12 col-xl-3 mx-xl-auto mb-2">
                 <p class="ftitle fw-bold mb-0 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
-                <img class="d-block w-100 h-100 text-center" src="data:<?= $row4['Sign_image'] ?>">
+                <img class="d-block w-100 h-100 text-center" src="data:<?= $row2['Sign_image'] ?>">
             </div>
             <div class="col-12 col-xl-3 mx-xl-auto mb-2">
                 <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
@@ -211,27 +197,20 @@ include('navbar.html');
             </div>
             <div class="row mb-xl-5">
                 <div class="col-xl-6 mx-auto">
-                    <a href="#" data-bs-target="#signatureBox" data-bs-toggle="modal"><img src="data:<?= $row4['Sign_image'] ?>" class="d-block mb-3 mx-auto mb-xl-3 w-50 h-100 text-center" alt=""></a>
+                    <img class="d-block w-250 h-300 text-center" src="data:<?= $row4['Sign_image'] ?>"><br>
                     <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row4['User_Name'] ?>" disabled>
-                </div>
-                <div class="modal fade" id="signatureBox" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <img class="d-block w-250 h-300 text-center" src="data:<?= $row4['Sign_image'] ?>"><br>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
 
         <div class="row justify-content-around mb-3 mt-xl-5">
-            <div class="col-auto col-xl-2 col-xl-3" id="editStatus">
-                <button class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-text" type='button' name='edit' id='edit' value="">แก้ไข</button>
+            <div class="col-auto col-xl-2 col-xl-3 d-none" id="editStatus">
+                <button class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-text" type='button' name='edit' id='edit' value="2">แก้ไข</button>
             </div>
-            <div class="col-auto col-xl-2 col-xl-3" id="approveStatus">
+            <div class="col-auto col-xl-2 col-xl-3 d-none" id="approveStatus">
                 <button class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" type='submit' name='approve' id='approve' value="5">อนุมัติ</button>
             </div>
-            <div class="col-auto col-xl-2 col-xl-3" id="disapprovedStatus">
+            <div class="col-auto col-xl-2 col-xl-3 d-none" id="disapprovedStatus">
                 <button class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-text" type='button' name='Disapproved' id='Disapproved' value="4">ไม่อนุมัติ</button>
             </div>
         </div>
@@ -243,20 +222,10 @@ include('navbar.html');
     </form>
 </main>
 
-<?php
 
-$conn = null;
-?>
 
 <script>
-    $(document).ready(function() {
-        let a = $('#Jobtype_id').val();
-        if (a == "4") {
-            $('#Jobtype_orther_name').removeClass('d-none');
-        } else {
-            $('#Jobtype_orther_name').addClass('d-none');
-        }
-    });
+    alert(1);
     
     function disableFalse() {
         var data = document.getElementsByClassName('data');
@@ -269,7 +238,6 @@ $conn = null;
 
         editbtn.classList.add('d-none');
         homebtn.innerText = "ยกเลิก";
-        savebtn.classList.remove('d-none');
         CKEDITOR.replace('detail');
     }
 
@@ -300,10 +268,22 @@ $conn = null;
     const box = document.getElementById('editBox');
     const topic = box.getElementsByTagName('p');
     var str;
-    if (status == 2) {
+    if (status == 1) {
+        document.getElementById('editStatus').classList.remove('d-none');
+        document.getElementById('approveStatus').classList.remove('d-none');
+        document.getElementById('disapprovedStatus').classList.remove('d-none');
+    }
+    else if (status == 2) {
         box.classList.remove('d-none');
         topic[0].innerText = 'รายละเอียดที่ต้องการแก้ไข โดย ';
-        document.getElementById('Detail').innerText = "<?= $text ?>";
+        document.getElementById('homeCol').classList.remove('ms-auto');
+        document.getElementById('home').classList.add('mx-auto');
+        document.getElementById('home').classList.remove('ms-auto', 'me-xl-5', 'me-2');
+        document.getElementById('home').classList.add('btn-primary');
+        document.getElementById('home').classList.remove('btn-secondary');
+        document.getElementById('editStatus').classList.add('d-none');
+        document.getElementById('approveStatus').classList.add('d-none');
+        document.getElementById('disapprovedStatus').classList.add('d-none');
 
     } else if (status == 3) {
         
@@ -319,7 +299,6 @@ $conn = null;
     }else if (status == 4) {
         box.classList.remove('d-none');
         topic[0].innerText = 'สาเหตุที่ไม่อนุมัติ โดย';
-        document.getElementById('Detail').innerText = "<?= $text ?>";
         document.getElementById('homeCol').classList.remove('ms-auto');
         document.getElementById('home').classList.add('mx-auto');
         document.getElementById('home').classList.remove('ms-auto', 'me-xl-5', 'me-2');
@@ -356,5 +335,8 @@ $conn = null;
     alert();
 </script>
 </body>
+<?php
 
+$conn = null;
+?>
 </html>

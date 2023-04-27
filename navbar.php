@@ -10,7 +10,7 @@
         <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbarLight"
             aria-labelledby="offcanvasNavbarLightLabel">
             <div class="offcanvas-header">
-                <a href="index.html"><img src="./asset/Logo/VP.svg" alt="logo"></a>
+                <a href="indexUser.php"><img src="./asset/Logo/VP.svg" alt="logo"></a>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <div class="offcanvas-body">
@@ -37,7 +37,7 @@
                         <a class="btn ftitle d-block text-start" id="index" href="index.php">รายการคำขอปฏิบัติงาน</a>
                     </div>
                     <div class="col-12">
-                        <a class="btn ftitle d-block text-start" id="department" href="department.php">หน่วยงาน</a>
+                        <a class="btn ftitle d-block text-start" id="department" href="sector.php">หน่วยงาน</a>
                     </div>
                 </div>
             </div>

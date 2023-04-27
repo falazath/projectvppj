@@ -1,5 +1,8 @@
 <?php 
 session_start();
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+}
 include ("connect.php");
 include ('header.html');
     if (isset($_POST['send_approve']))

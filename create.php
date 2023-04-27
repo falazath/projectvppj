@@ -6,11 +6,12 @@ if (!isset($_SESSION['id'])) {
 include("connect.php");
 include('header.html');
 
-include("navbar.html");
+include($_SESSION['navbar']);
+
 
 $sql = $conn->query("SELECT * FROM itoss_agency WHERE state_id =1;");
 $filter[0] = $sql->fetchAll();
-$sql = $conn->query("SELECT * FROM itoss_user WHERE state_id =1;");
+$sql = $conn->query("SELECT * FROM itoss_user WHERE state_id =1 and Status_id = 2;");
 $filter[1] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_jobtype;");
 $filter[2] = $sql->fetchAll();
@@ -41,7 +42,7 @@ $filter[3] = $sql->fetchAll();
                     ?>
                     <option value="0">อื่นๆ</option>
                 </select>
-                <input class="d-none form-control mt-1" type="text" name="other_agency" id="other_agency" placeholder="กรอกข้อมูลอื่นๆ">
+                <input class="d-none form-control mt-1" type="text" name="other_agency" id="other_agency" value="" placeholder="กรอกข้อมูลอื่นๆ">
             </div>
             <div class="col-12 col-xl-4 mb-0">
                 <p class="ftitle fw-bold mb-0">เบอร์โทรศัพท์</p>
@@ -54,6 +55,7 @@ $filter[3] = $sql->fetchAll();
                 <select class="form-select" id="Jobtype_id" name="Jobtype_id" required>
                     <option selected disabled>เลือกประเภทงาน</option>
                     <?php
+                    echo $_SESSION['id']."kbjbljknknknkllknk";
                     for ($i = 1; $i < count($filter[2]); $i++) {
 
                         echo '<option value="' . $filter[2][$i]['Jobtype_id'] . '">' . $filter[2][$i]['Jobtype_name'] . '</option>';
@@ -61,7 +63,7 @@ $filter[3] = $sql->fetchAll();
                     ?>
                     <option value="0">อื่นๆ</option>
                 </select>
-                <input class="d-none form-control mt-1" type="text" name="Jobtype_orther_name" id="Jobtype_orther_name" placeholder="กรอกข้อมูลอื่นๆ">
+                <input class="d-none form-control mt-1" type="text" name="Jobtype_orther_name" id="Jobtype_orther_name" value="" placeholder="กรอกข้อมูลอื่นๆ">
             </div>
         </div>
         <div class="row mb-3">
@@ -73,7 +75,20 @@ $filter[3] = $sql->fetchAll();
         <div class="row mb-5">
             <div class="col-10 col-xl-3 mx-xl-auto">
                 <p class="ftitle fw-bold mb-0">เจ้าหน้าที่ผู้รับผิดชอบ</p>
+                <?php
+                    if($_SESSION['status'] == 1){ ?>
+                <select class="form-select" id="User_id" name="User_id" required>
+                    <option selected disabled>เลือกเจ้าหน้าที่รับผิดชอบ</option>
+                    <?php
+                        for ($i = 0; $i < count($filter[1]); $i++) {
+
+                        echo '<option value="' . $filter[1][$i]['User_id'] . '">' . $filter[1][$i]['User_Name'] . '</option>';
+                    }
+                    ?>
+                </select>
+                <?php }else{?>
                 <input type="text" class="ftitle form-control" id="name-user" style="background-color: #5F7769;" name="User_Name" value="<?= $_SESSION['name'] ?>" disabled>
+            <?php }?>
             </div>
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">
@@ -90,8 +105,10 @@ $filter[3] = $sql->fetchAll();
     if (isset($_POST['save'])) {
         if ($_SESSION['status'] == 1) {
             $status = 5;
+            $id = $_POST['User_id'];
         } else if ($_SESSION['status'] == 2) {
             $status = 1;
+            $id = $_SESSION['id'];
         }
         $stmt = $conn->prepare("INSERT INTO itoss_form VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, now())");
         $stmt->bindParam(1, $_SESSION['date']);
@@ -101,19 +118,19 @@ $filter[3] = $sql->fetchAll();
         $stmt->bindParam(5, $_POST["Jobtype_id"]);
         $stmt->bindParam(6, $_POST["Form_Work"]);
         $stmt->bindParam(7, $status);
-        $stmt->bindParam(8, $_SESSION['id']);
+        $stmt->bindParam(8, $id);
         $stmt->execute();
         $stmt = $conn->query("SELECT * FROM itoss_form");
         while ($row = $stmt->fetch()) {
             $_SESSION['Form_id'] = $row['Form_id'];
         }
-        if (isset($_POST["Jobtype_orther_name"])) {
+        if ($_POST["Jobtype_id"] == 0) {
             $stmt = $conn->prepare("INSERT INTO itoss_jobtype_orther VALUES ('', ? , ?)");
             $stmt->bindParam(1, $_POST["Jobtype_orther_name"]);
             $stmt->bindParam(2, $_SESSION['Form_id']);
             $stmt->execute();
         }
-        if (isset($_POST["other_agency"])) {
+        if ($_POST["Agency_id"] == 0) {
             $stmt = $conn->prepare("INSERT INTO other_agency VALUES ('', ? , ?)");
             $stmt->bindParam(1, $_POST["other_agency"]);
             $stmt->bindParam(2, $_SESSION['Form_id']);
@@ -121,7 +138,11 @@ $filter[3] = $sql->fetchAll();
         }
         include("message.php");
         echo '<script language="javascript">';
-        echo 'location.href="indexUser.php"';
+        if($_SESSION['id'] == 1){
+        echo 'location.href="indexAdmin.php"';
+        }else if($_SESSION['id'] == 2){
+            echo 'location.href="indexUser.php"';
+        }
         echo '</script>';
     }
 

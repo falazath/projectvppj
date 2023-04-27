@@ -1,4 +1,9 @@
-<?php include ("connect.php");session_start();
+<?php include ("connect.php");
+session_start();
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+}
+
     $stmt = $conn->prepare("SELECT * FROM itoss_form 
     INNER JOIN itoss_jobtype ON itoss_form.Jobtype_id = itoss_jobtype.Jobtype_id 
     INNER JOIN itoss_user ON itoss_form.User_id = itoss_user.User_id 
@@ -12,9 +17,6 @@
     $Form_id = $_GET["Form_id"];
     $stmt1 = $conn->query("SELECT * FROM itoss_jobtype_orther where Form_id = '$Form_id'");
     $row1 = $stmt1->fetch();
-    
-    $stmt2 = $conn->query("SELECT * FROM itoss_task_orther where Form_id = '$Form_id'");
-    $row2 = $stmt2->fetch();
 
     $stmt3 = $conn->query("SELECT * FROM itoss_text where Form_id = '$Form_id' ORDER BY Text_id DESC");
     $row3 = $stmt3->fetch();
@@ -26,7 +28,7 @@
     $row5 = $stmt5->fetchAll();
     
     $User_id = $_SESSION['id'];
-    $stmt6 = $conn->query("SELECT * FROM itoss_sign where User_id = '$User_id'");
+    $stmt6 = $conn->query("SELECT * FROM itoss_sign where User_id = ".$row['User_id']."");
     $row6 = $stmt6->fetch();
 
 ?>
@@ -112,35 +114,6 @@
                         &nbsp;
                     <input type="text" class="d-none data form-control ftitle" name="Jobtype_orther_name" id="Jobtype_orther_name" value="<?=$row1['Jobtype_orther_name']?>"  disabled>
                 </div>
-                <div class="col-xl-6 mb-3 mb-xl-0">
-                    <p class="ftitle fw-bold mb-1">หมวดงาน</p>
-                    <div class="col-10 col-xl-12 align-items-center">
-                        <div class="form-check form-check-inline">
-                            <input class="data form-check-input my-3 me-4" type="checkbox" id="software" value="1"  disabled>
-                            <label class="form-check-label my-3 me-4" for="software">ซอฟต์แวร์</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="data form-check-input my-3 me-4" type="checkbox" id="hardware" value="2"  checked disabled>
-                            <label class="form-check-label my-3 me-4" for="hardware">ฮาร์ดแวร์</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="data form-check-input my-3 me-4" type="checkbox" id="other" onclick="otherCheck()" value="3" checked disabled>
-                            <label class="form-check-label my-3 me-4" for="inlineCheckbox3" id="lab-other">อื่นๆ</label>
-                          </div>
-                          <div class="col-10 col-xl-8 mb-3">
-                            <input class="d-none form-control" type="text" name="Task_orther_name" id="Task_orther_name" value="<?=$row2['Task_orther_name']?>">
-                          </div>
-                            <?php
-                            //$stmt = $conn->query("SELECT * FROM itoss_task_format where Form_id = '$Form_id'");
-                            //while($row1 = $stmt->fetch()){
-                            //echo '
-                            //    <input class="data form-check-input my-3 me-4" type="checkbox" id="software" value="'.$row1['Task_Format_id'].'"  checked disabled>
-                            //    <label class="form-check-label my-3 me-4" for="software">'.$row1['Task_Format_name'].'</label>
-                            //</div>';
-                            //}?>
-                        </div>
-                    </div>
-                </div>
             </div>
             <div class="row mb-0 mb-xl-3 mb-xl-0">
                 <div class="col-11 col-xl-12 mb-3">
@@ -189,17 +162,21 @@
             </div>
         </div>
         <?php
-        
         for ($i = 0; $i < count($row5); $i++) {
-            echo $row5[$i]['Report_sign_client'];
+            $class = "";
+            $a = "";
+            if($i == 0){
+                $class = "data";
+                $a = "a";
+            }
         ?>
             <div class="row mb-0 mb-xl-3 mb-xl-0">
                 <div class="col-11 col-xl-12 mb-3">
                     <p class="ftitle fw-bold mb-1">รายละเอียดงาน</p>
-                    <div class="a form-control text-light" name="Report_Detail[]" id="showDetail" cols="30" rows="10">
+                    <div class="form-control text-light" id="showDetail" cols="30" rows="10">
                         <?=$row5[$i]['Report_Detail']?>
                     </div>
-                    <textarea class="form-control text-light d-none" name="Report_Detail[<?= $i ?>]" id="detail-report" cols="30" rows="10">
+                    <textarea class="<?=$a?> form-control text-light d-none" name="Report_Detail[<?= $i ?>]" id="detail" cols="30" rows="10">
                         <?=$row5[$i]['Report_Detail']?>
                     </textarea>
                 </div>
@@ -207,28 +184,42 @@
             <div class="row mb-5 mb-xl-5">
                 <div class="col-xl-4">
                     <p class="ftilte fw-bold">เวลาเริ่มดำเนินงาน</p>
-                    <input class="data form-control" type="datetime" name="Report_Start_Date[<?= $i ?>]" id="Report_Start_Date" value="<?=$row5[$i]['Report_Start_Date']?>" disabled>
+                    <input class="<?=$class?> form-control" type="datetime" name="Report_Start_Date[<?= $i ?>]" id="Report_Start_Date" value="<?=$row5[$i]['Report_Start_Date']?>" disabled>
                 </div>
                 <div class="col-xl-4">
                     <p class=" ftilte fw-bold">เวลาเสร็จสิ้นการดำเนินงาน</p>
-                    <input class="data form-control" type="datetime" name="Report_Stop_Date[<?= $i ?>]" id="Report_Stop_Date" value="<?=$row5[$i]['Report_Stop_Date']?>" disabled>
+                    <input class="<?=$class?> form-control" type="datetime" name="Report_Stop_Date[<?= $i ?>]" id="Report_Stop_Date" value="<?=$row5[$i]['Report_Stop_Date']?>" disabled>
                 </div>
                 <div class="col-xl-3">
                     <p class="ftilte fw-bold">สถานะ:</p>
                     <div class="row">
-
+                    <?php if($row5[$i]['Report_Status'] == 6){?>
                         <div class="col-6 col-xl-6 form-check">
-                            <input class="data finish form-check-input mx-auto me-2" type="radio" onclick="otherCheck()" name="Report_Status[<?= $i ?>]" id="finish" disabled>
+                            <input class="<?=$class?> finish form-check-input mx-auto me-2" type="radio" name="Report_Status[<?= $i ?>]" id="finish" disabled>
                             <label class="form-check-label ftitle" for="finish">
                                 ปิดงาน
                             </label>
                         </div>
                         <div class="col-6 col-xl-6 form-check">
-                            <input class="data follow form-check-input me-2" type="radio" onclick="otherCheck()" name="Report_Status[<?= $i ?>]" id="follow" disabled>
+                            <input class="<?=$class?> follow form-check-input me-2" type="radio" name="Report_Status[<?= $i ?>]" id="follow" checked disabled>
                             <label class="form-check-label ftitle" for="follow" id="lab-other">
                                 ติดตามงาน
                             </label>
                         </div>
+                    <?php }else if($row5[$i]['Report_Status'] == 7){?>
+                        <div class="col-6 col-xl-6 form-check">
+                            <input class="<?=$class?> finish form-check-input mx-auto me-2" type="radio" name="Report_Status[<?= $i ?>]" id="finish" checked disabled>
+                            <label class="form-check-label ftitle" for="finish">
+                                ปิดงาน
+                            </label>
+                        </div>
+                        <div class="col-6 col-xl-6 form-check">
+                            <input class="<?=$class?> follow form-check-input me-2" type="radio" name="Report_Status[<?= $i ?>]" id="follow" disabled>
+                            <label class="form-check-label ftitle" for="follow" id="lab-other">
+                                ติดตามงาน
+                            </label>
+                        </div>
+                        <?php }?>
                         <div class="col-xl-12">
                             <input type="date" class="form-control d-none mt-xl-2" name="Report_follow_date[<?= $i ?>]" id="inp-other<?=$i?>" value="<?=$followDate?>" disabled>
                         </div>
@@ -250,21 +241,14 @@
                         </div>
                         <div class="row mb-xl-5">
                             <div class="col-xl-6 mx-auto">
-                            <a href="#" data-bs-target="#sendBox3" data-bs-toggle="modal"><img src="data:<?=$row6['Sign_image']?>" class="d-block mb-3 mx-auto mb-xl-3 w-50 h-100 text-center" alt=""></a>
-                            </div>
-                            <div class="modal fade" id="sendBox3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <img class="d-block w-250 h-300 text-center" src="data:<?=$row6['Sign_image']?>"><br>
-                                    </div>
-                                </div>
+                                <img class="<?=$class?> d-block w-250 h-300 text-center" src="data:<?=$row6['Sign_image']?>"><br>
                             </div>
                         </div>
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-3 col-xl-6 me-0 align-self-center">
                             <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
-                            <input class="data form-control ms-0  col-xl-1" type="date" name="Report_date_user[<?= $i ?>]" id="start" value="<?=$row5[$i]['Report_date_user']?>" disabled>
+                            <input class="<?=$class?> form-control ms-0  col-xl-1" type="date" name="Report_date_user[<?= $i ?>]" id="start" value="<?=$row5[$i]['Report_date_user']?>" disabled>
                         </div>
                     </div>
                 </div>
@@ -282,21 +266,18 @@
                         </div>
                         <div class="row mb-xl-5">
                             <div class="col-xl-6 mx-auto">
-                            <a href="#" data-bs-target="#sendBox2" data-bs-toggle="modal"><img src="data:<?=$row5[$i]['Sign_image']?>" class="d-block mb-3 mx-auto mb-xl-3 w-50 h-100 text-center" alt=""></a>
+                                <img class="<?=$class?> d-block w-250 h-300 text-center" src="data:<?=$row5[$i]['Sign_image']?>"><br>
+                                <div id="content">
+                                    <input type="hidden" name="Sign_image" id="Sign_image" value="..." rows="3" cols="50" style="width : 100%; height : 100px;" required>
+                                <div class="<?=$class?>" id="signature"></div>
                             </div>
-                            <div class="modal fade" id="sendBox2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <img class="d-block w-250 h-300 text-center" src="data:<?=$row5[$i]['Sign_image']?>"><br>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-3 col-xl-6 me-0 align-self-center">
                             <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
-                            <input class="data form-control ms-0  col-xl-1" type="date" name="Report_date_client[<?= $i ?>]" id="start" value="<?=$row5[$i]['Report_date_client']?>" disabled>
+                            <input class="<?=$class?> form-control ms-0  col-xl-1" type="date" name="Report_date_client[<?= $i ?>]" id="start" value="<?=$row5[$i]['Report_date_client']?>" disabled>
                         </div>
                     </div>
                 </div>
@@ -308,11 +289,11 @@
         <div class="row justify-content-around mb-5 mt-xl-5">
             <div class="col-6 col-xl-6 ms-auto" id="homeCol">
                 <?php
-                if($_SESSION['Status_id'] == 1){
+                if($_SESSION['status'] == 1){
                     ?>
                     <a class="col-xl-3 btn btn-secondary d-block ms-auto me-2 me-xl-5 ftitle" href="indexAdmin.php" id="home">กลับสู่หน้าหลัก</a>
                     <?php
-                    }else if($_SESSION['Status_id'] == 2){
+                    }else if($_SESSION['status'] == 2){
                     ?>
                     <a class="col-xl-3 btn btn-secondary d-block ms-auto me-2 me-xl-5 ftitle" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
                 <?php
@@ -323,18 +304,18 @@
                 <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5 d-none" type="submit" name="save" id="save">บันทึก</button>
                 <?php
                 if ($row['Status_form_id'] == 7) {
-                    if($_SESSION['Status_id'] == 1){
+                    if($_SESSION['status'] == 1){
                     ?>
                     <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5 ftitle" type="submit" id="edit" name="success" >เสร็จสิ้น</button>
                     <?php
-                    }else if($_SESSION['Status_id'] == 2){
+                    }else if($_SESSION['status'] == 2){
                     ?>
                     <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5 ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
                 <?php
                 }
                 } if ($row['Status_form_id'] == 6) {
                     ?>
-                    <a href="create_report.php?pid=<?=$id?>" class="btn btn-primary col-3 d-block me-auto ms-2 ms-xl-5 ftitle" type="button" id="continue" >ดำเนินงานต่อ</a>
+                    <a href="create_report.php?Form_id=<?=$Form_id?>" class="btn btn-primary col-3 d-block me-auto ms-2 ms-xl-5 ftitle" id="continue" >ดำเนินงานต่อ</a>
                 <?php
                 }
                 ?>
@@ -346,15 +327,16 @@
     <?php
         if (isset($_POST['save']))
         {  
-            $stmt = $conn->prepare("UPDATE itoss_form SET Report_Detail=?, Report_Start_Date=?, Report_Stop_Date=?, Report_Status=?, Report_follow_date=?, Report_date_user=?, Report_sign_client=?, Report_date_client=? WHERE Form_id=?"); // เตรยีมคา สง่ั SQL ส าหรบัแกไ้ข
-            $stmt->bindParam(1, $_POST["Report_Detail"]);
-            $stmt->bindParam(2, $_POST["Report_Start_Date"]);
-            $stmt->bindParam(3, $_POST["Report_Stop_Date"]);
-            $stmt->bindParam(4, $_POST["Report_Status"]);
-            $stmt->bindParam(5, $_POST["Report_follow_date"]);
-            $stmt->bindParam(6, $_POST["Report_date_user"]);
-            $stmt->bindParam(7, $_POST["Report_sign_client"]);
-            $stmt->bindParam(8, $_POST["Report_date_client"]);
+            echo $_POST["Report_Detail"][0];
+            $stmt = $conn->prepare("UPDATE itoss_report SET Report_Detail=?, Report_Start_Date=?, Report_Stop_Date=?, Report_Status=?, Report_follow_date=?, Report_date_user=?, Report_sign_client=?, Report_date_client=? WHERE Form_id=?"); // เตรยีมคา สง่ั SQL ส าหรบัแกไ้ข
+            $stmt->bindParam(1, $_POST["Report_Detail"][0]);
+            $stmt->bindParam(2, $_POST["Report_Start_Date"][0]);
+            $stmt->bindParam(3, $_POST["Report_Stop_Date"][0]);
+            $stmt->bindParam(4, $_POST["Report_Status"][0]);
+            $stmt->bindParam(5, $_POST["Report_follow_date"][0]);
+            $stmt->bindParam(6, $_POST["Report_date_user"][0]);
+            $stmt->bindParam(7, $_POST["Report_sign_client"][0]);
+            $stmt->bindParam(8, $_POST["Report_date_client"][0]);
             $stmt->bindParam(9, $Form_id);
             $stmt->execute();
             
@@ -377,16 +359,29 @@
     ?>
 
 </main>
+<script src="./libs/jquery.js"></script>
+<script src="./libs/jSignature.min.noconflict.js"></script>
 <script>
-    for (i = 0; i < document.getElementsByClassName('finish').length; i++) {
-        if (<?= $row['Status_form_id'] ?> == 7) {
-            document.getElementsByClassName('finish')[i].checked = true
-        } else  if (<?= $row['Status_form_id'] ?> == 6) {
-            document.getElementsByClassName('follow')[i].checked = true;
-            document.getElementById('inp-other'+i).classList.remove('d-none');
 
-        }
-    }
+    (function($) {
+
+    $(document).ready(function() {
+
+        var $sigdiv = $("#signature").jSignature({
+                'UndoButton': true
+            }),
+            $tools = $('#tools')
+
+        $("#send_approve").on('click', function() {
+            var data = $sigdiv.jSignature('getData', 'image');
+            $("#Sign_image").val(data);
+        });
+        $('<input class="btn btn-secondary d-block mx-auto my-5" type="button" value="Reset">').bind('click', function(e) {
+            $sigdiv.jSignature('reset')
+        }).appendTo($tools)
+    })
+
+    })(jQuery)
 
     function disableFalse() {
         var data = document.getElementsByClassName('data');
@@ -396,6 +391,9 @@
         for (var i = 0; i < data.length; i++) {
             data[i].disabled = false;
         }
+        document.getElementById('showDetail').classList.add('d-none');
+        document.getElementById('detail').classList.remove('d-none');
+
         editbtn.classList.add('d-none');
         homebtn.innerText = "ยกเลิก";
         savebtn.classList.remove('d-none');

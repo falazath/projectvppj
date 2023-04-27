@@ -1,5 +1,8 @@
 <?php
 session_start();
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+}
 include("connect.php");
 include("header.html");
 
@@ -217,11 +220,9 @@ include($_SESSION['navbar']);
                                 <td class="col-3 col-sm-1" id="status">' . $Status_form_name . '</td>
                                 <td class="col-2 col-sm-1">';
                     if ($Status_form_id <= 5) {
-                        echo '<a href="requestUser.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
+                        echo '<a href="requestAdmin.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
                     } else if ($Status_form_id > 5) {
                         echo '<a href="check_report.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
-                    } else {
-                        echo '<a href="create_report.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
                     }
 
                     echo ' </td>

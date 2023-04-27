@@ -1,6 +1,8 @@
 <?php
 session_start();
-$_SESSION['id'] = 2;
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+}
 include('connect.php');
 include('header.html');
 include('navbar.html');

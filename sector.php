@@ -1,6 +1,9 @@
 <?php
+if (!isset($_SESSION['id'])) {
+  header('location:login.php');
+}
 include('header.html');
-include('navbar.html');
+include('navbar.php');
 include('connect.php');
 
 $sql = $conn->prepare("SELECT * FROM itoss_agency WHERE state_id = 1");

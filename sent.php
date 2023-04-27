@@ -1,4 +1,7 @@
-<?php include ("connect.php");session_start();?>
+<?php include ("connect.php");session_start();
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+}?>
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -72,13 +75,13 @@ $(document).ready(function() {
             $stmt->bindParam(2, $_SESSION['id']);
             $stmt->execute();
 
-            if($_SESSION['Status_id'] == 1){
+            if($_SESSION['status'] == 1){
 				$_SESSION['Sign_image'] = $_POST['Sign_image'];
 				echo '<script language="javascript">';
 				echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="indexAdmin.php?User_id='.$user.'"';
 				echo '</script>';
             }
-            else if($_SESSION['Status_id'] == 2){
+            else if($_SESSION['status'] == 2){
 				$_SESSION['Sign_image'] = $_POST['Sign_image'];
                 echo '<script language="javascript">';
                 echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="indexUser.php?User_id='.$user.'"';
