@@ -1,5 +1,10 @@
-<?php include ("connect.php");
+<?php 
 session_start();
+include("header.html");
+if (!isset($_SESSION['id'])) {
+  header('location:login.php');
+}
+include ("connect.php");
     if (isset($_POST['createdp']))
     {   
         $stmt = $conn->prepare("INSERT INTO itoss_agency VALUES ('', ?, ?)");
@@ -37,10 +42,8 @@ session_start();
             echo 'location.href="department.php"';
             echo '</script>';
     }
+    include($_SESSION['navbar']);
 ?>
-    <?php 
-      include("header.html");
-      include($_SESSION['navbar']);?>
     <main>
         <div class="row justify-content-center mt-5 ">
             <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
@@ -92,26 +95,26 @@ session_start();
             <table class="table table-light table-bordered">
                 <thead>
                     <tr class="d-flex text-center fsub">
-                        <th class="col-7 col-sm-7">หน่วยงาน</th>
-                        <th class="col-3 col-sm-3">สถานะ</th>
-                        <th class="col-2 col-sm-2"></th>
+                        <th class="col-6 col-sm-7">หน่วยงาน</th>
+                        <th class="col-2 col-sm-3">สถานะ</th>
+                        <th class="col-4 col-sm-2"></th>
                     </tr>
                 </thead>
                 <tbody>
                     <!--สถานะ:รออนุมัติ-->
                     <?php 
-                        $stmt = $conn->query("SELECT * FROM itoss_agency INNER JOIN state ON itoss_agency.state_id = state.id WHERE itoss_agency.state_id = 1 AND NOT itoss_agency.Agency_id = 0 ;");
+                        $stmt = $conn->query("SELECT * FROM itoss_agency INNER JOIN state ON itoss_agency.state_id = state.id WHERE NOT itoss_agency.Agency_id = 0 ;");
                         while($row = $stmt->fetch()){?>
                         <tr class="d-flex text-center fsub">
-                          <td class="col-7 col-sm-7" id="date"><?=$row['Agency_Name']?></td>
+                          <td class="col-6 col-sm-7" id="date"><?=$row['Agency_Name']?></td>
                           <?php if($row['state_id'] == 1){?>
-                            <td class="col-3 col-sm-3" id="sector">เปิด</td>
+                            <td class="col-2 col-sm-3" id="sector">เปิด</td>
                           <?php }
                            else if($row['state_id'] == 0){?>
-                            <td class="col-3 col-sm-3" id="sector" style="background: rgba(234, 67, 53, 0.5);">ปิด</td>
+                            <td class="col-2 col-sm-3" id="sector" style="background: rgba(234, 67, 53, 0.5);">ปิด</td>
                           <?php }
                         ?>
-                                <td class="col-1 col-sm-1" id="user"><img data-bs-toggle="modal" data-bs-target="#edit-name<?=$row['Agency_id']?>" src="./asset/icon/Edit.svg" alt=""></td>
+                                <td class="col-2 col-sm-1" id="user"><img data-bs-toggle="modal" data-bs-target="#edit-name<?=$row['Agency_id']?>" src="./asset/icon/Edit.svg" alt=""></td>
                                 <form method="post">
                                   <div class="modal fade" id="edit-name<?=$row['Agency_id']?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                       <div class="modal-dialog">
@@ -129,7 +132,7 @@ session_start();
                                       </div>
                                     </div>
                                   </form>
-                                <td class="col-1 col-sm-1" id="user"><img data-bs-toggle="modal" data-bs-target="#edit-status<?=$row['Agency_id']?>" src="./asset/icon/Setting.svg" alt=""></td>
+                                <td class="col-2 col-sm-1" id="user"><img data-bs-toggle="modal" data-bs-target="#edit-status<?=$row['Agency_id']?>" src="./asset/icon/Setting.svg" alt=""></td>
                                 <form method="post">
                                   <div class="modal fade" id="edit-status<?=$row['Agency_id']?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                       <div class="modal-dialog">

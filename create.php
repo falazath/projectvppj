@@ -60,7 +60,6 @@ if (isset($_POST['save'])) {
         echo '</script>';
     } else if ($_SESSION['status'] == 2) {
         echo '<script language="javascript">';
-
         echo 'location.href="indexUser.php"';
         echo '</script>';
     }

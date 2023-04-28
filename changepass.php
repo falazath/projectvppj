@@ -1,21 +1,12 @@
-<?php include("connect.php");
+<?php 
 session_start();
+include("header.html");
+include("connect.php");
+if (!isset($_SESSION['id'])) {
+    header('location:login.php');
+}
+include($_SESSION['navbar']);
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
-    <link href="./dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="./dist/css/bootstrap.css" rel="stylesheet">
-    <script src="./dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="./style.css">
-</head>
-
-<body>
     <div class="row justify-content-center">
         <div class="col-6 login align-self-center position-absolute top-50 start-50 translate-middle">
             <div class="row justify-content-center align-items-center g-2 my-4">
