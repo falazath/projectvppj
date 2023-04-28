@@ -17,6 +17,55 @@ $sql = $conn->query("SELECT * FROM itoss_jobtype;");
 $filter[2] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
+
+if (isset($_POST['save'])) {
+    if ($_SESSION['status'] == 1) {
+        $status = 5;
+        $id = $_POST['User_id'];
+    } else if ($_SESSION['status'] == 2) {
+        $status = 1;
+        $id = $_SESSION['id'];
+    }
+    $stmt = $conn->prepare("INSERT INTO itoss_form VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, now())");
+    $stmt->bindParam(1, $_SESSION['date']);
+    $stmt->bindParam(2, $_POST["Form_Name"]);
+    $stmt->bindParam(3, $_POST["Agency_id"]);
+    $stmt->bindParam(4, $_POST["Form_Phone"]);
+    $stmt->bindParam(5, $_POST["Jobtype_id"]);
+    $stmt->bindParam(6, $_POST["Form_Work"]);
+    $stmt->bindParam(7, $status);
+    $stmt->bindParam(8, $id);
+    $stmt->execute();
+    $stmt = $conn->query("SELECT * FROM itoss_form");
+    while ($row = $stmt->fetch()) {
+        $Form_id = $row['Form_id'];
+    }
+    if ($_POST["Jobtype_id"] == 0) {
+        $stmt = $conn->prepare("INSERT INTO itoss_jobtype_orther VALUES ('', ? , ?)");
+        $stmt->bindParam(1, $_POST["Jobtype_orther_name"]);
+        $stmt->bindParam(2, $Form_id);
+        $stmt->execute();
+    }
+    if ($_POST["Agency_id"] == 0) {
+        $stmt = $conn->prepare("INSERT INTO other_agency VALUES ('', ? , ?)");
+        $stmt->bindParam(1, $_POST["other_agency"]);
+        $stmt->bindParam(2, $Form_id);
+        $stmt->execute();
+    }
+    include("message.php");
+
+    if ($_SESSION['status'] == 1) {
+        echo '<script language="javascript">';
+        echo 'location.href="indexAdmin.php"';
+        echo '</script>';
+    } else if ($_SESSION['status'] == 2) {
+        echo '<script language="javascript">';
+
+        echo 'location.href="indexUser.php"';
+        echo '</script>';
+    }
+}
+
 ?>
 <main>
     <div class="row justify-content-center mt-5 ">
@@ -46,7 +95,7 @@ $filter[3] = $sql->fetchAll();
             </div>
             <div class="col-12 col-xl-4 mb-0">
                 <p class="ftitle fw-bold mb-0">เบอร์โทรศัพท์</p>
-                <input type="text" class="form-control" name="Form_Phone" placeholder="กรอกเบอร์โทรศัพท์">
+                <input type="number" class="form-control" name="Form_Phone" placeholder="กรอกเบอร์โทรศัพท์">
             </div>
         </div>
         <div class="row mb-2">
@@ -55,7 +104,7 @@ $filter[3] = $sql->fetchAll();
                 <select class="form-select" id="Jobtype_id" name="Jobtype_id" required>
                     <option selected disabled>เลือกประเภทงาน</option>
                     <?php
-                    echo $_SESSION['id']."kbjbljknknknkllknk";
+                    echo $_SESSION['id'] . "kbjbljknknknkllknk";
                     for ($i = 1; $i < count($filter[2]); $i++) {
 
                         echo '<option value="' . $filter[2][$i]['Jobtype_id'] . '">' . $filter[2][$i]['Jobtype_name'] . '</option>';
@@ -73,22 +122,22 @@ $filter[3] = $sql->fetchAll();
             </div>
         </div>
         <div class="row mb-5">
-            <div class="col-10 col-xl-3 mx-xl-auto">
+            <div class="col-12 col-xl-3 mx-xl-auto">
                 <p class="ftitle fw-bold mb-0">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 <?php
-                    if($_SESSION['status'] == 1){ ?>
-                <select class="form-select" id="User_id" name="User_id" required>
-                    <option selected disabled>เลือกเจ้าหน้าที่รับผิดชอบ</option>
-                    <?php
+                if ($_SESSION['status'] == 1) { ?>
+                    <select class="form-select" id="User_id" name="User_id" required>
+                        <option selected disabled>เลือกเจ้าหน้าที่รับผิดชอบ</option>
+                        <?php
                         for ($i = 0; $i < count($filter[1]); $i++) {
 
-                        echo '<option value="' . $filter[1][$i]['User_id'] . '">' . $filter[1][$i]['User_Name'] . '</option>';
-                    }
-                    ?>
-                </select>
-                <?php }else{?>
-                <input type="text" class="ftitle form-control" id="name-user" style="background-color: #5F7769;" name="User_Name" value="<?= $_SESSION['name'] ?>" disabled>
-            <?php }?>
+                            echo '<option value="' . $filter[1][$i]['User_id'] . '">' . $filter[1][$i]['User_Name'] . '</option>';
+                        }
+                        ?>
+                    </select>
+                <?php } else { ?>
+                    <input type="text" class="ftitle form-control" id="name-user" style="background-color: #5F7769;" name="User_Name" value="<?= $_SESSION['name'] ?>" disabled>
+                <?php } ?>
             </div>
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">
@@ -96,58 +145,10 @@ $filter[3] = $sql->fetchAll();
                 <a class="col-xl-3 btn btn-secondary d-block ms-auto me-2 me-xl-5 ftitle" href="indexUser.php" id="home">ยกเลิก</a>
             </div>
             <div class="col col-xl-4 me-auto">
-                <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5" type="submit" name="save">บันทึก</button>
+                <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5" type="submit" name="save" value="<?= $Form_id ?>">บันทึก</button>
             </div>
         </div>
     </form>
-
-    <?php
-    if (isset($_POST['save'])) {
-        if ($_SESSION['status'] == 1) {
-            $status = 5;
-            $id = $_POST['User_id'];
-        } else if ($_SESSION['status'] == 2) {
-            $status = 1;
-            $id = $_SESSION['id'];
-        }
-        $stmt = $conn->prepare("INSERT INTO itoss_form VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?, now())");
-        $stmt->bindParam(1, $_SESSION['date']);
-        $stmt->bindParam(2, $_POST["Form_Name"]);
-        $stmt->bindParam(3, $_POST["Agency_id"]);
-        $stmt->bindParam(4, $_POST["Form_Phone"]);
-        $stmt->bindParam(5, $_POST["Jobtype_id"]);
-        $stmt->bindParam(6, $_POST["Form_Work"]);
-        $stmt->bindParam(7, $status);
-        $stmt->bindParam(8, $id);
-        $stmt->execute();
-        $stmt = $conn->query("SELECT * FROM itoss_form");
-        while ($row = $stmt->fetch()) {
-            $_SESSION['Form_id'] = $row['Form_id'];
-        }
-        if ($_POST["Jobtype_id"] == 0) {
-            $stmt = $conn->prepare("INSERT INTO itoss_jobtype_orther VALUES ('', ? , ?)");
-            $stmt->bindParam(1, $_POST["Jobtype_orther_name"]);
-            $stmt->bindParam(2, $_SESSION['Form_id']);
-            $stmt->execute();
-        }
-        if ($_POST["Agency_id"] == 0) {
-            $stmt = $conn->prepare("INSERT INTO other_agency VALUES ('', ? , ?)");
-            $stmt->bindParam(1, $_POST["other_agency"]);
-            $stmt->bindParam(2, $_SESSION['Form_id']);
-            $stmt->execute();
-        }
-        include("message.php");
-        echo '<script language="javascript">';
-        if($_SESSION['id'] == 1){
-        echo 'location.href="indexAdmin.php"';
-        }else if($_SESSION['id'] == 2){
-            echo 'location.href="indexUser.php"';
-        }
-        echo '</script>';
-    }
-
-    ?>
-
 </main>
 <script>
     CKEDITOR.replace('detail');
@@ -160,20 +161,27 @@ $filter[3] = $sql->fetchAll();
             document.getElementById('Task_orther_name').classList.add('d-none');
         }
     }
+
+
+
     $('#Jobtype_id').change(function() {
         let a = $('#Jobtype_id').val();
         if (a == "0") {
             $('#Jobtype_orther_name').removeClass('d-none');
+            document.getElementById('Jobtype_orther_name').required = true;
         } else {
             $('#Jobtype_orther_name').addClass('d-none');
+            document.getElementById('Jobtype_orther_name').required = false;
         }
     });
     $('#Agency_id').change(function() {
         let a = $('#Agency_id').val();
         if (a == "0") {
             $('#other_agency').removeClass('d-none');
+            document.getElementById('other_agency').required = true;
         } else {
             $('#other_agency').addClass('d-none');
+            document.getElementById('other_agency').required = false;
         }
     });
 </script>

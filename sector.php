@@ -1,4 +1,5 @@
 <?php
+session_start();
 if (!isset($_SESSION['id'])) {
   header('location:login.php');
 }
@@ -6,7 +7,7 @@ include('header.html');
 include('navbar.php');
 include('connect.php');
 
-$sql = $conn->prepare("SELECT * FROM itoss_agency WHERE state_id = 1");
+$sql = $conn->prepare("SELECT * FROM itoss_agency WHERE state_id = 1 AND Agency_id != 0");
 $sql->execute();
 $data = $sql->fetchAll();
 ?>

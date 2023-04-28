@@ -45,16 +45,34 @@ if (isset($_POST['save'])) {
 
     include("message.php");
 
-    echo '<script language="javascript">';
-    echo 'alert("แก้ไขข้อมูลแล้ว");';
+    if($_SESSION['status'] == 1){
+        echo '<script language="javascript">';
+    echo 'location.href="indexAdmin.php"';
     echo '</script>';
+
+    }else if($_SESSION['status'] == 2){
+        echo '<script language="javascript">';
+
+        echo 'location.href="indexUser.php"';
+    echo '</script>';
+
+    }
 } else if (isset($_POST['cancel'])) {
     $stmt = $conn->query("UPDATE itoss_form SET Status_form_id=3 WHERE Form_id=" . $_POST['cancel'] . "");
     include("message.php");
 
-    echo '<script language="javascript">';
-    echo 'alert("ยกเลิกคำขอเรียบร้อย"); location.href="indexUser.php"';
+    if($_SESSION['status'] == 1){
+        echo '<script language="javascript">';
+    echo 'location.href="indexAdmin.php"';
     echo '</script>';
+
+    }else if($_SESSION['status'] == 2){
+        echo '<script language="javascript">';
+
+        echo 'location.href="indexUser.php"';
+    echo '</script>';
+
+    }
 }
 
 $stmt = $conn->prepare("SELECT * FROM itoss_form 
@@ -76,14 +94,18 @@ $stmt1 = $conn->query("SELECT * FROM itoss_jobtype_orther where Form_id = '$Form
 $row1 = $stmt1->fetch();
 isset($row1['Jobtype_orther_name']) ? $job_other = $row1['Jobtype_orther_name'] : $job_other = $row['Jobtype_name'];
 
+$stmt2 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = 1");
+$row2 = $stmt2->fetch();
+
 $stmt3 = $conn->query("SELECT * FROM itoss_text where Form_id = '$Form_id' ORDER BY Text_id DESC");
 $row3 = $stmt3->fetch();
 isset($row3['Text_name']) ? $text = $row3['Text_name'] : $text = "";
-isset($row3['Status_form_id']) ? $Status = $row3['Status_form_id'] : $Status = $row['Status_form_id'];
+isset($row3['Status_form_id']) ? $Status = $row['Status_form_id'] : $Status = $row3['Status_form_id'];
 
 $stmt4 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $row['User_id'] . "");
 $row4 = $stmt4->fetch();
 include($_SESSION['navbar']);
+echo 'asfsdfasdfasdfsadfsadfsd'.$Status;
 ?>
 <main>
     <div class="row justify-content-center mt-5 ">
@@ -95,7 +117,7 @@ include($_SESSION['navbar']);
 
     <form action="requestUser.php?Form_id=<?= $Form_id ?> " method="post">
         <div class="row mb-0 mb-xl-3 mb-xl-0 d-none" id="editBox">
-            <div class="col-11 col-xl-12 mb-3">
+            <div class="col-12 col-xl-12 mb-3">
                 <p class="ftitle fw-bold mb-0">รายละเอียดการแก้ไขงาน</p>
                 <div class="form-control text-light" id="Detail" cols="30" rows="10">
                     <?= $text ?>
@@ -157,13 +179,35 @@ include($_SESSION['navbar']);
                     </textarea>
             </div>
         </div>
-        <div class="row mb-5">
-            <div class="col-12 col-xl-3 mx-xl-auto mb-2">
-                <p class="ftitle fw-bold mb-0 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
-                <img class="d-block w-100 h-100 text-center" src="data:<?= $row4['Sign_image'] ?>">
-            </div>
-            <div class="col-12 col-xl-3 mx-xl-auto mb-2">
+        <div class="row mb-xl-5 ">
+            <div class="col-12 col-xl-6">
+                <div class="col-12 col-xl-3 mx-xl-auto mb-3">
+                    <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
+                </div>
+                <div class="row mb-xl-0">
+                    <div class="col-12 col-xl-12 mx-auto mb-xl-0">
+                        <img class="d-block mx-auto w-75 h-auto" src="data:<?= $row4['Sign_image'] ?>"><br>
+                    </div>
+                </div>
+                <div class="col-6 col-xl-3 mx-auto mb-5">
                 <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
+
+
+                </div>
+            </div>
+            <div class="col-12 col-xl-6 mb-5">
+                <div class="col-12 col-xl-6 mx-xl-auto mb-3">
+                    <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
+                </div>
+                <div class="row mb-xl-0">
+                    <div class="col-12 col-xl-12 mx-auto mb-xl-0">
+                        <img class="d-block mx-auto w-75 h-auto" src="data:<?= $row2['Sign_image'] ?>"><br>
+                    </div>
+                </div>
+                <div class="col-6 col-xl-3 mx-auto">
+                    <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row2['User_Name'] ?>" disabled>
+
+                </div>
             </div>
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">
@@ -181,8 +225,6 @@ include($_SESSION['navbar']);
     </form>
 </main>
 <script>
-    alert(1);
-
     function disableFalse() {
         var data = document.getElementsByClassName('data');
         var editbtn = document.getElementById('edit');
@@ -205,7 +247,6 @@ include($_SESSION['navbar']);
     var user = <?= $row['User_id'] ?>;
     var id = <?= $_SESSION['id'] ?>;
     var str;
-    
     if (user == id) {
         if (status == 2) {
             box.classList.remove('d-none');
@@ -223,6 +264,15 @@ include($_SESSION['navbar']);
         } else if (status == 4) {
             box.classList.remove('d-none');
             topic[0].innerText = 'สาเหตุที่ไม่อนุมัติ โดย';
+            document.getElementById('homeCol').classList.remove('ms-auto');
+            document.getElementById('home').classList.add('mx-auto');
+            document.getElementById('home').classList.remove('ms-auto', 'me-xl-5', 'me-2');
+            document.getElementById('home').classList.add('btn-primary');
+            document.getElementById('home').classList.remove('btn-secondary');
+
+            document.getElementById('saveCol').classList.add('d-none');
+        }else if (status == 5) {
+            alert();
             document.getElementById('homeCol').classList.remove('ms-auto');
             document.getElementById('home').classList.add('mx-auto');
             document.getElementById('home').classList.remove('ms-auto', 'me-xl-5', 'me-2');

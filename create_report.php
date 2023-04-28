@@ -37,9 +37,8 @@ if (isset($_POST['send_approve'])) {
     $stmt->execute();
 
     include("message.php");
-
     echo '<script language="javascript">';
-    echo 'alert("แก้ไขข้อมูลแล้ว"); location.href="indexUser.php"';
+    echo 'alert("บันทึกรายงานเรียบร้อย"); location.href="indexUser.php"';
     echo '</script>';
 }
 
@@ -77,7 +76,7 @@ include($_SESSION['navbar']);
     <div class="row justify-content-center mt-5 ">
         <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
             <p class="text-dark text-center fhead fw-bold">คำขอปฏิบัติงาน</p>
-            <p class="text-end ftitle text-danger">สถานะ : <?=$row['Status_form_name']?></p>
+            <p class="text-end ftitle text-danger">สถานะ : <?= $row['Status_form_name'] ?></p>
 
         </div>
     </div>
@@ -161,16 +160,19 @@ include($_SESSION['navbar']);
                 <p class="ftilte fw-bold mb-0">สถานะ:</p>
                 <div class="row">
                     <div class="col-6 col-xl form-check">
-                        <input class="form-check-input mx-auto me-2" type="radio" name="Report_Status" value="7" id="status1" >
+                        <input class="form-check-input mx-auto me-2" type="radio" name="Report_Status" value="7" id="finish">
                         <label class="form-check-label ftitle" for="flexRadioDefault1">
                             ปิดงาน
                         </label>
                     </div>
                     <div class="col-6 col-xl form-check">
-                        <input class="form-check-input me-2" type="radio" name="Report_Status" id="status2" value="6" checked>
+                        <input class="form-check-input me-2" type="radio" name="Report_Status" id="follow" value="6" checked>
                         <label class="form-check-label ftitle" for="flexRadioDefault2">
                             ติดตามงาน
                         </label>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <input class="ms-0 form-control" type="date" name="Report_follow_date" id="follow-date" value="<?= date('d/M/yyyy') ?>">
                     </div>
                 </div>
 
@@ -184,10 +186,9 @@ include($_SESSION['navbar']);
         </div>
         <div class="row mb-3 mb-xl-5 text-center">
             <div class="col-xl-6 mx-auto">
-                <div id="content">
-                    <input type="hidden" name="Sign_image" id="Sign_image" value="..." rows="3" cols="50" style="width : 100%; height : 100px;" required>
-                    <div id="signature"></div>
-                </div>
+                <div id="signature"></div>
+                <input type="hidden" name="Sign_image" id="Sign_image" value="..." required>
+
             </div>
         </div>
 
@@ -216,7 +217,6 @@ include($_SESSION['navbar']);
 <script src="./libs/jquery.js"></script>
 <script src="./libs/jSignature.min.noconflict.js"></script>
 <script>
-    
     (function($) {
 
         $(document).ready(function() {
@@ -249,16 +249,26 @@ include($_SESSION['navbar']);
             document.getElementById('inp-other').classList.add('d-none');
         }
     }
+    const finish = document.getElementById('finish');
+    const follow = document.getElementById('follow');
+    const date = document.getElementById('follow-date');
 
-    $(document).ready(function() {
-        let a = $('#Jobtype_id').val();
-        if (a == "4") {
-            $('#Jobtype_orther_name').removeClass('d-none');
+    finish.addEventListener("click", function() {
+        var date = document.getElementById('follow-date').classList.add('d-none');
+    })
+    follow.addEventListener("click", function() {
+        var date = document.getElementById('follow-date').classList.remove('d-none');
+    })
+    $('#Agency_id').change(function() {
+        let a = $('#Agency_id').val();
+        if (a == "0") {
+            $('#other_agency').removeClass('d-none');
+            document.getElementById('other_agency').required = true;
         } else {
-            $('#Jobtype_orther_name').addClass('d-none');
+            $('#other_agency').addClass('d-none');
+            document.getElementById('other_agency').required = false;
         }
     });
-
 </script>
 </body>
 

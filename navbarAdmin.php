@@ -27,13 +27,13 @@
                         <p class="fhead text-start my-auto">คุณ<?=$_SESSION['name']?></p>
                     </div>
                     <div class="col-2 align-self-center">
-                        <a href="login.html"><img src="./asset/icon/Password.svg"
+                        <a href="changepass.php"><img src="./asset/icon/Password.svg"
                                 class=" d-block float-end me-3"></a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 mb-2 mt-5">
-                        <a class="btn ftitle d-block text-start" id="index" href="index.php">รายการคำขอปฏิบัติงาน</a>
+                        <a class="btn ftitle d-block text-start" id="index" href="indexAdmin.php">รายการคำขอปฏิบัติงาน</a>
                     </div>
                     <div class="col-12 mb-2">
                         <a class="btn ftitle d-block text-start" id="sector" href="department.php">จัดการหน่วยงาน</a>
@@ -53,7 +53,7 @@
     const sector = document.getElementById('sector');
     const user = document.getElementById('user');
 
-    if(url_str.search('index')){
+    if(url_str.search('index') != -1){
         index.classList.add('btn-primary');
         index.classList.remove('btn-secondary');
 
@@ -62,7 +62,7 @@
         
         user.classList.add('btn-secondary');
         user.classList.remove('btn-primary');
-    }else if(url_str.search('sector')){
+    }else if(url_str.search('department') != -1){
         index.classList.add('btn-secondary');
         index.classList.remove('btn-primary');
 
@@ -71,7 +71,7 @@
         
         user.classList.add('btn-secondary');
         user.classList.remove('btn-primary');
-    }else if(url_str.search('user')){
+    }else if(url_str.search('manage') != -1){
         index.classList.add('btn-secondary');
         index.classList.remove('btn-primary');
 
@@ -80,6 +80,15 @@
 
         user.classList.add('btn-primary');
         user.classList.remove('btn-secondary');
+    }else{
+        index.classList.add('btn-secondary');
+        index.classList.remove('btn-primary');
+
+        sector.classList.add('btn-secondary');
+        sector.classList.remove('btn-primary');
+        
+        user.classList.add('btn-secondary');
+        user.classList.remove('btn-primary');
     }
 </script>
 <!--navbar-->

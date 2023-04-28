@@ -20,12 +20,12 @@ $Form_id = $_GET["Form_id"];
 if (isset($_POST['create-text'])) {
 
     $Status_form_id = $_POST["create-text"];
-    echo 'alert(' . $Status_form_id . ');';
 
-    $stmt = $conn->prepare("INSERT INTO itoss_text VALUES ('', ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO itoss_text VALUES ('', ?, ?, ?, ?)");
     $stmt->bindParam(1, $_POST["Text_name"]);
     $stmt->bindParam(2, $Form_id);
     $stmt->bindParam(3, $_POST["create-text"]);
+    $stmt->bindParam(4, $_SESSION['id']);
     $stmt->execute();
 
     $stmt = $conn->prepare("UPDATE itoss_form SET Status_form_id = '$Status_form_id' where Form_id = '$Form_id'");
@@ -34,7 +34,7 @@ if (isset($_POST['create-text'])) {
     include("message.php");
 
     echo '<script language="javascript">';
-    echo 'alert("ส่งไปให้ User แล้ว"); location.href="indexAdmin.php"';
+    echo 'alert("ส่งไปให้ User แล้ว");location.href="indexAdmin.php"';
     echo '</script>';
 } else if (isset($_POST['approve'])) {
     $Status_form_id = $_POST["approve"];
@@ -57,6 +57,7 @@ $stmt = $conn->prepare("SELECT * FROM itoss_form
 $stmt->bindParam(1, $Form_id);
 $stmt->execute();
 $row = $stmt->fetch();
+isset($row['Status_form_id'])?$Status1=$row['Status_form_id']:$Status1=$row3['Status_form_id'];
 
 $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id' ORDER BY id DESC LIMIT 1");
 $data = $sql->fetch();
@@ -70,9 +71,11 @@ $stmt2 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_s
 $row2 = $stmt2->fetch();
 
 
-$stmt3 = $conn->query("SELECT * FROM itoss_text where Form_id = '$Form_id' ORDER BY Text_id DESC");
+$stmt3 = $conn->query("SELECT * FROM itoss_text,itoss_user WHERE itoss_text.editor = itoss_user.User_id AND itoss_text.Form_id = '$Form_id' ORDER BY Text_id DESC");
 $row3 = $stmt3->fetch();
+
 isset($row3['Text_name'])?$text=$row3['Text_name']:$text="";
+isset($row3['editor'])?$editor=$row3['User_Name']:$editor="";
     isset($row3['Status_form_id'])?$Status=$row3['Status_form_id']:$Status=$row['Status_form_id'];
 
 
@@ -80,11 +83,10 @@ $stmt4 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_s
 $row4 = $stmt4->fetch();
 
 include($_SESSION['navbar']);
-
 ?>
 <main>
     <div class="row justify-content-center mt-5 ">
-        <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
+        <div class="col col-xl-3 col-xl-3 d-block mx-auto ">
             <p class="text-dark text-center fhead fw-bold">คำขอปฏิบัติงาน</p>
             <p class="text-end ftitle text-danger">สถานะ : <?= $row['Status_form_name'] ?></p>
 
@@ -115,8 +117,9 @@ include($_SESSION['navbar']);
     </form>
     <form action="" method="post">
         <div class="row mb-0 mb-xl-3 mb-xl-0 d-none" id="editBox">
-            <div class="col-11 col-xl-12 mb-3">
-                <p class="ftitle fw-bold mb-1">รายละเอียดการแก้ไขงาน</p>
+            <div class="col-12 col-xl-12 mb-2">
+                <p class="ftitle d-inline fw-bold mb-0">รายละเอียดการแก้ไขงาน</p>
+                <p class="d-inline"><?=$editor?></p>
                 <div class="form-control text-light" id="Detail" cols="30" rows="10">
                 <?= $text ?>
                 </div>
@@ -125,13 +128,13 @@ include($_SESSION['navbar']);
         </div>
 
         <div class="row justify-content-start mb-0 mb-xl-3" id="dsk">
-            <div class="col-10 col-xl-4 mb-3 mb-xl-0">
-                <p class="ftitle fw-bold mb-1" id="demo">ชื่อผู้ติดต่อ</p>
+            <div class="col-12 col-xl-4 mb-2 mb-xl-0">
+                <p class="ftitle fw-bold mb-0" id="demo">ชื่อผู้ติดต่อ</p>
                 <input type="hidden" name="Form_date" value="<?= $row['Form_date'] ?>">
                 <input type="text" class="data form-control ftitle" name="Form_Name" id="contact" value="<?= $row["Form_Name"] ?>" disabled>
             </div>
-            <div class="col-10 col-xl-4 mb-3 mb-xl-0">
-                <p class="ftitle fw-bold mb-1">หน่วยงาน</p>
+            <div class="col-12 col-xl-4 mb-2 mb-xl-0">
+                <p class="ftitle fw-bold mb-0">หน่วยงาน</p>
                 <select class="form-select data form-control ftitle" id="Agency_id" name="Agency_id" disabled>
                 <option selected value="<?= $row["Agency_id"] ?>"><?= $agency ?></option>
                     <?php
@@ -145,14 +148,14 @@ include($_SESSION['navbar']);
                 </select>
                 <input class="d-none form-control mt-1" type="text" name="other_agency" id="other_agency" placeholder="กรอกชื่อหน่วยงาน">
             </div>
-            <div class="col-10 col-xl-4 mb-3 mb-xl-0">
-                <p class="ftitle fw-bold mb-1">เบอร์โทรศัพท์</p>
+            <div class="col-12 col-xl-4 mb-2 mb-xl-0">
+                <p class="ftitle fw-bold mb-0">เบอร์โทรศัพท์</p>
                 <input type="text" class="data form-control ftitle" name="Form_Phone" value="<?= $row["Form_Phone"] ?>" disabled>
             </div>
         </div>
         <div class="row mb-xl-3">
-            <div class="col-10 col-xl-4 mb-3 mb-xl-0">
-                <p class="ftitle fw-bold">ประเภทงาน</p>
+            <div class="col-12 col-xl-4 mb-2 mb-xl-0">
+                <p class="ftitle fw-bold mb-0">ประเภทงาน</p>
                 <select class="form-select data form-control ftitle" id="Jobtype_id" name="Jobtype_id" disabled>
                     <option selected value="<?= $row["Jobtype_id"] ?>"><?= $row["Jobtype_name"] ?></option>
                     <?php
@@ -169,8 +172,8 @@ include($_SESSION['navbar']);
         </div>
         </div>
         <div class="row mb-0 mb-xl-3 mb-xl-0">
-            <div class="col-11 col-xl-12 mb-3">
-                <p class="ftitle fw-bold mb-1">รายละเอียดงาน</p>
+            <div class="col-12 col-xl-12 mb-2">
+                <p class="ftitle fw-bold mb-0">รายละเอียดงาน</p>
                 <div class="data form-control text-light" name="Form_Work" id="show-detail" cols="30" rows="10">
                     <?= $row['Form_Work'] ?>
                 </div>
@@ -179,28 +182,38 @@ include($_SESSION['navbar']);
                     </textarea>
             </div>
         </div>
-        <div class="row mb-5">
-            <div class="col-10 col-xl-3 mx-xl-auto mb-3">
-                <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
+        <div class="row mb-xl-5 mb-5">
+            <div class="col-12 col-xl-6">
+                <div class="col-12 col-xl-3 mx-xl-auto mb-3">
+                    <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
+                </div>
+                <div class="row mb-xl-0">
+                    <div class="col-12 col-xl-12 mx-auto mb-xl-0">
+                        <img class="d-block mx-auto w-75 h-auto" src="data:<?= $row2['Sign_image'] ?>"><br>
+                    </div>
+                </div>
+                <div class="col-6 col-xl-3 mx-auto mb-5">
                 <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
-            </div>
-        </div>
-        <div class="d-none" id="send-text">
-            <div class="row">
-            <div class="col-12 col-xl-3 mx-xl-auto mb-2">
-                <p class="ftitle fw-bold mb-0 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
-                <img class="d-block w-100 h-100 text-center" src="data:<?= $row2['Sign_image'] ?>">
-            </div>
-            <div class="col-12 col-xl-3 mx-xl-auto mb-2">
-                <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
-            </div>
-            </div>
-            <div class="row mb-xl-5">
-                <div class="col-xl-6 mx-auto">
-                    <img class="d-block w-250 h-300 text-center" src="data:<?= $row4['Sign_image'] ?>"><br>
-                    <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row4['User_Name'] ?>" disabled>
+
+
                 </div>
             </div>
+            <div class="col-12 col-xl-6">
+                <div class="col-12 col-xl-6 mx-xl-auto mb-3">
+                    <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
+                </div>
+                <div class="row mb-xl-0">
+                    <div class="col-12 col-xl-12 mx-auto mb-xl-0">
+                        <img class="d-block mx-auto w-75 h-auto" src="data:<?= $row4['Sign_image'] ?>"><br>
+                    </div>
+                </div>
+                <div class="col-6 col-xl-3 mx-auto">
+                    <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row4['User_Name'] ?>" disabled>
+
+                </div>
+            </div>
+        </div>
+        
         </div>
 
         <div class="row justify-content-around mb-3 mt-xl-5">
@@ -225,7 +238,6 @@ include($_SESSION['navbar']);
 
 
 <script>
-    alert(1);
     
     function disableFalse() {
         var data = document.getElementsByClassName('data');
@@ -264,6 +276,7 @@ include($_SESSION['navbar']);
         }
     });
 
+    const status1 = <?= $Status1 ?> //ค่า status 
     const status = <?= $Status ?> //ค่า status 
     const box = document.getElementById('editBox');
     const topic = box.getElementsByTagName('p');
@@ -273,7 +286,7 @@ include($_SESSION['navbar']);
         document.getElementById('approveStatus').classList.remove('d-none');
         document.getElementById('disapprovedStatus').classList.remove('d-none');
     }
-    else if (status == 2) {
+    else if (status == 2 && status1 != 1) {
         box.classList.remove('d-none');
         topic[0].innerText = 'รายละเอียดที่ต้องการแก้ไข โดย ';
         document.getElementById('homeCol').classList.remove('ms-auto');
@@ -285,7 +298,7 @@ include($_SESSION['navbar']);
         document.getElementById('approveStatus').classList.add('d-none');
         document.getElementById('disapprovedStatus').classList.add('d-none');
 
-    } else if (status == 3) {
+    } else if (status == 3 && status1 != 1) {
         
         document.getElementById('homeCol').classList.remove('ms-auto');
         document.getElementById('home').classList.add('mx-auto');
@@ -296,9 +309,25 @@ include($_SESSION['navbar']);
         document.getElementById('approveStatus').classList.add('d-none');
         document.getElementById('disapprovedStatus').classList.add('d-none');
 
-    }else if (status == 4) {
+    }else if (status == 4 && status1 != 1) {
         box.classList.remove('d-none');
         topic[0].innerText = 'สาเหตุที่ไม่อนุมัติ โดย';
+        document.getElementById('homeCol').classList.remove('ms-auto');
+        document.getElementById('home').classList.add('mx-auto');
+        document.getElementById('home').classList.remove('ms-auto', 'me-xl-5', 'me-2');
+        document.getElementById('home').classList.add('btn-primary');
+        document.getElementById('home').classList.remove('btn-secondary');
+        document.getElementById('editStatus').classList.add('d-none');
+        document.getElementById('approveStatus').classList.add('d-none');
+        document.getElementById('disapprovedStatus').classList.add('d-none');
+    }else if (status == 2 && status1 == 1) {
+        box.classList.remove('d-none');
+        topic[0].innerText = 'รายละเอียดที่ต้องการแก้ไข โดย ';
+        document.getElementById('editStatus').classList.remove('d-none');
+        document.getElementById('approveStatus').classList.remove('d-none');
+        document.getElementById('disapprovedStatus').classList.remove('d-none');
+    }else if(status == 5){
+        box.classList.remove('d-none');
         document.getElementById('homeCol').classList.remove('ms-auto');
         document.getElementById('home').classList.add('mx-auto');
         document.getElementById('home').classList.remove('ms-auto', 'me-xl-5', 'me-2');
@@ -332,7 +361,6 @@ include($_SESSION['navbar']);
 
     CKEDITOR.replace('text-detail');
     document.getElementById('cke_1_top').classList.add('d-none');
-    alert();
 </script>
 </body>
 <?php

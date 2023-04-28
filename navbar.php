@@ -28,13 +28,13 @@
                         <p class="fhead text-start my-auto">คุณ<?=$_SESSION['name']?></p>
                     </div>
                     <div class="col-2 align-self-center">
-                        <a href="login.html"><img src="./asset/icon/Password.svg"
+                        <a href="changepass.php"><img src="./asset/icon/Password.svg"
                                 class=" d-block float-end me-3"></a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-12 mb-2 mt-5">
-                        <a class="btn ftitle d-block text-start" id="index" href="index.php">รายการคำขอปฏิบัติงาน</a>
+                        <a class="btn ftitle d-block text-start" id="index" href="indexUser.php">รายการคำขอปฏิบัติงาน</a>
                     </div>
                     <div class="col-12">
                         <a class="btn ftitle d-block text-start" id="department" href="sector.php">หน่วยงาน</a>
@@ -49,18 +49,22 @@
     var url_str = window.location.href;
     const index = document.getElementById('index');
     const department = document.getElementById('department');
-    if(url_str.search('index')){
-        index.classList.add('btn-primary');
-        index.classList.remove('btn-secondary');
 
-        department.classList.add('btn-secondary');
-        department.classList.remove('btn-primary');
-    }else if(url_str.search('department')){
+    if(url_str.search('sector') != -1){
+
         index.classList.add('btn-secondary');
         index.classList.remove('btn-primary');
 
         department.classList.add('btn-primary');
         department.classList.remove('btn-secondary');
+
+    }else{
+        index.classList.add('btn-primary');
+        index.classList.remove('btn-secondary');
+
+        department.classList.add('btn-secondary');
+        department.classList.remove('btn-primary');
     }
+
 </script>
 <!--navbar-->

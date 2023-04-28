@@ -17,7 +17,7 @@ $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
 //-Value filter
 
-if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 'all' && $_POST['type'] && $_POST['start-date'] == '' && $_POST['end-date'] == '' && $_POST['status'] == 'all')) {
+if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 'all' && $_POST['type']=='all' && $_POST['start-date'] == '' && $_POST['end-date'] == '' && $_POST['status'] == 'all')) {
 
     $data = $conn->prepare("SELECT * FROM itoss_form
     LEFT JOIN itoss_agency ON itoss_agency.Agency_id = itoss_form.Agency_id
@@ -108,7 +108,7 @@ include($_SESSION['navbar']);
 
                             <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกวันที่เริ่มต้น-->
                                 <p class="ftitle mb-0">วันที่เริ่มต้น</p>
-                                <input type="date" class="filter form-control" name="start-date" min="2000-01-01" value="" >
+                                <input type="date" class="filter form-control" name="start-date" min="2000-01-01" value="<?=date('d-m-Y')?>" >
                             </div>
                             <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกวันที่สิ้นสุด-->
                                 <p class="ftitle mb-0">วันที่สิ้นสุด</p>
@@ -196,7 +196,7 @@ include($_SESSION['navbar']);
                     $Form_Work = $row[$j]['Form_Work'];
                     $Form_id = $row[$j]['Form_id'];
                     echo '<tr class="d-flex text-center fsub">
-                                <td class="col-3 col-sm-1" id="date">' . $Form_date . '</td>';
+                                <td class="col-3 col-sm-1" id="date">' . date('d-m-Y',strtotime($Form_date)) . '</td>';
                                 if($row[$j]['Agency_id'] == 0){
                                     $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id'");
                                     $agency = $sql->fetch();
