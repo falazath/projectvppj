@@ -38,6 +38,9 @@
                     <div class="col-12 mb-2">
                         <a class="btn ftitle d-block text-start" id="sector" href="department.php">จัดการหน่วยงาน</a>
                     </div>
+                    <div class="col-12 mb-2">
+                        <a class="btn ftitle d-block text-start" id="type" href="type.php">จัดการประเภทงาน</a>
+                    </div>
                     <div class="col-12">
                         <a class="btn ftitle d-block text-start" id="user" href="manageUser.php">จัดการบัญชีผู้ใช้</a>
                     </div>
@@ -52,6 +55,7 @@
     const index = document.getElementById('index');
     const sector = document.getElementById('sector');
     const user = document.getElementById('user');
+    const type = document.getElementById('type');
 
     if(url_str.search('index') != -1){
         index.classList.add('btn-primary');
@@ -62,6 +66,9 @@
         
         user.classList.add('btn-secondary');
         user.classList.remove('btn-primary');
+
+        type.classList.add('btn-secondary');
+        type.classList.remove('btn-primary');
     }else if(url_str.search('department') != -1){
         index.classList.add('btn-secondary');
         index.classList.remove('btn-primary');
@@ -71,6 +78,9 @@
         
         user.classList.add('btn-secondary');
         user.classList.remove('btn-primary');
+
+        type.classList.add('btn-secondary');
+        type.classList.remove('btn-primary');
     }else if(url_str.search('manage') != -1){
         index.classList.add('btn-secondary');
         index.classList.remove('btn-primary');
@@ -80,6 +90,21 @@
 
         user.classList.add('btn-primary');
         user.classList.remove('btn-secondary');
+
+        type.classList.add('btn-secondary');
+        type.classList.remove('btn-primary');
+    }else if(url_str.search('type') != -1){
+        index.classList.add('btn-secondary');
+        index.classList.remove('btn-primary');
+
+        sector.classList.add('btn-secondary');
+        sector.classList.remove('btn-primary');
+
+        type.classList.add('btn-primary');
+        type.classList.remove('btn-secondary');
+
+        user.classList.add('btn-secondary');
+        user.classList.remove('btn-primary');
     }else{
         index.classList.add('btn-secondary');
         index.classList.remove('btn-primary');

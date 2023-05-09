@@ -6,23 +6,27 @@ if (!isset($_SESSION['id'])) {
 }
 include('header.html');
 if (isset($_POST['send_approve'])) {
-	$user = $_SESSION['id'];
+	$signSVG = strrchr($_POST['Sign_image'], "width");
+	$signSVG = substr($signSVG, 7, 1);
+	if ($signSVG != 0) {
+		$sign = strchr($_POST['Sign_image'], 'dtd">');
+		$sign = substr($sign, 5);
+		$stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, ?)");
+		$stmt->bindParam(1, $sign);
+		$stmt->bindParam(2, $_SESSION['id']);
+		$stmt->execute();
 
-	$stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, ?)");
-	$stmt->bindParam(1, $_POST['Sign_image']);
-	$stmt->bindParam(2, $_SESSION['id']);
-	$stmt->execute();
-
-	if ($_SESSION['status'] == 1) {
-		$_SESSION['Sign_image'] = $_POST['Sign_image'];
-		echo '<script language="javascript">';
-		echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="indexAdmin.php"';
-		echo '</script>';
-	} else if ($_SESSION['status'] == 2) {
-		$_SESSION['Sign_image'] = $_POST['Sign_image'];
-		echo '<script language="javascript">';
-		echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="indexUser.php"';
-		echo '</script>';
+		if ($_SESSION['status'] == 1) {
+			$_SESSION['Sign_image'] = $_POST['Sign_image'];
+			echo '<script language="javascript">';
+			echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="indexAdmin.php"';
+			echo '</script>';
+		} else if ($_SESSION['status'] == 2) {
+			$_SESSION['Sign_image'] = $_POST['Sign_image'];
+			echo '<script language="javascript">';
+			echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="indexUser.php"';
+			echo '</script>';
+		}
 	}
 }
 ?>
@@ -44,7 +48,7 @@ if (isset($_POST['send_approve'])) {
 					<div class="form-floating">
 						<div class="row justify-content-center">
 							<div class="col-3">
-								<div id="tools"></div>
+								<div class="mt-xl-5" id="tools"></div>
 							</div>
 							<div class="col-3">
 								<button class="btn btn-primary d-block mx-auto my-5" type="submit" name='send_approve' id='send_approve' value="บันทึก">บันทึก</button>
@@ -62,15 +66,15 @@ if (isset($_POST['send_approve'])) {
 			$(document).ready(function() {
 
 				var $sigdiv = $("#signature").jSignature({
-						'UndoButton': true
+						'UndoButton': false
 					}),
 					$tools = $('#tools')
 
 				$("#send_approve").on('click', function() {
-					var data = $sigdiv.jSignature('getData', 'image');
+					var data = $sigdiv.jSignature('getData', 'svg');
 					$("#Sign_image").val(data);
 				});
-				$('<input class="btn btn-secondary d-block mx-auto my-5" type="button" value="Reset">').bind('click', function(e) {
+				$('<input class="btn btn-secondary d-block mx-auto" type="button" value="ล้างลายเซ็น">').bind('click', function(e) {
 					$sigdiv.jSignature('reset')
 				}).appendTo($tools)
 			})

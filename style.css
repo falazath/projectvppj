@@ -80,7 +80,7 @@ hr.h-color{
     font-size: 18px;
 }
 
-input:disabled ,#show-detail, #detail, #Detail, #showDetail{
+input:disabled ,#show-detail, #detail, #Detail, #showDetail, #detailBox{
     background-color: #5F7769;
     color: #999;
 }
@@ -90,6 +90,6 @@ input:disabled ,#show-detail, #detail, #Detail, #showDetail{
     color:#000000;
 }
 
-#filterBtn{
-    
+.row .signBox{
+    height: 150px;
 }

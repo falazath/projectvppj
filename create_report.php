@@ -5,45 +5,79 @@ if (!isset($_SESSION['id'])) {
 }
 include('header.html');
 include("connect.php");
+include($_SESSION['navbar']);
 
 $sql = $conn->query("SELECT * FROM itoss_agency WHERE state_id =1;");
 $filter[0] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_user WHERE state_id =1;");
 $filter[1] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_jobtype;");
-$filter[2] = $sql->fetchAll();
+$jobChoice = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
 $Form_id = $_GET["Form_id"];
 
 if (isset($_POST['send_approve'])) {
-    $stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, NULL)");
-    $stmt->bindParam(1, $_POST['Sign_image']);
-    $stmt->execute();
-    $id = $conn->lastInsertId();
-    $stmt = $conn->prepare("INSERT INTO itoss_report VALUES ('', ?, ?, ?, ?, ?, ? , ?, ?, ?)");
-    $stmt->bindParam(1, $_POST["Report_Detail"]);
-    $stmt->bindParam(2, $_POST["Report_Start_Date"]);
-    $stmt->bindParam(3, $_POST["Report_Stop_Date"]);
-    $stmt->bindParam(4, $_POST["Report_Status"]);
-    $stmt->bindParam(5, $_POST["Report_follow_date"]);
-    $stmt->bindParam(6, $_POST["Report_date_client"]);
-    $stmt->bindParam(7, $id);
-    $stmt->bindParam(8, $_POST["Report_date_client"]);
-    $stmt->bindParam(9, $Form_id);
-    $stmt->execute();
-    $Status_form_id = $_POST["Report_Status"];
-    $stmt = $conn->prepare("UPDATE itoss_form SET Status_form_id = '$Status_form_id' where Form_id = '$Form_id'");
-    $stmt->execute();
+    $signSVG = strrchr($_POST['Sign_image'], "width");
+    $signSVG = substr($signSVG, 7, 1);
+    if ($signSVG != 0) {
+        $sign = strchr($_POST['Sign_image'], 'dtd">');
+        $sign = substr($sign, 5);
+        $stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, NULL)");
+        $stmt->bindParam(1, $sign);
+        $stmt->execute();
+        $id = $conn->lastInsertId();
+        $stmt = $conn->prepare("INSERT INTO itoss_report VALUES ('', ?, ?, ?, ?, ?, ? , ?, ?, ?)");
+        $stmt->bindParam(1, $_POST["Report_Detail"]);
+        $stmt->bindParam(2, $_POST["Report_Start_Date"]);
+        $stmt->bindParam(3, $_POST["Report_Stop_Date"]);
+        $stmt->bindParam(4, $_POST["Report_Status"]);
+        $stmt->bindParam(5, $_POST["Report_follow_date"]);
+        $stmt->bindParam(6, $_POST["Report_date_client"]);
+        $stmt->bindParam(7, $id);
+        $stmt->bindParam(8, $_POST["Report_date_client"]);
+        $stmt->bindParam(9, $Form_id);
+        $stmt->execute();
 
-    include("message.php");
-    echo '<script language="javascript">';
-    echo 'alert("บันทึกรายงานเรียบร้อย"); location.href="indexUser.php"';
-    echo '</script>';
+        $Status_form_id = $_POST["Report_Status"];
+        $stmt = $conn->prepare("UPDATE itoss_form SET Status_form_id = '$Status_form_id' where Form_id = '$Form_id'");
+        $stmt->execute();
+
+        $stmt = $conn->query("SELECT * FROM itoss_report WHERE Form_id = $Form_id;");
+        $row = $stmt->fetch();
+        $Report_id = $row['Report_id'];
+        $count = count($_FILES['img_file']['name']);
+        if ($count >= 3 && $count <= 5) {
+            $date1 = date("dmY_His");
+            foreach ($_FILES['img_file']['tmp_name'] as $key => $value) {
+                $file_names = $_FILES['img_file']['name'];
+                $type = strrchr($_FILES['img_file']['name'][$key], ".");
+                $new_name = $Report_id . "00" . $date1 . $key . $type;
+                if (move_uploaded_file($_FILES['img_file']['tmp_name'][$key], "img_work/" . $new_name)) {
+                    $path_link = "img_work/" . $new_name;
+                    $sql = "INSERT INTO itoss_img (img_file, date_img, Report_id) 
+                        VALUES ( :image , now() , $Report_id)";
+                    $stmt = $conn->prepare($sql);
+                    $params = array(
+                        'image' => $path_link
+                    );
+                    $stmt->execute($params);
+                }
+            }
+            include("message.php");
+            $_SESSION['ch'] = 4;
+            echo '<script language="javascript">';
+            echo 'location.href="indexUser.php"';
+            echo '</script>';
+        } else {
+            echo '<script>toastr.warning("กรุณาอัพโหลดรูปภาพการทำงาน 3-5 รูป");</script>';
+        }
+    }else{
+        echo '<script>toastr.warning("กรุณาลงชื่อให้เรียบร้อย");</script>';
+    }
 }
 
-$stmt = $conn->prepare("SELECT * FROM itoss_form 
-    INNER JOIN itoss_jobtype ON itoss_form.Jobtype_id = itoss_jobtype.Jobtype_id 
+$stmt = $conn->prepare("SELECT * FROM itoss_form
     INNER JOIN itoss_user ON itoss_form.User_id = itoss_user.User_id 
     INNER JOIN itoss_status_form ON itoss_form.Status_form_id = itoss_status_form.Status_form_id
     INNER JOIN itoss_agency ON itoss_form.Agency_id = itoss_agency.Agency_id 
@@ -51,24 +85,27 @@ $stmt = $conn->prepare("SELECT * FROM itoss_form
 $stmt->bindParam(1, $Form_id);
 $stmt->execute();
 $row = $stmt->fetch();
-
+isset($row['Status_form_id']) ? $Status1 = $row['Status_form_id'] : $Status1 = $row3['Status_form_id'];
 
 $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id' ORDER BY id DESC LIMIT 1");
 $data = $sql->fetch();
 $agency = isset($data['name']) ? $data['name'] : $row['Agency_Name'];
 
-$stmt1 = $conn->query("SELECT * FROM itoss_jobtype_orther where Form_id = '$Form_id'");
-$row1 = $stmt1->fetch();
-isset($row1['Jobtype_orther_name']) ? $job_other = $row1['Jobtype_orther_name'] : $job_other = $row['Jobtype_name'];
+$sql_job = $conn->query("SELECT itoss_job.Job_id,itoss_job.Jobtype_id,itoss_job.name_other,itoss_jobtype.Jobtype_name 
+FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id AND itoss_job.Form_id = '$Form_id'");
+$job = $sql_job->fetchAll();
+
+$sqlAdmin = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $row['assign_id'] . "");
+$signAdmin = $sqlAdmin->fetch();
 
 $stmt3 = $conn->query("SELECT * FROM itoss_text where Form_id = '$Form_id' ORDER BY Text_id DESC");
 $row3 = $stmt3->fetch();
+$editor = isset($row3['editor']) ? $row3['editor'] : '';
 isset($row3['Text_name']) ? $text = $row3['Text_name'] : $text = "";
 isset($row3['Status_form_id']) ? $Status = $row3['Status_form_id'] : $Status = $row['Status_form_id'];
 
-$stmt4 = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $_SESSION['id'] . "");
-$row4 = $stmt4->fetch();
-include($_SESSION['navbar']);
+$sql_user = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $row['User_id'] . "");
+$signUser = $sql_user->fetch();
 
 ?>
 <main>
@@ -112,9 +149,51 @@ include($_SESSION['navbar']);
         </div>
     </div>
     <div class="row mb-xl-3">
-        <div class="col-12 col-xl-4 mb-2 mb-xl-3 mb-xl-0">
-            <p class="ftitle fw-bold mb-0">ประเภทงาน</p>
-            <input type="text" class="form-control" value="<?= $job_other ?>" disabled>
+        <div class="row mb-0">
+            <div class="col-12 col-lg-6 mb-0">
+                <p class="ftitle fw-bold mb-0">ประเภทงาน</p>
+            </div>
+        </div>
+        <div class="row mb-xl-3">
+
+            <?php
+
+            for ($i = 1; $i < count($jobChoice); $i++) {
+                $ch = '';
+                for ($j = 0; $j < count($job); $j++) {
+                    if ($job[$j]['Jobtype_id'] == $jobChoice[$i]['Jobtype_id']) {
+                        $ch = 'checked';
+            ?>
+
+
+                        <div class="col-4 col-lg-2 mb-2 mb-xl-0">
+                            <div class="form-check">
+                                <input type="checkbox" class="data form-check-input my-0 required" name="Jobtype_id[]" id="name<?= $jobChoice[$i]['Jobtype_id'] ?>" value="<?= $jobChoice[$i]['Jobtype_id'] ?>" onclick="deRequireCb('required')" disabled <?= $ch ?>>
+                                <label class="form-check-label ms-1 my-0" for="name<?= $jobChoice[$i]['Jobtype_id'] ?>">
+                                    <?= $jobChoice[$i]['Jobtype_name'] ?>
+                                </label>
+                            </div>
+                        </div>
+                <?php
+                    }
+                }
+            }
+            $index = array_search('0', array_column($job, 'Jobtype_id'));
+            // echo '<script>alert('.$index.');</script>';
+            if (is_null($index)) {
+                $ch = 'checked';
+                $valueOther = $job[$index]['name_other']; ?>
+
+                <div class="col-12 col-lg-2 mb-0">
+                    <div class="form-check">
+                        <input type="checkbox" class="data form-check-input mb-2 my-xl-0 required" name="Jobtype_id[]" id="name0" value="0" onclick="deRequireCb('required')" disabled <?= $ch ?>>
+                        <label class="form-check-label ms-1 my-0" for="name" id="labelOther">
+                            อื่น ๆ
+                        </label>
+                    </div>
+                    <input class="data form-control mt-1" type="text" name="Jobtype_orther_name" id="other_job" value="<?= $valueOther ?>" placeholder="กรอกประเภทงาน" disabled>
+                </div>
+            <?php } ?>
         </div>
     </div>
     <div class="row mb-2 mb-xl-3 mb-xl-0">
@@ -125,17 +204,38 @@ include($_SESSION['navbar']);
             </div>
         </div>
     </div>
-    <div class="row mb-4 mb-xl-5">
-        <div class="col-12 col-xl-3 mx-xl-auto mb-2">
-            <p class="ftitle fw-bold mb-0 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
-            <img class="d-block w-100 h-100 text-center" src="data:<?= $row4['Sign_image'] ?>">
+
+    <div class="row mb-xl-5 ">
+        <div class="col-12 col-xl-6">
+            <div class="col-12 col-xl-3 mx-xl-auto mb-3">
+                <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
+            </div>
+            <div class="row signBox my-3 my-xl-5">
+                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                    <?= $signUser['Sign_image'] ?>
+                </div>
+            </div>
+            <div class="col-6 col-xl-6 mx-auto mb-5">
+                <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
+            </div>
         </div>
-        <div class="col-6 col-xl-3 mx-auto mb-2">
-            <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
+        <div class="col-12 col-xl-6">
+            <div class="col-12 col-xl-3 mx-xl-auto mb-3">
+                <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
+            </div>
+            <div class="row signBox my-3 my-xl-5">
+                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                    <?= $signAdmin['Sign_image'] ?>
+                </div>
+            </div>
+            <div class="col-6 col-xl-6 mx-auto mb-5">
+                <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $signAdmin['User_Name'] ?>" disabled>
+            </div>
         </div>
     </div>
     <hr>
-    <form action="" method="post">
+    <form action="" method="post" enctype="multipart/form-data">
+
         <div class="row justify-content-center mt-5 ">
             <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
                 <p class="text-dark text-center fhead fw-bold">รายงานการปฏิบัติงาน</p>
@@ -147,32 +247,32 @@ include($_SESSION['navbar']);
                 <textarea class="data form-control" name="Report_Detail" id="detail-report" cols="30" rows="10" required></textarea>
             </div>
         </div>
-        <div class="row mb-5 mb-xl-5">
+        <div class="row mb-3 mb-xl-5">
             <div class="col-12 col-xl-4 mb-2">
                 <p class="ftilte fw-bold mb-0">เวลาเริ่มดำเนินงาน</p>
-                <input class="form-control" type="datetime-local" name="Report_Start_Date" required>
+                <input class="form-control" type="datetime-local" name="Report_Start_Date" value="<?= date("Y-m-d H:i") ?>" required>
             </div>
             <div class="col-12 col-xl-4 mb-2">
                 <p class="ftilte fw-bold mb-0">เวลาเสร็จสิ้นการดำเนินงาน</p>
-                <input class="form-control" type="datetime-local" name="Report_Stop_Date" required>
+                <input class="form-control" type="datetime-local" name="Report_Stop_Date" value="<?= date("Y-m-d H:i") ?>" required>
             </div>
             <div class="col-12 col-xl-3 mb-2">
                 <p class="ftilte fw-bold mb-0">สถานะ:</p>
                 <div class="row">
                     <div class="col-6 col-xl form-check">
-                        <input class="form-check-input mx-auto me-2" type="radio" name="Report_Status" value="7" id="finish">
+                        <input class="form-check-input mx-auto me-2" type="radio" name="Report_Status" value="7" id="finish" checked>
                         <label class="form-check-label ftitle" for="flexRadioDefault1">
                             ปิดงาน
                         </label>
                     </div>
                     <div class="col-6 col-xl form-check">
-                        <input class="form-check-input me-2" type="radio" name="Report_Status" id="follow" value="6" checked>
+                        <input class="form-check-input me-2" type="radio" name="Report_Status" id="follow" value="6">
                         <label class="form-check-label ftitle" for="flexRadioDefault2">
                             ติดตามงาน
                         </label>
                     </div>
                     <div class="col-12 mt-2">
-                        <input class="ms-0 form-control" type="date" name="Report_follow_date" id="follow-date" value="<?= date('d/M/yyyy') ?>">
+                        <input class="ms-0 form-control" type="date" name="Report_follow_date" id="follow-date" value="<?= date('Y-m-d') ?>">
                     </div>
                 </div>
 
@@ -187,6 +287,7 @@ include($_SESSION['navbar']);
         <div class="row mb-3 mb-xl-5 text-center">
             <div class="col-xl-6 mx-auto">
                 <div id="signature"></div>
+                <div class="col mt-xl-5" id="tools"> </div>
                 <input type="hidden" name="Sign_image" id="Sign_image" value="..." required>
 
             </div>
@@ -195,18 +296,27 @@ include($_SESSION['navbar']);
         <div class="row mb-5 justify-content-center">
             <div class="col-10 col-xl-3 me-0 align-self-center">
                 <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
-                <input class="form-control ms-0  col-xl-1" type="date" name="Report_date_client" id="start" required>
+                <input class="form-control ms-0  col-xl-1" type="date" name="Report_date_client" id="start" value="<?= date('Y-m-d') ?>" required>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-xl-6 mx-xl-auto">
+                <p class="ftitle fw-bold text-center">อัพโหลดรูปภาพ</p>
+                <input type="file" name="img_file[]" id="img_file" multiple="multiple" class="form-control" accept="image/*"> <br>
+                <p class="fsub fw-bold text-danger">*กรุณาอัพโหลดรูปภาพ 3-5 รูป </p>
             </div>
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">
-            <div class="col-auto col-xl-4">
-                <a class="col-xl-3 btn btn-secondary d-block ms-auto me-2 me-xl-5 ftitle" href="indexUser.php" id="home">ยกเลิก</a>
+            <div class="col-auto col-xl-3 d-flex">
+                <a class="btn btn-secondary me-2 mx-xl-auto ftitle" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
             </div>
-            <div class="col-auto col-xl-4">
-                <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5" type="submit" name="send_approve" id="send_approve">บันทึก</button>
+            <div class="col-auto col-xl-3">
+                <button class="btn btn-primary d-block mx-xl-auto" type="submit" name="send_approve" id="send_approve" onclick="checkUploadPhoto()">บันทึก</button>
             </div>
         </div>
     </form>
+
 
     <?php
 
@@ -222,36 +332,40 @@ include($_SESSION['navbar']);
         $(document).ready(function() {
 
             var $sigdiv = $("#signature").jSignature({
-                    'UndoButton': true
+                    'UndoButton': false
                 }),
                 $tools = $('#tools')
 
             $("#send_approve").on('click', function() {
-                var data = $sigdiv.jSignature('getData', 'image');
+                var data = $sigdiv.jSignature('getData', 'svg');
                 $("#Sign_image").val(data);
             });
-            $('<input class="btn btn-secondary d-block mx-auto my-5" type="button" value="Reset">').bind('click', function(e) {
-                $sigdiv.jSignature('reset')
-            }).appendTo($tools)
+            $('<input class="btn btn-secondary d-block mx-auto" type="button" value="ล้างลายเซ็น">').bind('click', function(e) {
+                    $sigdiv.jSignature('reset')
+                }).appendTo($tools)
         })
 
     })(jQuery)
+    var editor = CKEDITOR.replace('detail-report');
+    editor.on('required', function(evt) {
+        toastr.warning("กรุณากรอกรายละเอียดงาน");
+        evt.cancel();
+    });
 
-    CKEDITOR.replace('detail-report');
+    function checkStatusReport() {
+        const finish = document.getElementById('finish');
+        const follow = document.getElementById('follow');
+        const date = document.getElementById('follow-date');
 
-    function otherCheck() {
-        var check = document.getElementById('other');
-        if (check.checked == true) {
-            document.getElementById('lab-other').classList.add('d-none');
-            document.getElementById('inp-other').classList.remove('d-none');
-        } else {
-            document.getElementById('lab-other').classList.remove('d-none');
-            document.getElementById('inp-other').classList.add('d-none');
+        if (follow.checked == true) {
+            date.classList.remove('d-none');
+            date.required = true;
+        } else if (finish.checked == true) {
+            date.classList.add('d-none');
+            date.required = false;
         }
     }
-    const finish = document.getElementById('finish');
-    const follow = document.getElementById('follow');
-    const date = document.getElementById('follow-date');
+    checkStatusReport();
 
     finish.addEventListener("click", function() {
         var date = document.getElementById('follow-date').classList.add('d-none');
@@ -259,6 +373,7 @@ include($_SESSION['navbar']);
     follow.addEventListener("click", function() {
         var date = document.getElementById('follow-date').classList.remove('d-none');
     })
+
     $('#Agency_id').change(function() {
         let a = $('#Agency_id').val();
         if (a == "0") {

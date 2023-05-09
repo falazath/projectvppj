@@ -1,9 +1,7 @@
 <?php
-	$stmt = $conn->prepare("SELECT * FROM itoss_form 
-    INNER JOIN itoss_jobtype ON itoss_form.Jobtype_id = itoss_jobtype.Jobtype_id 
+	$stmt = $conn->prepare("SELECT * FROM itoss_form
     INNER JOIN itoss_user ON itoss_form.User_id = itoss_user.User_id 
     INNER JOIN itoss_status_form ON itoss_form.Status_form_id = itoss_status_form.Status_form_id
-    INNER JOIN itoss_agency ON itoss_form.Agency_id = itoss_agency.Agency_id 
     WHERE Form_id = ?");
     $stmt->bindParam(1, $Form_id);
     $stmt->execute();
@@ -39,6 +37,10 @@
 	else if( $row['Status_form_id'] == 1){
 		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
 		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/requestAdmin.php?Form_id=$Form_id";
+	}
+	else if( $row['Status_form_id'] == 6){
+		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
+		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/check_report.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 7){
 		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
