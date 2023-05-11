@@ -13,12 +13,6 @@ $Form_id = $_GET["Form_id"];
 
 if (isset($_POST['save'])) {
     $num = $_POST['index'];
-    $signSVG = strrchr($_POST['Sign_image'], "width");
-    $signSVG = substr($signSVG, 7, 1);
-    if ($signSVG != 0) {
-        $sign = strchr($_POST['Sign_image'], 'dtd">');
-        $sign = substr($sign, 5);
-
         $stmt = $conn->prepare("UPDATE itoss_report SET Report_Detail=?, Report_Start_Date=?, Report_Stop_Date=?, Report_Status=?, Report_follow_date=?, Report_date_user=?, Report_sign_client=?, Report_date_client=? WHERE Report_id=?");
         $stmt->bindParam(1, $_POST["Report_Detail"][$num]);
         $stmt->bindParam(2, $_POST["Report_Start_Date"][$num]);
@@ -31,17 +25,15 @@ if (isset($_POST['save'])) {
         $stmt->bindParam(9, $_POST['save']);
         $stmt->execute();
         $stmt = $conn->prepare("UPDATE itoss_sign SET Sign_image=? WHERE Sign_id = ?");
-        $stmt->bindParam(1, $sign);
+        $stmt->bindParam(1, $_POST['Sign_image']);
         $stmt->bindParam(2, $_POST['Sign_id']);
         $stmt->execute();
-
-        $_SESSION['ch'] = 5;
+        $stmt = $conn->query("UPDATE itoss_form SET Status_form_id=".$_POST["Report_Status"][$num]." WHERE Form_id=".$Form_id."");
+        
+        $_SESSION['ch'] = 4;
         echo '<script language="javascript">';
         echo 'location.href="indexUser.php"';
         echo '</script>';
-    } else {
-        echo '<script>toastr.warning("กรุณาลงชื่อให้เรียบร้อย");</script>';
-    }
 } else if (isset($_POST['success'])) {
     $stmt = $conn->prepare("UPDATE itoss_form SET Status_form_id = 8 where Form_id = '$Form_id'");
     $stmt->execute();
@@ -114,7 +106,7 @@ $signUser = $sql_user->fetch();
         </div>
     </div>
     <div class="col-auto col-xl-2 ms-auto">
-        <a class="btn btn-outline-success col-auto d-block ms-xl-auto me-xl-0 me-auto ms-2 " href="fileprint.php?Form_id=<?=$Form_id?>" target ="_blank">พิมพ์เอกสาร</a>
+        <a class="btn btn-outline-success col-auto d-block ms-xl-auto me-xl-0 me-auto ms-2 " href="fileprint.php?Form_id=<?= $Form_id ?>" target="_blank">พิมพ์เอกสาร</a>
     </div>
 
     <form action="" method="post">
@@ -175,39 +167,37 @@ $signUser = $sql_user->fetch();
 
                     <div class="col-12 col-lg-2 mb-0">
                         <div class="form-check">
-                            <input type="checkbox" class="data form-check-input mb-2 my-xl-0 required" name="Jobtype_id[]" id="name0" value="0" onclick="deRequireCb('required')" disabled <?= $ch ?>>
+                            <input type="checkbox" class="form-check-input mb-2 my-xl-0 required" name="Jobtype_id[]" id="name0" value="0" onclick="deRequireCb('required')" disabled <?= $ch ?>>
                             <label class="form-check-label ms-1 my-0" for="name" id="labelOther">
                                 อื่น ๆ
                             </label>
                         </div>
-                        <input class="data d-none form-control mt-1" type="text" name="Jobtype_orther_name" id="other_job" value="<?= $valueOther ?>" placeholder="กรอกประเภทงาน" disabled>
+                        <input class="d-none form-control mt-1" type="text" name="Jobtype_orther_name" id="other_job" value="<?= $valueOther ?>" placeholder="กรอกประเภทงาน" disabled>
                     </div>
                 <?php } ?>
             </div>
         </div>
         <div class="row mb-xl-5 ">
-        <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
+            <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
                 <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
-                    </div>
-                
+                    <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                </div>
                 <div class="col-6 col-xl-6 mx-auto mb-5">
-                    <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
+                    <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $row['User_Name'] ?>" disabled>
                 </div>
             </div>
-            <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
+            <div class="col-12 col-xl-6 mx-xl-auto">
                 <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
                 </div>
-                <div class="signBox col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <img class="w-100 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
-                    </div>
-                
+                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                    <img class="w-100 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
+                </div>
                 <div class="col-6 col-xl-6 mx-auto mb-5">
-                    <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $signAdmin['User_Name'] ?>" disabled>
+                    <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $signAdmin['User_Name'] ?>" disabled>
                 </div>
             </div>
         </div>
@@ -291,13 +281,13 @@ $signUser = $sql_user->fetch();
                     ?>
                     <div class="row">
                         <div class="col-6 col-xl-6 form-check">
-                            <input class="<?= $class ?> finish form-check-input mx-auto me-2" type="radio" name="Report_Status[<?= $i ?>]" value="7" id="finish<?= $i ?>" disabled <?= $finish ?>>
+                            <input class="<?= $class ?> finish form-check-input mx-auto me-2" type="radio" name="Report_Status[<?= $i ?>]" value="7" id="finish<?= $i ?>" onclick="checkStatusReport()" disabled <?= $finish ?>>
                             <label class="form-check-label ftitle" for="finish">
                                 ปิดงาน
                             </label>
                         </div>
                         <div class="col-6 col-xl-6 form-check">
-                            <input class="<?= $class ?> follow form-check-input me-2" type="radio" name="Report_Status[<?= $i ?>]" id="follow<?= $i ?>" value="6" disabled <?= $follow ?>>
+                            <input class="<?= $class ?> follow form-check-input me-2" type="radio" name="Report_Status[<?= $i ?>]" id="follow<?= $i ?>" value="6" onclick="checkStatusReport()" disabled <?= $follow ?>>
                             <label class="form-check-label ftitle" for="follow" id="lab-other">
                                 ติดตามงาน
                             </label>
@@ -305,11 +295,11 @@ $signUser = $sql_user->fetch();
 
                         <div class="col-xl-12">
                             <?php
-                                if($i == count($report) - 1){
-                                    echo '<input type="date" class="data form-control mt-xl-2" name="Report_follow_date[<?= $i ?>]" id="follow-date'.$i.'" value="'.date('Y-m-d', strtotime($report[$i]['Report_follow_date'])).'" disabled>';
-                                }else{
-                                    echo '<input type="date" class=" form-control mt-xl-2" name="Report_follow_date[<?= $i ?>]" id="follow-date'.$i.'" value="'.date('Y-m-d', strtotime($report[$i]['Report_follow_date'])).'" disabled>';
-                                }
+                            if ($i == count($report) - 1) {
+                                echo '<input type="date" class="data form-control mt-xl-2" name="Report_follow_date['.$i.']" id="follow-date' . $i . '" value="' . date('Y-m-d', strtotime($report[$i]['Report_follow_date'])) . '" disabled>';
+                            } else {
+                                echo '<input type="date" class="form-control mt-xl-2" name="Report_follow_date['.$i.']" id="follow-date' . $i . '" value="' . date('Y-m-d', strtotime($report[$i]['Report_follow_date'])) . '" disabled>';
+                            }
                             ?>
                         </div>
                     </div>
@@ -318,50 +308,41 @@ $signUser = $sql_user->fetch();
 
 
             <div class="row mb-xl-5 ">
-                <div class="col-12 col-xl-6">
+                <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
                     <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                         <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                     </div>
-                    <div class="row signBox my-3 my-xl-5">
-                        <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                            <?= $signUser['Sign_image'] ?>
-                        </div>
+                    <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                        <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                     </div>
                     <div class="col-6 col-xl-6 mx-auto mb-5">
                         <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
-                        <input class="<?= $class ?> form-control ms-0  col-xl-1" type="date" name="Report_date_user[<?= $i ?>]" id="start" value="<?= date('Y-m-d', strtotime($report[$i]['Report_date_user'])) ?>" disabled>
+                        <input class="<?= $class ?> form-control ms-0  col-xl-1" type="date" name="Report_date_user[<?= $i ?>]" id="start" value="<?= date('Y-m-d', strtotime(isset($report[$i]['Report_date_user'])?$report[$i]['Report_date_user']:"now")) ?>" disabled>
                     </div>
                 </div>
-                <div class="col-12 col-xl-6">
-                    <div class="col-12 col-xl-6 mx-xl-auto mb-3">
+
+                <div class="col-12 col-xl-6 mx-xl-auto">
+                    <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                         <p class="ftitle fw-bold mb-1 text-center">ผู้ใช้บริการ</p>
                     </div>
+
                     <?php
                     if ($i == count($report) - 1) {
                     ?>
-                        <div class="row signBox my-3 my-xl-5" id="sent_img">
-                            <div class="col-auto mx-auto col-xl-auto mx-auto mx-xl-auto mb-xl-0 align-self-center">
-                                <?= $report[$i]['Sign_image'] ?>
-                            </div>
+                        <div class="col-auto mx-auto col-xl-12 mx-xl-auto mb-xl-0" id="sent_img">
+                            <img class="d-block w-100 h-100" src="data:<?= $report[$i]['Sign_image'] ?>" alt="">
                         </div>
-                        <div class="row mb-3 my-xl-5 text-center <?= $none ?>" id="signa">
-                            <div class="col-12 col-xl-12 mx-auto mb-xl-0">
-                                <div id="content">
-                                    <input type="hidden" name="Sign_id" id="Sign_id" value="<?= $report[$i]['Sign_id'] ?>" required>
-                                    <input type="hidden" name="Sign_image" id="Signimg" value=".." required>
-
-                                    <div id="signature"></div>
-                                    <div class="col mt-xl-5" id="tools"> </div>
-                                </div>
-                            </div>
+                        <div class="col-xl-12 mx-auto <?= $none ?>" id="signa">
+                            <input type="hidden" name="Sign_id" id="Sign_id" value="<?= $report[$i]['Sign_id'] ?>" required>
+                            <input type="hidden" name="Sign_image" id="Signimg" value="..." required>
+                            <div class="mb-3 col-12" id="signature"></div>
+                            <div class="col mt-xl-5" id="tools"></div>
                         </div>
                     <?php
                     } else {
                     ?>
-                        <div class="row signBox my-3 my-xl-5">
-                            <div class="col-auto mx-auto col-xl-auto mx-auto mx-xl-auto mb-xl-0 align-self-center">
-                                <?= $report[$i]['Sign_image'] ?>
-                            </div>
+                        <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                            <img class="w-100 h-auto" src="data:<?= $report[$i]['Sign_image'] ?>" alt="">
                         </div>
                     <?php
                     }
@@ -370,7 +351,9 @@ $signUser = $sql_user->fetch();
                         <label class="ftilte fw-bold text-end mb-0 mt-0" for="client">วันที่</label>
                         <input class="<?= $class ?> form-control ms-0  col-xl-1" type="date" name="Report_date_client[<?= $i ?>]" id="client" value="<?= $report[$i]['Report_date_client'] ?>" disabled>
                     </div>
+
                 </div>
+
             </div>
             <div class="modal fade" id="show-img<?= $i ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"><!--แสดงรูปภาพการปฏิบัติงาน-->
                 <div class="modal-dialog">
@@ -432,25 +415,28 @@ $signUser = $sql_user->fetch();
                     } else if ($_SESSION['status'] == 2) {
                     ?>
                         <button class="btn btn-warning d-block ms-2 mx-xl-auto ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
+                        <div id="continueCol"></div>
                 <?php
                     }
                     echo '</div>';
                 }
+                if($row['Status_form_id'] == 8){
+                   echo '<div id="continueCol"></div>';
+                    
+                }
                 ?>
-            
-            <?php
-            if ($report[count($report) - 1]['Report_Status'] == 6 && $_SESSION['status'] == 2) {
-            ?>
-            <button class="btn btn-warning d-block ms-2 mx-xl-auto ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
-            </div>
-            <?php
-            }
-            ?>
-            <div class="col-auto col-xl-3 align-self-center <?=isset($conch)?$conch:''?>" id="continueCol">
-                <a href="create_report.php?Form_id=<?= $Form_id ?>" class="btn btn-primary col-xl-4 d-block mx-xl-auto ftitle">ดำเนินงานต่อ</a>
-            </div>
 
-
+                <?php
+                if ($report[count($report) - 1]['Report_Status'] == 6 && $_SESSION['status'] == 2) {
+                ?>
+                    <button class="btn btn-warning d-block ms-2 mx-xl-auto ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
+            </div>
+            <div class="col-auto col-xl-3 align-self-center <?= isset($conch) ? $conch : '' ?>" id="continueCol">
+                <a href="create_report.php?Form_id=<?= $Form_id ?>" class="btn btn-primary col-xl-5 col-sm-4  d-block mx-xl-auto ftitle">ดำเนินงานต่อ</a>
+            </div>
+        <?php
+                }
+        ?>
         </div>
     </form>
     <form action="" method="post" enctype="multipart/form-data">
@@ -506,13 +492,13 @@ $signUser = $sql_user->fetch();
 
     function disableFalse() {
         var data = document.getElementsByClassName('data');
-        const conCol = document.getElementById('continueCol');
         var editbtn = document.getElementById('edit');
         var homebtn = document.getElementById('home');
         var savebtn = document.getElementById('save');
         for (var i = 0; i < data.length; i++) {
             data[i].disabled = false;
         }
+        const conCol = document.getElementById('continueCol');
         conCol.classList.add('d-none');
         document.getElementById('showDetail').classList.add('d-none');
         document.getElementById('detail').classList.remove('d-none');
@@ -546,7 +532,28 @@ $signUser = $sql_user->fetch();
         })(jQuery)
 
     }
+    const otherJob = document.getElementById('name0');
+    const inpOther = document.getElementById('other_job');
+    if (otherJob.checked == true) {
+        inpOther.classList.remove('d-none');
+        inpOther.required = true;
+    } else if (otherJob.checked == false) {
 
+        inpOther.classList.add('d-none');
+        inpOther.required = false;
+    }
+    $('#name0').click(function() {
+        const otherJob = document.getElementById('name0');
+        const inpOther = document.getElementById('other_job');
+        if (otherJob.checked == true) {
+            inpOther.classList.remove('d-none');
+            inpOther.required = true;
+        } else if (otherJob.checked == false) {
+
+            inpOther.classList.add('d-none');
+            inpOther.required = false;
+        }
+    });
     // const finish = document.getElementById('finish0');
     // const follow = document.getElementById('follow0');
 

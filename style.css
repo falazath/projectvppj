@@ -89,7 +89,3 @@ input:disabled ,#show-detail, #detail, #Detail, #showDetail, #detailBox{
     background-color:#FFFF;
     color:#000000;
 }
-
-.row .signBox{
-    height: 150px;
-}

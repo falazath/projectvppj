@@ -39,7 +39,7 @@ $sql = $conn->query("SELECT * FROM itoss_agency WHERE state_id =1;");
 $filter[0] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_user WHERE state_id =1;");
 $filter[1] = $sql->fetchAll();
-$sql = $conn->query("SELECT * FROM itoss_jobtype;");
+$sql = $conn->query("SELECT * FROM itoss_jobtype WHERE state_id =1;");
 $filter[2] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
@@ -71,6 +71,8 @@ if (isset($_POST['search'])) {
         while ($row = $sql_job->fetch()) {
             array_push($idJob, $row['Form_id']);
         };
+    }else{
+        $idJob = null;
     }
     if (!empty(strcmp('', $inpStart)) && !empty(strcmp('', $inpEnd))) {
         $condition[] = "itoss_form.Form_date BETWEEN '$inpStart' AND '$inpEnd'";
@@ -80,11 +82,13 @@ if (isset($_POST['search'])) {
     }
     if (count($condition) > 0) {
         $sql .= "WHERE " . implode(' AND ', $condition) . " ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;";
+    }else{
+        $sql .= " ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;";
     }
     $idForm = array();
     $query = $conn->query($sql);
     $in;
-    if (!empty($idJob)) { //ถ้ามี input ประเภทงาน
+    if (!is_null($idJob)) { //ถ้ามี input ประเภทงาน
         while ($data = $query->fetch()) {
             array_push($idForm, $data['Form_id']);
         }

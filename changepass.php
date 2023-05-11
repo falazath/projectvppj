@@ -27,13 +27,13 @@ include($_SESSION['navbar']);
                         echo '</script>';
                         
                         
-                        } else if (strlen($_POST['User_Password']) < 6 || strlen($_POST['new_pwd']) > 20) {
+                        } else if (strlen($_POST['new_pwd']) < 6 || strlen($_POST['new_pwd']) > 20) {
                             echo '<script type="text/javascript">';
                             echo 'window.location.href = "changepass.php"; ';
                             echo "alert('กรุณาใส่รหัสอย่างน้อย 6 ตัว ไม่เกิน 20 ตัว');";
                             echo '</script>';
                             
-                        } else if ($_POST['User_Password'] == $_POST['confirm']) {
+                        } else if ($_POST['new_pwd'] == $_POST['confirm']) {
                             $stmt = $conn->prepare("UPDATE itoss_user SET itoss_user.User_Password = ? WHERE User_id LIKE ?;");
                             $stmt->bindParam(1, $_POST['new_pwd']);
                             $stmt->bindParam(2, $_SESSION['id']);

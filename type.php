@@ -88,12 +88,17 @@ include($_SESSION['navbar']);
                                     <div class="modal fade" id="delete<?= $row['Jobtype_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
-                                                <div class="modal-body">
-                                                    <p class="ftitle fw-bold text-center">ยืนยันการลบ <?= $row['Jobtype_name'] ?></p>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                                        <button type="submit" name="delete" value="<?= $row['Jobtype_id'] ?>" class="btn btn-primary mx-auto">ยืนยัน</button>
-                                                    </div>
+                                                <div class="modal-header">
+                                                    <p class="modal-title fhead fw-bold text-center">ยืนยันการลบ</p>
+                                                </div>
+                                                <div class="modal-body my-3 my-xl-3 text-center">
+                                                    <p class="ftitle text-center d-inline">คุณต้องการลบประเภทงาน </p>
+                                                    <p class="ftitle text-center fw-bold d-inline"> <?= $row['Jobtype_name'] ?> </p>
+                                                    <p class="ftitle text-center d-inline">หรือไม่</p>
+                                                </div>
+                                                <div class="modal-footer justify-content-center">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
+                                                    <button type="submit" class="btn btn-primary" name="delete" value="<?= $row['Jobtype_id'] ?>" class="btn btn-primary mx-auto">ยืนยัน</button>
                                                 </div>
                                             </div>
                                         </div>

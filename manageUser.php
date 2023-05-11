@@ -73,24 +73,24 @@ if (isset($_POST['save'])) {
                             <p class="ftitle fw-bold text-center">เพิ่มผู้ใช้งาน</p>
                             <div class="col-xl-10 mx-auto">
                                 <p class="ftitle fw-bold mb-1">Username</p>
-                                <input type="text" class="form-control ftitle" name="User_Username" placeholder="กรอกข้อมูลUsername">
+                                <input type="text" class="form-control ftitle" name="User_Username" placeholder="กรอกข้อมูลUsername" required>
                             </div>
                             <div class="col-xl-10 mx-auto">
                                 <p class="ftitle fw-bold mb-1">Password</p>
-                                <input type="password" class="form-control ftitle" name="User_Password" placeholder="กรอกข้อมูลPassword">
+                                <input type="password" class="form-control ftitle" name="User_Password" placeholder="กรอกข้อมูลPassword" required>
                                 <input type="hidden" name="state_id" value="1">
                             </div>
                             <div class="col-xl-10 mx-auto">
                                 <p class="ftitle fw-bold mb-1">ชื่อ-นามสกุล</p>
-                                <input type="text" class="form-control ftitle" name="User_Name" placeholder="กรอกข้อมูลชื่อ-นามสกุล">
+                                <input type="text" class="form-control ftitle" name="User_Name" placeholder="กรอกข้อมูลชื่อ-นามสกุล" required>
                             </div>
                             <div class="col-xl-10 mx-auto">
                                 <p class="ftitle fw-bold mb-1">ตำแหน่งงาน</p>
-                                <input type="text" class="form-control ftitle" name="User_Jop" placeholder="กรอกข้อมูลตำแหน่งงาน">
+                                <input type="text" class="form-control ftitle" name="User_Jop" placeholder="กรอกข้อมูลตำแหน่งงาน" required>
                             </div>
                             <div class="col-xl-10 mx-auto">
                                 <p class="ftitle fw-bold mb-1">เบอร์ติดต่อ</p>
-                                <input type="number" class="form-control ftitle" name="User_Phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="กรอกข้อมูลเบอร์ติดต่อ">
+                                <input type="number" class="form-control ftitle" name="User_Phone" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" placeholder="กรอกข้อมูลเบอร์ติดต่อ" required>
                             </div>
                             <div class="col-xl-10 mx-auto">
                                 <p class="ftitle fw-bold">แผนกงาน</p>
@@ -150,7 +150,7 @@ if (isset($_POST['save'])) {
                         <td class="col-5 col-xl-2" id="date"><?= $row['User_Jop'] ?></td>
                         <td class="col-5 col-xl-2" id="date"><?= $row['User_Phone'] ?></td>
                         <td class="col-5 col-xl-2" id="date"><?= $row['Department_name'] ?></td>
-                        <td class="col-1 col-xl-1" id="user"><img data-bs-toggle="modal" data-bs-target="#edit-User<?= $row['User_id'] ?>" src="./asset/icon/Setting.svg" alt=""></td>
+                        <td class="col-1 col-xl-1" id="user"><a data-bs-toggle="modal" data-bs-target="#edit-User<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Setting.svg" alt=""></a></td>
                     </tr>
 
                     <form method="post">
@@ -205,7 +205,7 @@ if (isset($_POST['save'])) {
                                     </div>
                                     <div class="modal-footer justify-content-around">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">กลับ</button>
-                                        <button type="submit" name="edit" value="<?= $row['User_id'] ?>" class="btn btn-primary">แก้ไข</button>
+                                        <button type="submit" class="btn btn-primary"  name="edit" value="<?= $row['User_id'] ?>" >แก้ไข</button>
                                     </div>
                                 </div>
                             </div>

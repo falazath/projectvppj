@@ -88,6 +88,7 @@ $stmt = $conn->prepare("SELECT * FROM itoss_form
 $stmt->bindParam(1, $Form_id);
 $stmt->execute();
 $row = $stmt->fetch();
+isset($row['Status_form_id']) ? $Status1 = $row['Status_form_id'] : $Status1 = $row3['Status_form_id'];
 
 
 $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id' ORDER BY id DESC LIMIT 1");
@@ -216,9 +217,9 @@ $signUser = $stmt4->fetch();
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
-                    </div>
-                
+                    <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                </div>
+
                 <div class="col-6 col-xl-6 mx-auto mb-5">
                     <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
                 </div>
@@ -233,7 +234,29 @@ $signUser = $stmt4->fetch();
                 <button class="btn btn-primary d-block ms-2 mx-xl-auto  ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
             </div>
             <div class="col-auto col-xl-3" id="cancelCol">
-                <button class="btn btn-danger d-block ms-2 me-xl-auto ftitle" type="submit" name="cancel" id="cancel" value="<?= $Form_id ?>">ยกเลิก</button>
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalId" id="cancel">
+                    ยกเลิก
+                </button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="modalId" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <p class="modal-title fhead fw-bold text-center">ยืนยันการยกเลิก</p>
+                            </div>
+                            <div class="modal-body my-3 my-xl-3 text-center">
+                                <p class="ftitle text-center d-inline">คุณต้องการยกเลิกคำขอปฏิบัติงานหรือไม่  </p>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">กลับ</button>
+                                <button class="btn btn-danger ftitle" type="submit" name="cancel"  value="<?= $Form_id ?>">ยืนยัน</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </form>
@@ -259,23 +282,24 @@ $signUser = $stmt4->fetch();
             }
         }
     }
-        const otherJob = document.getElementById('name0');
-        const inpOther = document.getElementById('other_job');
-        if (otherJob.checked == true) {
-            inpOther.classList.remove('d-none');
-            inpOther.required = true;
-        } else if(otherJob.checked == false){
 
-            inpOther.classList.add('d-none');
-            inpOther.required = false;
-        }
-    $('#name0').click(  function(){  
+    const otherJob = document.getElementById('name0');
+    const inpOther = document.getElementById('other_job');
+    if (otherJob.checked == true) {
+        inpOther.classList.remove('d-none');
+        inpOther.required = true;
+    } else if (otherJob.checked == false) {
+
+        inpOther.classList.add('d-none');
+        inpOther.required = false;
+    }
+    $('#name0').click(function() {
         const otherJob = document.getElementById('name0');
         const inpOther = document.getElementById('other_job');
         if (otherJob.checked == true) {
             inpOther.classList.remove('d-none');
             inpOther.required = true;
-        } else if(otherJob.checked == false){
+        } else if (otherJob.checked == false) {
 
             inpOther.classList.add('d-none');
             inpOther.required = false;
@@ -302,7 +326,7 @@ $signUser = $stmt4->fetch();
             evt.cancel();
         });
     }
-
+    const status1 = <?= $Status1 ?> //ค่า status 
     const status = <?= $Status ?>;
     const box = document.getElementById('editBox');
     const topic = box.getElementsByTagName('p');
@@ -314,11 +338,10 @@ $signUser = $stmt4->fetch();
         if (status == 1) {
             userSignBox.classList.add('mx-auto');
         }
-        if (status == 2) {
+        if (status == 2 && status1 != 3) {
             box.classList.remove('d-none');
             topic[0].innerText = 'รายละเอียดที่ต้องการแก้ไข โดย ';
-
-        } else if (status == 3) {
+        } else if (status == 2 && status1 == 3) {
             userSignBox.classList.add('mx-auto');
             document.getElementById('homeCol').classList.remove('ms-auto');
             document.getElementById('home').classList.add('mx-xl-auto');
@@ -327,7 +350,7 @@ $signUser = $stmt4->fetch();
             document.getElementById('home').classList.remove('btn-secondary');
             document.getElementById('saveCol').classList.add('d-none');
             document.getElementById('cancelCol').classList.add('d-none');
-
+            
         } else if (status == 4) {
             box.classList.remove('d-none');
             topic[0].innerText = 'สาเหตุที่ไม่อนุมัติ โดย';

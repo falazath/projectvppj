@@ -43,7 +43,7 @@
           $_SESSION['Sign_image'] = $row1['Sign_image'];
           header('location: indexAdmin.php');
         }
-      } else if ($_SESSION['status'] == 2) {
+      } else if ($_SESSION['status'] == 2 || $_SESSION['status'] == 3) {
         $_SESSION['navbar'] = 'navbar.php';
         if ($row1['Sign_image'] == NULL) {
           header('location: sent.php');

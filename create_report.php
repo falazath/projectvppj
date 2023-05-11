@@ -173,7 +173,6 @@ $signUser = $sql_user->fetch();
                 }
             }
             $index = array_search('0', array_column($job, 'Jobtype_id'));
-            // echo '<script>alert('.$index.');</script>';
             if (is_null($index)) {
                 $ch = 'checked';
                 $valueOther = $job[$index]['name_other']; ?>
@@ -219,7 +218,7 @@ $signUser = $sql_user->fetch();
             </div>
             <div class="row signBox my-3 my-xl-5">
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img src="<?= $signAdmin['Sign_image'] ?>" alt="">
+                    <img src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
                 </div>
             </div>
             <div class="col-6 col-xl-6 mx-auto mb-5">
@@ -283,7 +282,6 @@ $signUser = $sql_user->fetch();
                 <div class="mb-3" id="signature"></div>
                 <div class="col mt-xl-5" id="tools"></div>
                 <input type="hidden" name="Sign_image" id="Sign_image" value="..." required>
-
             </div>
         </div>
 

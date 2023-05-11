@@ -18,6 +18,11 @@ if (isset($_SESSION['ch'])) { //toastr
                 unset($_SESSION['ch']);
                 break;
             }
+        case 4: {
+                echo '<script>toastr.success("แก้ไขรายงานเรียบร้อย");</script>'; //if cancel success
+                unset($_SESSION['ch']);
+                break;
+            }
         case 6: {
                 echo '<script>toastr.success("สร้างรายงานเรียบร้อย:กำลังติดตามงาน");</script>'; //if edit report success
                 unset($_SESSION['ch']);
@@ -36,7 +41,7 @@ $sql = $conn->query("SELECT * FROM itoss_agency WHERE state_id =1;");
 $filter[0] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_user WHERE state_id =1;");
 $filter[1] = $sql->fetchAll();
-$sql = $conn->query("SELECT * FROM itoss_jobtype;");
+$sql = $conn->query("SELECT * FROM itoss_jobtype WHERE state_id =1;;");
 $filter[2] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
@@ -66,8 +71,11 @@ if (isset($_POST['search'])) {
         $sql_job = $conn->query("SELECT itoss_jobtype.Jobtype_name,itoss_form.Form_id FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
                            itoss_job.Jobtype_id = '$inpType' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
         while ($row = $sql_job->fetch()) {
+            var_dump($row['Form_id']) ;
             array_push($idJob, $row['Form_id']);
         };
+    }else{
+        $idJob = null;
     }
     if (!empty(strcmp('', $inpStart)) && !empty(strcmp('', $inpEnd))) {
         $condition[] = "itoss_form.Form_date BETWEEN '$inpStart' AND '$inpEnd'";
@@ -77,11 +85,13 @@ if (isset($_POST['search'])) {
     }
     if (count($condition) > 0) {
         $sql .= "WHERE " . implode(' AND ', $condition) . " ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;";
+    }else{
+        $sql .= " ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;";
     }
     $idForm = array();
     $query = $conn->query($sql);
     $in;
-    if (!empty($idJob)) { //ถ้ามี input ประเภทงาน
+    if (!is_null($idJob)) { //ถ้ามี input ประเภทงาน
         while ($data = $query->fetch()) {
             array_push($idForm, $data['Form_id']);
         }
@@ -314,9 +324,15 @@ if (!empty($_SESSION['check'])) {
     </form>
     <!--ปุ่มสร้างคำขอ-->
     <div class="row">
+        <?php
+            if($_SESSION['status'] == 2){
+              ?>
         <div class="col mb-3">
             <button type="button" class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-date">สร้างคำขอปฏิบัติงาน</button>
         </div>
+              <?php  
+            }
+        ?>
         <form method="post">
             <div class="modal fade" id="create-date" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -392,7 +408,7 @@ if (!empty($_SESSION['check'])) {
                     $Form_Work = $row[$j]['Form_Work'];
                     $Form_id = $row[$j]['Form_id'];
                     echo '<tr class="d-flex text-center fsub">
-                                <td class="col-3 col-sm-1" id="date">' . date("d/m/Y", strtotime($Form_date)) . '</td>';
+                                <td class="col-3 col-sm-1" >' . date("d/m/Y", strtotime($Form_date)) . '</td>';
                     if ($row[$j]['Agency_id'] == 0) {
                         $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id'");
                         $agency = $sql->fetch();
