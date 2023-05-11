@@ -6,16 +6,10 @@ if (!isset($_SESSION['id'])) {
 include("header.html");
 include("connect.php");
 include($_SESSION['navbar']);
-
 if (isset($_SESSION['ch'])) { //toastr
     switch ($_SESSION['ch']) {
         case 1: {
                 echo '<script>toastr.success("สร้างคำขอเรียบร้อย");</script>'; //if create success
-                unset($_SESSION['ch']);
-                break;
-            }
-        case 2: {
-                echo '<script>toastr.success("แก้ไขคำขอเรียบร้อย");</script>'; //if edit success
                 unset($_SESSION['ch']);
                 break;
             }
@@ -24,16 +18,15 @@ if (isset($_SESSION['ch'])) { //toastr
                 unset($_SESSION['ch']);
                 break;
             }
-        case 5: {
-                echo '<script>toastr.success("แก้ไขรายงานเรียบร้อย");</script>'; //if edit report success
+        case 6: {
+                echo '<script>toastr.success("สร้างรายงานเรียบร้อย:กำลังติดตามงาน");</script>'; //if edit report success
                 unset($_SESSION['ch']);
                 break;
             }
-        case 4: {
-            echo '<script>toastr.success("สร้างรายงานเรียบร้อย");</script>'; //if edit report success
-            unset($_SESSION['ch']);
-            break;
-
+        case 7: {
+                echo '<script>toastr.success("สร้างรายงานเรียบร้อย:รอตรวจสอบ");</script>'; //if edit report success
+                unset($_SESSION['ch']);
+                break;
             }
     }
 }
@@ -49,26 +42,66 @@ $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
 //-Value filter
 
-if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 'all' && $_POST['type'] == 'all' && $_POST['start-date'] == '' && $_POST['end-date'] == '' && $_POST['status'] == 'all')) {
-
-    $sql_data = $conn->prepare("SELECT DISTINCT itoss_form.Form_id FROM itoss_form
-    INNER JOIN itoss_agency ON itoss_agency.Agency_id = itoss_form.Agency_id
-    INNER JOIN itoss_status_form ON itoss_status_form.Status_form_id = itoss_form.Status_form_id
-    INNER JOIN itoss_user ON itoss_user.User_id = itoss_form.User_id
-    INNER JOIN itoss_job ON itoss_job.Form_id = itoss_form.Form_id
-    INNER JOIN itoss_jobtype ON itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id
-    WHERE itoss_form.Agency_id LIKE ? OR itoss_form.User_id LIKE ? OR itoss_job.Jobtype_id LIKE ?
-    OR itoss_form.Form_date BETWEEN ? AND ? OR itoss_form.Status_form_id LIKE ?
-    ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;");
-    $sql_data->bindParam(1, $_POST['sector']);
-    $sql_data->bindParam(2, $_POST['user']);
-    $sql_data->bindParam(3, $_POST['type']);
-    $sql_data->bindParam(4, $_POST['start-date']);
-    $sql_data->bindParam(5, $_POST['end-date']);
-    $sql_data->bindParam(6, $_POST['status']);
-    $sql_data->execute();
-    $data = $sql_data->fetchAll();
-    if (!empty($data)) {
+if (isset($_POST['search'])) {
+    $inpAgency = $_POST['sector'];
+    $inpUser = $_POST['user'];
+    $inpType = $_POST['type'];
+    $inpStart = $_POST['start-date'];
+    $inpEnd = $_POST['end-date'];
+    $inpStatus = $_POST['status'];
+    $idJob = array();
+    $sql = "SELECT DISTINCT itoss_form.Form_id FROM itoss_form
+         INNER JOIN itoss_agency ON itoss_agency.Agency_id = itoss_form.Agency_id
+         INNER JOIN itoss_status_form ON itoss_status_form.Status_form_id = itoss_form.Status_form_id
+         INNER JOIN itoss_user ON itoss_user.User_id = itoss_form.User_id ";
+    $condition = array();
+    $dateSql;
+    if (!empty(strcmp('all', $inpAgency))) {
+        $condition[] = "itoss_form.Agency_id LIKE '$inpAgency'";
+    }
+    if (!empty(strcmp('all', $inpUser))) {
+        $condition[] = "itoss_form.User_id LIKE '$inpUser'";
+    }
+    if (!empty(strcmp('all', $inpType))) {
+        $sql_job = $conn->query("SELECT itoss_jobtype.Jobtype_name,itoss_form.Form_id FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
+                           itoss_job.Jobtype_id = '$inpType' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
+        while ($row = $sql_job->fetch()) {
+            array_push($idJob, $row['Form_id']);
+        };
+    }
+    if (!empty(strcmp('', $inpStart)) && !empty(strcmp('', $inpEnd))) {
+        $condition[] = "itoss_form.Form_date BETWEEN '$inpStart' AND '$inpEnd'";
+    }
+    if (!empty(strcmp('all', $inpStatus))) {
+        $condition[] = "itoss_form.Status_form_id LIKE '$inpStatus'";
+    }
+    if (count($condition) > 0) {
+        $sql .= "WHERE " . implode(' AND ', $condition) . " ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;";
+    }
+    $idForm = array();
+    $query = $conn->query($sql);
+    $in;
+    if (!empty($idJob)) { //ถ้ามี input ประเภทงาน
+        while ($data = $query->fetch()) {
+            array_push($idForm, $data['Form_id']);
+        }
+        if (!empty($idForm)) {
+            $data = array_intersect($idJob, $idForm);
+            print_r(array_key_last($data));
+            $in = "(";
+            for ($i = 0; $i <= array_key_last($data); $i++) {
+                if (!empty($data[$i])) {
+                    echo $data[$i];
+                    $in .= "'" . $data[$i] . "'";
+                    if ($i != array_key_last($data)) {
+                        $in .= ",";
+                    }
+                }
+            }
+            $in .= ")";
+        }
+    } else { //ถ้าไม่มี input ประเภทงาน
+        $data = $query->fetchAll();
         $in = "(";
         for ($i = 0; $i < count($data); $i++) {
             $in .= "'" . $data[$i]['Form_id'] . "'";
@@ -77,12 +110,15 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
             }
         }
         $in .= ")";
+    }
+
+    if (!empty($data)) {
         $sql_in = $conn->query("SELECT * FROM itoss_form
-        WHERE itoss_form.Form_id IN $in");
+                WHERE itoss_form.Form_id IN $in");
         $row = $sql_in->fetchAll();
     } else {
         $sql_in = $conn->query("SELECT * FROM itoss_form
-        WHERE itoss_form.Form_id IN ('')");
+                WHERE itoss_form.Form_id IN ('')");
         $row = $sql_in->fetchAll();
     }
 } else {
@@ -93,21 +129,16 @@ if (isset($_POST['search']) && !($_POST['sector'] == 'all' && $_POST['user'] == 
     $data->execute();
     $row = $data->fetchAll();
 }
-
-for ($i = 0; $i < count($row); $i++) {
-    if (strtotime(date('Y-m-d')) == strtotime($row[$i]['Form_date'])) {
-        $max = isset($_SESSION['checkFormToday']) ? count($_SESSION['checkFormToday']) : 1;
-        $_SESSION['checkFormToday'][$max] = $row[$i]['Form_id'];
-    }
-    if ($i == count($row) - 1) { ?>
-        <script>
-            $(document).ready(function() {
-                //$("#notiWorkToday").modal("show");
-            });
-        </script>
+if (!empty($_SESSION['check'])) {
+?>
+    <script>
+        $(document).ready(function() {
+            $("#notiWorkToday").modal("show");
+        });
+    </script>
 <?php
-    }
 }
+
 ?>
 <main>
     <!-- Modal -->
@@ -115,17 +146,29 @@ for ($i = 0; $i < count($row); $i++) {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitleId">Modal title</h5>
+                    <h5 class="modal-title" id="modalTitleId">รายการคำขอปฏิบัติงานของคุณวันนี้</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <div class="container-fluid">
-                        Add rows here
+                        <?php
+                        for ($i = 0; $i < count(isset($_SESSION['check']) ? $_SESSION['check'] : array()); $i++) {
+                        ?>
+                            <div class="row">
+                                <div class="col">
+                                    <p class="ftitle fw-bold"><?= $_SESSION['check'][$i]['Agency_Name'] ?></p>
+                                    <p class="ftitle">รายละเอียด: </p>
+                                    <?= $_SESSION['check'][$i]['Form_Work'] ?>
+                                </div>
+                            </div>
+                        <?php
+                        }
+                        unset($_SESSION['check']);
+                        ?>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
                 </div>
             </div>
         </div>
@@ -145,7 +188,7 @@ for ($i = 0; $i < count($row); $i++) {
                     <img src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt="">
                 </button>
                 <div class="offcanvas offcanvas-bottom" tabindex="-1" id="filterPhone" aria-labelledby="offcanvasBottomLabel">
-                    <div class="offcanvas-body small">
+                    <div class="offcanvas-body small mx-xl-auto">
                         <div class="row justify-content-start mb-3">
                             <div class="col-12 col-sm-2 col-xl-2 mb-2"><!--เลือกหน่วยงาน-->
                                 <p class="ftitle mb-0">หน่วยงาน</p>
@@ -175,7 +218,7 @@ for ($i = 0; $i < count($row); $i++) {
                                     <option selected value="all">ทั้งหมด</option>
                                     <?php
                                     for ($i = 0; $i < count($filter[1]); $i++) {
-                                        if (!is_null($_POST['user']) && $_POST['User_id'] != 'all') {
+                                        if (!is_null($_POST['user']) && $_POST['user'] != 'all') {
                                             if ($_POST['user'] == $filter[1][$i]['User_id']) {
                                                 echo '<option selected value="' . $filter[1][$i]['User_id'] . '">' . $filter[1][$i]['User_Name'] . '</option>';
                                                 $_POST['user'] = null;
@@ -215,11 +258,27 @@ for ($i = 0; $i < count($row); $i++) {
 
                             <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกวันที่เริ่มต้น-->
                                 <p class="ftitle mb-0">วันที่เริ่มต้น</p>
-                                <input type="date" class="filter form-control" name="start-date" min="2000-01-01" value="">
+                                <?php
+                                if (isset($_POST['start-date'])) { ?>
+                                    <input type="date" class="filter form-control" name="start-date" id="start-date" min="2000-01-01" value="<?= $_POST['start-date'] ?>" onchange="requireDate()">
+                                <?php
+                                } else {
+                                    echo '<input type="date" class="filter form-control" name="start-date" id="start-date" min="2000-01-01" value="" onchange="requireDate()">';
+                                }
+                                ?>
                             </div>
                             <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกวันที่สิ้นสุด-->
                                 <p class="ftitle mb-0">วันที่สิ้นสุด</p>
-                                <input type="date" class="filter form-control" name="end-date" id="" min="2000-01-01" value="">
+                                <?php
+                                if (isset($_POST['end-date'])) { ?>
+                                    <input type="date" class="filter form-control" name="end-date" id="end-date" min="2000-01-01" value="<?= $_POST['end-date'] ?>" onchange="requireDate()">
+
+                                <?php
+                                } else {
+                                    echo '<input type="date" class="filter form-control" name="end-date" id="end-date" min="2000-01-01" value="" onchange="requireDate()">';
+                                }
+                                ?>
+
                             </div>
 
                             <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกสถานะ-->
@@ -243,7 +302,7 @@ for ($i = 0; $i < count($row); $i++) {
                                 </select>
                             </div>
                             <div class="row justify-content-center mt-3">
-                                <div class="col-3 my-auto">
+                                <div class="col-auto my-auto ">
                                     <button type="submit" class="btn btn-primary d-block mx-auto px-5" name="search">ค้นหา</button>
                                 </div>
                             </div>
@@ -265,7 +324,8 @@ for ($i = 0; $i < count($row); $i++) {
                         <div class="modal-body">
                             <p class="ftitle fw-bold text-center">วันที่สร้างคำขอปฏิบัติงาน</p>
                             <div class="col-xl-10 mx-auto">
-                                <input type="date" name="Form_date" class="form-control" value="<?= date("Y-m-d") ?>">
+                                <input type="date" name="Form_date" id="Form_date" class="form-control">
+                                <input type="text" name="Show_date" id="Show_date" class="form-control">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -343,7 +403,7 @@ for ($i = 0; $i < count($row); $i++) {
                     echo '<td class="col-4 col-sm-2" id="user">' . $User_Name . '</td>';
                     echo  '<td class="col-4 col-sm-1" id="cate-work">'; // column ประเภทงาน
                     $sql = $conn->query("SELECT * FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
-                           itoss_form.Form_id = '$Form_id' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
+                           itoss_form.Form_id = '$Form_id' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id ORDER BY itoss_job.Job_id ASC");
                     $job = $sql->fetchAll();
                     for ($i = 0; $i < count($job); $i++) {
                         if ($i != 0) {
@@ -381,13 +441,75 @@ for ($i = 0; $i < count($row); $i++) {
                     echo ' </td>
                             </tr>';
                 }
+
                 ?>
             </tbody>
         </table>
     </div>
 
 </main>
+
 <script>
+    $(document).ready(function() {
+        $("#Show_date").hide();
+        $("#Form_date").val("<?= date("Y-m-d") ?>");
+        var date = new Date($('#Form_date').val());
+        var options = {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+        };
+        var formattedDate = date.toLocaleDateString('th-TH',
+            options);
+        $("#Show_date").val(formattedDate);
+        $("#Form_date").hide();
+        $("#Show_date").show();
+
+        $("#Form_date").change(function() {
+            var date = new Date($(this).val());
+            var options = {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            };
+            var formattedDate = date.toLocaleDateString('th-TH',
+                options);
+            $("#Show_date").val(formattedDate);
+            $("#Form_date").hide();
+            $("#Show_date").show();
+        });
+
+        $("#Show_date").click(function() {
+            $("#Show_date").hide();
+            $("#Form_date").show();
+        });
+    });
+    // Get the current date
+    let currentDate = new Date();
+
+    // Get the current year, month, and day
+    let year = currentDate.getFullYear() + 543;
+    let month = currentDate.getMonth() + 1; // Month is 0-indexed, so add 1
+    let day = currentDate.getDate();
+
+    // Pad the day with a leading zero if necessary
+    day = day.toString().padStart(2, '0');
+
+    // Get the abbreviated name of the month
+    let monthNames = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.',
+        'ธ.ค.'
+    ];
+    let monthAbbr = monthNames[month - 1]; // Month is 1-indexed, so subtract 1
+
+    // Get the date in the format "DD-MMM-YYYY"
+    let dateString = `${day} ${monthAbbr} ${year}`;
+    let dateElement = document.getElementById('date');
+    dateElement.innerHTML = dateString;
+
+    function requireDate() {
+        document.getElementById('start-date').required = true;
+        document.getElementById('end-date').required = true;
+    }
     var status = document.getElementById('status')
 </script>
 </body>

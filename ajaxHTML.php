@@ -73,10 +73,9 @@ include('header.html');
         })(jQuery)
 
         document.getElementById('convert').addEventListener('click', function() {
-            // const svgData = new XMLSerializer().serializeToString('<?=$data['Sign_image']?>')
             const svgDataBase64 = btoa(unescape(encodeURIComponent('<?=$data['Sign_image']?>')))
             const svgDataUrl = `data:image/svg+xml;charset=utf-8;base64,${svgDataBase64}`
-            document.getElementById('text').innerText = svgDataUrl;
+            // document.getElementById('text').innerText = svgDataUrl;
             document.getElementById('imgpng').src = svgDataUrl;
         })
     </script>

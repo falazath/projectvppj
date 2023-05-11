@@ -180,7 +180,9 @@ $signUser = $stmt4->fetch();
             <?php
             }
             $index = array_search('0', array_column($job, 'Jobtype_id'));
-            if (isset($index)) {
+            // print_r($job);
+            if ($index !== false) {
+
                 $ch = 'checked';
                 $valueOther = $job[$index]['name_other'];
             } else {
@@ -213,11 +215,10 @@ $signUser = $stmt4->fetch();
                 <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
-                <div class="row signBox my-3 my-xl-5">
-                    <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <?= $signUser['Sign_image'] ?>
+                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                        <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                     </div>
-                </div>
+                
                 <div class="col-6 col-xl-6 mx-auto mb-5">
                     <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
                 </div>
@@ -225,31 +226,61 @@ $signUser = $stmt4->fetch();
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">
             <div class="col-auto col-xl-3 d-flex" id="homeCol">
-                <a class="btn btn-secondary me-2 ms-xl-auto me-xl-0 ftitle" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
+                <a class="btn btn-primary mx-xl-auto ftitle mx-auto" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
             </div>
             <div class="col-auto col-xl-3" id="saveCol">
                 <button class="btn btn-primary d-block me-auto ms-2 mx-xl-auto d-none" type="submit" name="save" id="save">บันทึก</button>
                 <button class="btn btn-primary d-block ms-2 mx-xl-auto  ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
             </div>
             <div class="col-auto col-xl-3" id="cancelCol">
-                <button class="btn btn-primary d-block ms-2 me-xl-auto ftitle" type="submit" name="cancel" id="cancel" value="<?= $Form_id ?>">ยกเลิก</button>
+                <button class="btn btn-danger d-block ms-2 me-xl-auto ftitle" type="submit" name="cancel" id="cancel" value="<?= $Form_id ?>">ยกเลิก</button>
             </div>
         </div>
     </form>
 </main>
 <script>
-    function checkOtherJobSelected() {
+    function deRequireCb(elClass) {
+        el = document.getElementsByClassName(elClass);
+
+        var atLeastOneChecked = false; //at least one cb is checked
+        for (i = 0; i < el.length; i++) {
+            if (el[i].checked === true) {
+                atLeastOneChecked = true;
+            }
+        }
+
+        if (atLeastOneChecked === true) {
+            for (i = 0; i < el.length; i++) {
+                el[i].required = false;
+            }
+        } else {
+            for (i = 0; i < el.length; i++) {
+                el[i].required = true;
+            }
+        }
+    }
         const otherJob = document.getElementById('name0');
         const inpOther = document.getElementById('other_job');
         if (otherJob.checked == true) {
             inpOther.classList.remove('d-none');
             inpOther.required = true;
-        } else {
+        } else if(otherJob.checked == false){
+
             inpOther.classList.add('d-none');
             inpOther.required = false;
         }
-    }
-    checkOtherJobSelected();
+    $('#name0').click(  function(){  
+        const otherJob = document.getElementById('name0');
+        const inpOther = document.getElementById('other_job');
+        if (otherJob.checked == true) {
+            inpOther.classList.remove('d-none');
+            inpOther.required = true;
+        } else if(otherJob.checked == false){
+
+            inpOther.classList.add('d-none');
+            inpOther.required = false;
+        }
+    });
 
     function disableFalse() {
         var data = document.getElementsByClassName('data');
@@ -278,11 +309,9 @@ $signUser = $stmt4->fetch();
     var user = <?= $row['User_id'] ?>;
     var id = <?= $_SESSION['id'] ?>;
     const userSignBox = document.getElementById('userSignBox');
-    const adminSignBox = document.getElementById('adminSignBox');
     var str;
     if (user == id) {
         if (status == 1) {
-            adminSignBox.classList.add('d-none');
             userSignBox.classList.add('mx-auto');
         }
         if (status == 2) {
@@ -290,7 +319,6 @@ $signUser = $stmt4->fetch();
             topic[0].innerText = 'รายละเอียดที่ต้องการแก้ไข โดย ';
 
         } else if (status == 3) {
-            adminSignBox.classList.add('d-none');
             userSignBox.classList.add('mx-auto');
             document.getElementById('homeCol').classList.remove('ms-auto');
             document.getElementById('home').classList.add('mx-xl-auto');

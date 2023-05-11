@@ -32,7 +32,7 @@ if (isset($_POST['save'])) {
         $stmt->execute();
         $stmt = $conn->prepare("UPDATE itoss_sign SET Sign_image=? WHERE Sign_id = ?");
         $stmt->bindParam(1, $sign);
-        $stmt->bindParam(2, $_POST['Sign_id']   );
+        $stmt->bindParam(2, $_POST['Sign_id']);
         $stmt->execute();
 
         $_SESSION['ch'] = 5;
@@ -47,7 +47,7 @@ if (isset($_POST['save'])) {
     $stmt->execute();
 
     include("message.php");
-$_SESSION['ch'] = 8;
+    $_SESSION['ch'] = 8;
     echo '<script language="javascript">';
     echo 'location.href="indexAdmin.php"';
     echo '</script>';
@@ -112,6 +112,9 @@ $signUser = $sql_user->fetch();
         <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
             <p class="text-dark text-center fhead fw-bold">คำขอปฏิบัติงาน</p>
         </div>
+    </div>
+    <div class="col-auto col-xl-2 ms-auto">
+        <a class="btn btn-outline-success col-auto d-block ms-xl-auto me-xl-0 me-auto ms-2 " href="fileprint.php?Form_id=<?=$Form_id?>" target ="_blank">พิมพ์เอกสาร</a>
     </div>
 
     <form action="" method="post">
@@ -183,28 +186,26 @@ $signUser = $sql_user->fetch();
             </div>
         </div>
         <div class="row mb-xl-5 ">
-            <div class="col-12 col-xl-6">
+        <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
                 <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
-                <div class="row signBox my-3 my-xl-5">
-                    <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <?= $signUser['Sign_image'] ?>
+                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                        <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                     </div>
-                </div>
+                
                 <div class="col-6 col-xl-6 mx-auto mb-5">
                     <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
                 </div>
             </div>
-            <div class="col-12 col-xl-6">
+            <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
                 <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
                 </div>
-                <div class="row signBox my-3 my-xl-5">
-                    <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <?= $signAdmin['Sign_image'] ?>
+                <div class="signBox col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                        <img class="w-100 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
                     </div>
-                </div>
+                
                 <div class="col-6 col-xl-6 mx-auto mb-5">
                     <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $signAdmin['User_Name'] ?>" disabled>
                 </div>
@@ -243,27 +244,27 @@ $signUser = $sql_user->fetch();
                     <!-- <div class="col-auto col-xl-3">
                     </div> -->
                     <?php
-                        if($i == count($report)-1){
-                            ?>
-                            <div class="form-control text-light" id="showDetail">
-                                <?= $report[$i]['Report_Detail'] ?>
-                            </div>
-                            <textarea class="<?= $a ?> form-control text-light d-none" name="Report_Detail[<?= $i ?>]" id="detail" cols="30" rows="10" required>
-                                <?= $report[$i]['Report_Detail'] ?>
-                            </textarea>
-                            
-                            <?php
-                        }else{
-                            ?>
-                            <div class="form-control text-light" id="detailBox">
-                                <?= $report[$i]['Report_Detail'] ?>
-                            </div>
-                            <textarea class="<?= $a ?> form-control text-light d-none" name="Report_Detail[<?= $i ?>]" cols="30" rows="10" required>
+                    if ($i == count($report) - 1) {
+                    ?>
+                        <div class="form-control text-light" id="showDetail">
+                            <?= $report[$i]['Report_Detail'] ?>
+                        </div>
+                        <textarea class="<?= $a ?> form-control text-light d-none" name="Report_Detail[<?= $i ?>]" id="detail" cols="30" rows="10" required>
                                 <?= $report[$i]['Report_Detail'] ?>
                             </textarea>
-                            
-                            <?php
-                        }
+
+                    <?php
+                    } else {
+                    ?>
+                        <div class="form-control text-light" id="detailBox">
+                            <?= $report[$i]['Report_Detail'] ?>
+                        </div>
+                        <textarea class="<?= $a ?> form-control text-light d-none" name="Report_Detail[<?= $i ?>]" cols="30" rows="10" required>
+                                <?= $report[$i]['Report_Detail'] ?>
+                            </textarea>
+
+                    <?php
+                    }
                     ?>
                 </div>
             </div>
@@ -303,7 +304,13 @@ $signUser = $sql_user->fetch();
                         </div>
 
                         <div class="col-xl-12">
-                            <input type="date" class="form-control mt-xl-2" name="Report_follow_date[<?= $i ?>]" id="follow-date<?= $i ?>" value="<?= date('Y-m-d', strtotime($report[$i]['Report_follow_date'])) ?>" disabled>
+                            <?php
+                                if($i == count($report) - 1){
+                                    echo '<input type="date" class="data form-control mt-xl-2" name="Report_follow_date[<?= $i ?>]" id="follow-date'.$i.'" value="'.date('Y-m-d', strtotime($report[$i]['Report_follow_date'])).'" disabled>';
+                                }else{
+                                    echo '<input type="date" class=" form-control mt-xl-2" name="Report_follow_date[<?= $i ?>]" id="follow-date'.$i.'" value="'.date('Y-m-d', strtotime($report[$i]['Report_follow_date'])).'" disabled>';
+                                }
+                            ?>
                         </div>
                     </div>
                 </div>
@@ -349,14 +356,14 @@ $signUser = $sql_user->fetch();
                             </div>
                         </div>
                     <?php
-                    }else{
-                        ?>
+                    } else {
+                    ?>
                         <div class="row signBox my-3 my-xl-5">
                             <div class="col-auto mx-auto col-xl-auto mx-auto mx-xl-auto mb-xl-0 align-self-center">
                                 <?= $report[$i]['Sign_image'] ?>
                             </div>
                         </div>
-                        <?php
+                    <?php
                     }
                     ?>
                     <div class="col-6 col-xl-6 mx-auto mb-5">
@@ -393,7 +400,7 @@ $signUser = $sql_user->fetch();
             </div>
             <hr class="my-5">
 
-            
+
         <?php
         }
         ?>
@@ -412,30 +419,37 @@ $signUser = $sql_user->fetch();
                 ?>
             </div>
             <div class="col-auto col-xl-3" id="saveCol">
-                <input type="hidden" name="index" value="<?=count($report) - 1?>">
+                <input type="hidden" name="index" value="<?= count($report) - 1 ?>">
                 <button class="btn btn-primary d-block mx-auto mx-xl-auto ftitle d-none" type="submit" name="save" id="save" value="<?= $report[count($report) - 1]['Report_id'] ?>" onclick="checkEmpty()">บันทึก</button>
 
                 <?php
                 if ($report[count($report) - 1]['Report_Status'] == 7) {
                     if ($_SESSION['status'] == 1) {
+                        $conch = 'd-none';
                 ?>
                         <button class="btn btn-primary d-block me-auto ms-2 ms-xl-5 ftitle" type="submit" id="edit" name="success">เสร็จสิ้น</button>
                     <?php
                     } else if ($_SESSION['status'] == 2) {
                     ?>
-                        <button class="btn btn-primary d-block ms-2 mx-xl-auto ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
-                    <?php
-                    }
-                }
-                if ($report[count($report) - 1]['Report_Status'] == 6 && $_SESSION['status'] == 2) {
-                    ?>
-                    <button class="btn btn-primary d-block ms-2 mx-xl-auto ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
-                    <a href="create_report.php?Form_id=<?= $Form_id ?>" class="btn btn-primary d-block me-auto ms-2 ms-xl-5 ftitle">ดำเนินงานต่อ</a>
+                        <button class="btn btn-warning d-block ms-2 mx-xl-auto ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
                 <?php
+                    }
+                    echo '</div>';
                 }
                 ?>
-
+            
+            <?php
+            if ($report[count($report) - 1]['Report_Status'] == 6 && $_SESSION['status'] == 2) {
+            ?>
+            <button class="btn btn-warning d-block ms-2 mx-xl-auto ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
             </div>
+            <?php
+            }
+            ?>
+            <div class="col-auto col-xl-3 align-self-center <?=isset($conch)?$conch:''?>" id="continueCol">
+                <a href="create_report.php?Form_id=<?= $Form_id ?>" class="btn btn-primary col-xl-4 d-block mx-xl-auto ftitle">ดำเนินงานต่อ</a>
+            </div>
+
 
         </div>
     </form>
@@ -472,6 +486,7 @@ $signUser = $sql_user->fetch();
         document.getElementById('homeCol').classList.add('mx-auto');
         document.getElementById('homeCol').classList.remove('ms-auto');
         document.getElementById('saveCol').classList.add('d-none');
+        document.getElementById('continueCol').classList.add('d-none');
     }
     checkStatusReport();
 
@@ -491,12 +506,14 @@ $signUser = $sql_user->fetch();
 
     function disableFalse() {
         var data = document.getElementsByClassName('data');
+        const conCol = document.getElementById('continueCol');
         var editbtn = document.getElementById('edit');
         var homebtn = document.getElementById('home');
         var savebtn = document.getElementById('save');
         for (var i = 0; i < data.length; i++) {
             data[i].disabled = false;
         }
+        conCol.classList.add('d-none');
         document.getElementById('showDetail').classList.add('d-none');
         document.getElementById('detail').classList.remove('d-none');
 
@@ -519,7 +536,7 @@ $signUser = $sql_user->fetch();
                     }),
                     $tools = $('#tools')
                 $("#save").on('click', function() {
-                    var data = $sigdiv.jSignature('getData', 'svg');
+                    var data = $sigdiv.jSignature('getData', 'image');
                     $("#Signimg").val(data);
                 });
                 $('<input class="btn btn-secondary d-block mx-auto" type="button" value="ล้างลายเซ็น">').bind('click', function(e) {

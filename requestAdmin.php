@@ -32,13 +32,13 @@ if (isset($_POST['create-text'])) {
     $stmt->execute();
 
     include("message.php");
-    $_SESSION['ch'] = 2;
+    $_SESSION['ch'] = $_POST["create-text"];
     echo '<script language="javascript">';
     echo 'location.href="indexAdmin.php"';
     echo '</script>';
 } else if (isset($_POST['approve'])) {
     $Status_form_id = $_POST["approve"];
-    $stmt = $conn->prepare("UPDATE itoss_form SET Status_form_id = '$Status_form_id' , assign_id = ".$_SESSION['id']." WHERE Form_id = '$Form_id'");
+    $stmt = $conn->prepare("UPDATE itoss_form SET Status_form_id = '$Status_form_id' , assign_id = " . $_SESSION['id'] . " WHERE Form_id = '$Form_id'");
     $stmt->execute();
 
     include("message.php");
@@ -67,12 +67,12 @@ $sql_job = $conn->query("SELECT itoss_job.Job_id,itoss_job.Jobtype_id,itoss_job.
 FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id AND itoss_job.Form_id = '$Form_id'");
 $job = $sql_job->fetchAll();
 
-$sqlAdmin = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = ".$_SESSION['id']."");
+$sqlAdmin = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $_SESSION['id'] . "");
 $signAdmin = $sqlAdmin->fetch();
 
 $stmt3 = $conn->query("SELECT * FROM itoss_text INNER JOIN itoss_user ON itoss_user.User_id = itoss_text.editor where Form_id = '$Form_id' ORDER BY Text_id DESC");
 $row3 = $stmt3->fetch();
-$editor = isset($row3['editor'])?$row3['editor']:'';
+$editor = isset($row3['editor']) ? $row3['editor'] : '';
 
 isset($row3['Text_name']) ? $text = $row3['Text_name'] : $text = "";
 isset($row3['Status_form_id']) ? $Status = $row3['Status_form_id'] : $Status = $row['Status_form_id'];
@@ -177,8 +177,7 @@ include($_SESSION['navbar']);
             <?php
             }
             $index = array_search('0', array_column($job, 'Jobtype_id'));
-            
-            if (isset($index)) {
+            if ($index !== false) {
                 $ch = 'checked';
                 $valueOther = $job[$index]['name_other'];
             } else {
@@ -210,27 +209,24 @@ include($_SESSION['navbar']);
             </div>
         </div>
         <div class="row mb-xl-5 mb-5">
-        <div class="col-12 col-xl-6 mx-xl-auto" id="colSignUser">
+            <div class="col-12 col-xl-6 mx-xl-auto" id="colSignUser">
                 <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
-                <div class="row signBox my-3 my-xl-5">
-                    <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <?= $signUser['Sign_image'] ?>
+                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                        <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                     </div>
-                </div>
+                
                 <div class="col-6 col-xl-6 mx-auto mb-5">
-                    <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $signUser['User_Name'] ?>" disabled>
+                    <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
                 </div>
             </div>
             <div class="col-12 col-xl-6 d-none" id="colSignAdmin">
                 <div class="col-12 col-xl-6 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
                 </div>
-                <div class="row mb-xl-0">
-                    <div class="col-12 col-xl-12 mx-auto mb-xl-0">
-                        <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>"><br>
-                    </div>
+                <div class="col-12 col-xl-12 mx-auto mb-xl-0">
+                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>"><br>
                 </div>
                 <div class="col-6 col-xl-3 mx-auto">
                     <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $signAdmin['User_Name'] ?>" disabled>
@@ -263,6 +259,27 @@ include($_SESSION['navbar']);
 
 
 <script>
+    function deRequireCb(elClass) {
+        el = document.getElementsByClassName(elClass);
+
+        var atLeastOneChecked = false; //at least one cb is checked
+        for (i = 0; i < el.length; i++) {
+            if (el[i].checked === true) {
+                atLeastOneChecked = true;
+            }
+        }
+
+        if (atLeastOneChecked === true) {
+            for (i = 0; i < el.length; i++) {
+                el[i].required = false;
+            }
+        } else {
+            for (i = 0; i < el.length; i++) {
+                el[i].required = true;
+            }
+        }
+    }
+
     function disableFalse() {
         var data = document.getElementsByClassName('data');
         var editbtn = document.getElementById('edit');
@@ -293,18 +310,11 @@ include($_SESSION['navbar']);
         });
     });
 
-    // $(document).ready(function() {
-    //     const status = <?php echo $row['Status_form_id'] ?>;
-    //     if (status == 5) {
-    //         document.getElementById('send-text').classList.remove('d-none');
-    //     }
-    // });
-
     const status1 = <?= $Status1 ?> //ค่า status 
     const status = <?= $Status ?> //ค่า status 
     const box = document.getElementById('editBox');
     const topic = box.getElementsByTagName('p');
-//button
+    //button
     const btnEdit = document.getElementById('editStatus');
     const btnApprove = document.getElementById('approveStatus');
     const btnDisapp = document.getElementById('disapprovedStatus');
@@ -390,6 +400,29 @@ include($_SESSION['navbar']);
     });
 
     CKEDITOR.replace('text-detail');
+
+    const otherJob = document.getElementById('name0');
+    const inpOther = document.getElementById('other_job');
+    if (otherJob.checked == true) {
+        inpOther.classList.remove('d-none');
+        inpOther.required = true;
+    } else if (otherJob.checked == false) {
+
+        inpOther.classList.add('d-none');
+        inpOther.required = false;
+    }
+    $('#name0').click(function() {
+        const otherJob = document.getElementById('name0');
+        const inpOther = document.getElementById('other_job');
+        if (otherJob.checked == true) {
+            inpOther.classList.remove('d-none');
+            inpOther.required = true;
+        } else if (otherJob.checked == false) {
+
+            inpOther.classList.add('d-none');
+            inpOther.required = false;
+        }
+    });
 </script>
 </body>
 <?php

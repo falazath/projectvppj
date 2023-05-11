@@ -18,13 +18,9 @@ $filter[3] = $sql->fetchAll();
 $Form_id = $_GET["Form_id"];
 
 if (isset($_POST['send_approve'])) {
-    $signSVG = strrchr($_POST['Sign_image'], "width");
-    $signSVG = substr($signSVG, 7, 1);
-    if ($signSVG != 0) {
-        $sign = strchr($_POST['Sign_image'], 'dtd">');
-        $sign = substr($sign, 5);
+
         $stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, NULL)");
-        $stmt->bindParam(1, $sign);
+        $stmt->bindParam(1, $_POST['Sign_image']);
         $stmt->execute();
         $id = $conn->lastInsertId();
         $stmt = $conn->prepare("INSERT INTO itoss_report VALUES ('', ?, ?, ?, ?, ?, ? , ?, ?, ?)");
@@ -65,16 +61,14 @@ if (isset($_POST['send_approve'])) {
                 }
             }
             include("message.php");
-            $_SESSION['ch'] = 4;
+            $_SESSION['ch'] = 7;
             echo '<script language="javascript">';
             echo 'location.href="indexUser.php"';
             echo '</script>';
         } else {
             echo '<script>toastr.warning("กรุณาอัพโหลดรูปภาพการทำงาน 3-5 รูป");</script>';
         }
-    }else{
-        echo '<script>toastr.warning("กรุณาลงชื่อให้เรียบร้อย");</script>';
-    }
+    
 }
 
 $stmt = $conn->prepare("SELECT * FROM itoss_form
@@ -212,7 +206,7 @@ $signUser = $sql_user->fetch();
             </div>
             <div class="row signBox my-3 my-xl-5">
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <?= $signUser['Sign_image'] ?>
+                    <img src="data:<?= $signUser['Sign_image'] ?>" alt="">
                 </div>
             </div>
             <div class="col-6 col-xl-6 mx-auto mb-5">
@@ -225,7 +219,7 @@ $signUser = $sql_user->fetch();
             </div>
             <div class="row signBox my-3 my-xl-5">
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <?= $signAdmin['Sign_image'] ?>
+                    <img src="<?= $signAdmin['Sign_image'] ?>" alt="">
                 </div>
             </div>
             <div class="col-6 col-xl-6 mx-auto mb-5">
@@ -286,8 +280,8 @@ $signUser = $sql_user->fetch();
         </div>
         <div class="row mb-3 mb-xl-5 text-center">
             <div class="col-xl-6 mx-auto">
-                <div id="signature"></div>
-                <div class="col mt-xl-5" id="tools"> </div>
+                <div class="mb-3" id="signature"></div>
+                <div class="col mt-xl-5" id="tools"></div>
                 <input type="hidden" name="Sign_image" id="Sign_image" value="..." required>
 
             </div>
@@ -337,10 +331,10 @@ $signUser = $sql_user->fetch();
                 $tools = $('#tools')
 
             $("#send_approve").on('click', function() {
-                var data = $sigdiv.jSignature('getData', 'svg');
+                var data = $sigdiv.jSignature('getData', 'image');
                 $("#Sign_image").val(data);
             });
-            $('<input class="btn btn-secondary d-block mx-auto" type="button" value="ล้างลายเซ็น">').bind('click', function(e) {
+            $('<input class="btn btn-secondary d-block mx-auto mt-3" type="button" value="ล้างลายเซ็น">').bind('click', function(e) {
                     $sigdiv.jSignature('reset')
                 }).appendTo($tools)
         })
