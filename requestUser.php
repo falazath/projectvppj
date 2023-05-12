@@ -53,31 +53,19 @@ if (isset($_POST['save'])) {
         $stmt->bindParam(2, $Form_id);
         $stmt->execute();
     }
-
     include("message.php");
 
-    if ($_SESSION['status'] == 1) {
-        echo '<script language="javascript">';
-        echo 'location.href="indexAdmin.php"';
-        echo '</script>';
-    } else if ($_SESSION['status'] == 2) {
         $_SESSION['ch'] = 2; //ส่งค่า ch ไปเช็คที่ indexUser
         echo '<script language="javascript">location.href="indexUser.php";</script>';
-    }
+
 } else if (isset($_POST['cancel'])) {
     $stmt = $conn->query("UPDATE itoss_form SET Status_form_id=3 WHERE Form_id=" . $_POST['cancel'] . "");
     include("message.php");
 
-    if ($_SESSION['status'] == 1) {
+    $_SESSION['ch'] = 3; //ส่งค่า ch ไปเช็คที่ indexUser
         echo '<script language="javascript">';
-        echo 'location.href="indexAdmin.php"';
-        echo '</script>';
-    } else if ($_SESSION['status'] == 2) {
-        echo '<script language="javascript">';
-        $_SESSION['ch'] = 3; //ส่งค่า ch ไปเช็คที่ indexUser
         echo 'location.href="indexUser.php"';
         echo '</script>';
-    }
 }
 
 $stmt = $conn->prepare("SELECT * FROM itoss_form
@@ -227,11 +215,11 @@ $signUser = $stmt4->fetch();
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">
             <div class="col-auto col-xl-3 d-flex" id="homeCol">
-                <a class="btn btn-primary mx-xl-auto ftitle mx-auto" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
+                <a class="btn btn-secondary mx-xl-auto ftitle mx-auto" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
             </div>
             <div class="col-auto col-xl-3" id="saveCol">
                 <button class="btn btn-primary d-block me-auto ms-2 mx-xl-auto d-none" type="submit" name="save" id="save">บันทึก</button>
-                <button class="btn btn-primary d-block ms-2 mx-xl-auto  ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
+                <button class="btn btn-warning d-block ms-2 mx-xl-auto  ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
             </div>
             <div class="col-auto col-xl-3" id="cancelCol">
                 <!-- Button trigger modal -->

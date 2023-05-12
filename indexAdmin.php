@@ -45,13 +45,14 @@ $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
 //-Value filter
 
-if (isset($_POST['search'])) {
-    $inpAgency = $_POST['sector'];
-    $inpUser = $_POST['user'];
-    $inpType = $_POST['type'];
-    $inpStart = $_POST['start-date'];
-    $inpEnd = $_POST['end-date'];
-    $inpStatus = $_POST['status'];
+if (isset($_POST['search']) || isset($_GET['page'])) {
+    isset($_POST['sector']) ? $_SESSION['sector'] = $_POST['sector']: $_SESSION['sector'] ;
+    isset($_POST['user']) ? $_SESSION['user'] = $_POST['user'] : $_SESSION['user'];
+    isset($_POST['type']) ? $_SESSION['type'] = $_POST['type'] : $_SESSION['type'];
+    isset($_POST['start-date']) ? $_SESSION['start-date'] = $_POST['start-date'] : $_SESSION['start-date'];
+    isset($_POST['end-date']) ? $_SESSION['end-date'] = $_POST['end-date'] : $_SESSION['end-date'];
+    isset($_POST['status']) ? $_SESSION['inpstatus'] = $_POST['status'] : $_SESSION['inpstatus'];
+
     $idJob = array();
     $sql = "SELECT DISTINCT itoss_form.Form_id FROM itoss_form
          INNER JOIN itoss_agency ON itoss_agency.Agency_id = itoss_form.Agency_id
@@ -59,26 +60,26 @@ if (isset($_POST['search'])) {
          INNER JOIN itoss_user ON itoss_user.User_id = itoss_form.User_id ";
     $condition = array();
     $dateSql;
-    if (!empty(strcmp('all', $inpAgency))) {
-        $condition[] = "itoss_form.Agency_id LIKE '$inpAgency'";
+    if (!empty(strcmp('all', $_SESSION['sector']))) {
+        $condition[] = "itoss_form.Agency_id LIKE ".$_SESSION['sector']."";
     }
-    if (!empty(strcmp('all', $inpUser))) {
-        $condition[] = "itoss_form.User_id LIKE '$inpUser'";
+    if (!empty(strcmp('all', $_SESSION['user']))) {
+        $condition[] = "itoss_form.User_id LIKE ".$_SESSION['user']."";
     }
-    if (!empty(strcmp('all', $inpType))) {
+    if (!empty(strcmp('all', $_SESSION['type']))) {
         $sql_job = $conn->query("SELECT itoss_jobtype.Jobtype_name,itoss_form.Form_id FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
-                           itoss_job.Jobtype_id = '$inpType' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
+                           itoss_job.Jobtype_id = ".$_SESSION['type']." AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
         while ($row = $sql_job->fetch()) {
             array_push($idJob, $row['Form_id']);
         };
     }else{
         $idJob = null;
     }
-    if (!empty(strcmp('', $inpStart)) && !empty(strcmp('', $inpEnd))) {
-        $condition[] = "itoss_form.Form_date BETWEEN '$inpStart' AND '$inpEnd'";
+    if (!empty(strcmp('', $_SESSION['start-date'])) && !empty(strcmp('', $_SESSION['end-date']))) {
+        $condition[] = "itoss_form.Form_date BETWEEN ".$_SESSION['start-date']." AND ".$_SESSION['end-date']."";
     }
-    if (!empty(strcmp('all', $inpStatus))) {
-        $condition[] = "itoss_form.Status_form_id LIKE '$inpStatus'";
+    if (!empty(strcmp('all', $_SESSION['inpstatus']))) {
+        $condition[] = "itoss_form.Status_form_id LIKE ".$_SESSION['inpstatus']."";
     }
     if (count($condition) > 0) {
         $sql .= "WHERE " . implode(' AND ', $condition) . " ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;";
@@ -94,11 +95,9 @@ if (isset($_POST['search'])) {
         }
         if (!empty($idForm)) {
             $data = array_intersect($idJob, $idForm);
-            print_r(array_key_last($data));
             $in = "(";
             for ($i = 0; $i <= array_key_last($data); $i++) {
                 if (!empty($data[$i])) {
-                    echo $data[$i];
                     $in .= "'" . $data[$i] . "'";
                     if ($i != array_key_last($data)) {
                         $in .= ",";
@@ -121,21 +120,86 @@ if (isset($_POST['search'])) {
 
     if (!empty($data)) {
         $sql_in = $conn->query("SELECT * FROM itoss_form
-                WHERE itoss_form.Form_id IN $in ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;");
+                WHERE Form_id IN $in");
+        $row = $sql_in->fetchAll();
+
+        $results_per_page = 10;
+        $number_of_result = count($row);
+        $number_of_page = ceil($number_of_result / $results_per_page);
+        if (!isset ($_GET['page']) ) {
+            $page = 1;
+        } else {
+            $page = $_GET['page'];
+        }
+        $page_first_result = ($page-1)*$results_per_page;
+
+        $sql_in = $conn->query("SELECT * FROM itoss_form
+                WHERE Form_id IN $in ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC LIMIT $page_first_result,$results_per_page  ");
         $row = $sql_in->fetchAll();
     } else {
         $sql_in = $conn->query("SELECT * FROM itoss_form
-                WHERE itoss_form.Form_id IN ('') ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;");
+                WHERE Form_id IN ('')");
+        $row = $sql_in->fetchAll();
+        $results_per_page = 10;
+        $number_of_result = count($row);
+        $number_of_page = ceil($number_of_result / $results_per_page);
+        if (!isset ($_GET['page']) ) {
+            $page = 1;
+        } else {
+            $page = $_GET['page'];
+        }
+        $page_first_result = ($page-1)*$results_per_page;
+        $sql_in = $conn->query("SELECT * FROM itoss_form
+                WHERE Form_id IN ('') ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC LIMIT $page_first_result,$results_per_page ");
         $row = $sql_in->fetchAll();
     }
 } else {
+    unset($_SESSION['sector'],$_SESSION['user'],$_SESSION['type'],$_SESSION['start-date'],$_SESSION['end-date'],$_SESSION['inpstatus']);
     $data = $conn->prepare("SELECT * FROM itoss_form,itoss_agency,itoss_status_form,itoss_user
     WHERE itoss_form.Agency_id = itoss_agency.Agency_id
     AND itoss_form.Status_form_id = itoss_status_form.Status_form_id AND itoss_form.User_id = itoss_user.User_id
-    AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1 ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC ");
+    AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1 ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC; ");
+    $data->execute();
+    $row = $data->fetchAll();
+
+    $results_per_page = 10;
+    $number_of_result = count($row);
+    $number_of_page1 = ceil($number_of_result / $results_per_page);
+    if (!isset ($_GET['page1']) ) {
+        $page1 = 1;
+    } else {
+        $page1 = $_GET['page1'];
+    }
+    $page_first_result = ($page1-1)*$results_per_page;
+    $data = $conn->prepare("SELECT * FROM itoss_form,itoss_agency,itoss_status_form,itoss_user
+    WHERE itoss_form.Agency_id = itoss_agency.Agency_id
+    AND itoss_form.Status_form_id = itoss_status_form.Status_form_id AND itoss_form.User_id = itoss_user.User_id
+    AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1 ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC LIMIT $page_first_result,$results_per_page;");
     $data->execute();
     $row = $data->fetchAll();
 }
+    function convertDate($date){
+        $dd = date('d',strtotime($date));
+        $mm = date('m',strtotime($date));
+        $yy = date('Y',strtotime($date));
+        switch($mm){
+            case 1: $mm = "ม.ค";break;
+            case 2: $mm = "ก.พ";break;
+            case 3: $mm = "มี.ค";break;
+            case 4: $mm = "เม.ย";break;
+            case 5: $mm = "พ.ค";break;
+            case 6: $mm = "มิ.ย";break;
+            case 7: $mm = "ก.ค";break;
+            case 8: $mm = "ส.ค";break;
+            case 9: $mm = "ก.ย";break;
+            case 10: $mm = "ต.ค";break;
+            case 11: $mm = "พ.ย";break;
+            case 12: $mm = "ธ.ค";break;
+        }
+        $date = $dd." ".$mm." ".($yy+543);
+        return $date;
+      }
+
 ?>
 <main>
 
@@ -161,10 +225,9 @@ if (isset($_POST['search'])) {
                                     <option selected value="all">ทั้งหมด</option>
                                     <?php
                                     for ($i = 1; $i < count($filter[0]); $i++) {
-                                        if (!is_null($_POST['sector']) && $_POST['sector'] != 'all') {
-                                            if ($_POST['sector'] == $filter[0][$i]['Agency_id']) {
+                                        if (!is_null($_SESSION['sector']) && $_SESSION['sector'] != 'all') {
+                                            if ($_SESSION['sector'] == $filter[0][$i]['Agency_id']) {
                                                 echo '<option selected value="' . $filter[0][$i]['Agency_id'] . '">' . $filter[0][$i]['Agency_Name'] . '</option>';
-                                                $_POST['sector'] = null;
                                             } else {
                                                 echo '<option value="' . $filter[0][$i]['Agency_id'] . '">' . $filter[0][$i]['Agency_Name'] . '</option>';
                                             }
@@ -184,9 +247,8 @@ if (isset($_POST['search'])) {
                                     <?php
                                     for ($i = 0; $i < count($filter[1]); $i++) {
                                         if (!is_null($_POST['user']) && $_POST['user'] != 'all') {
-                                            if ($_POST['user'] == $filter[1][$i]['User_id']) {
+                                            if ($_SESSION['user'] == $filter[1][$i]['User_id']) {
                                                 echo '<option selected value="' . $filter[1][$i]['User_id'] . '">' . $filter[1][$i]['User_Name'] . '</option>';
-                                                $_POST['user'] = null;
                                             } else {
                                                 echo '<option value="' . $filter[1][$i]['User_id'] . '">' . $filter[1][$i]['User_Name'] . '</option>';
                                             }
@@ -205,10 +267,9 @@ if (isset($_POST['search'])) {
                                     <option selected value="all">ทั้งหมด</option>
                                     <?php
                                     for ($i = 1; $i < count($filter[2]); $i++) {
-                                        if (!is_null($_POST['type']) && $_POST['Jobtype_id'] != 'all') {
-                                            if ($_POST['type'] == $filter[2][$i]['Jobtype_id']) {
+                                        if (!is_null($_SESSION['type']) && $_SESSION['type'] != 'all') {
+                                            if ($_SESSION['type'] == $filter[2][$i]['Jobtype_id']) {
                                                 echo '<option selected value="' . $filter[2][$i]['Jobtype_id'] . '">' . $filter[2][$i]['Jobtype_name'] . '</option>';
-                                                $_POST['type'] = null;
                                             } else {
                                                 echo '<option value="' . $filter[2][$i]['Jobtype_id'] . '">' . $filter[2][$i]['Jobtype_name'] . '</option>';
                                             }
@@ -224,8 +285,8 @@ if (isset($_POST['search'])) {
                             <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกวันที่เริ่มต้น-->
                                 <p class="ftitle mb-0">วันที่เริ่มต้น</p>
                                 <?php
-                                if (isset($_POST['start-date'])) { ?>
-                                    <input type="date" class="filter form-control" name="start-date" id="start-date" min="2000-01-01" value="<?= $_POST['start-date'] ?>" onchange="requireDate()">
+                                if (isset($_SESSION['start-date'])) { ?>
+                                    <input type="date" class="filter form-control" name="start-date" id="start-date" min="2000-01-01" value="<?= $_SESSION['start-date'] ?>" onchange="requireDate()">
                                 <?php
                                 } else {
                                     echo '<input type="date" class="filter form-control" name="start-date" id="start-date" min="2000-01-01" value="" onchange="requireDate()">';
@@ -235,8 +296,8 @@ if (isset($_POST['search'])) {
                             <div class="col-12 col-sm-2 col-xl-2 mb-2"> <!--เลือกวันที่สิ้นสุด-->
                                 <p class="ftitle mb-0">วันที่สิ้นสุด</p>
                                 <?php
-                                if (isset($_POST['end-date'])) { ?>
-                                    <input type="date" class="filter form-control" name="end-date" id="end-date" min="2000-01-01" value="<?= $_POST['end-date'] ?>" onchange="requireDate()">
+                                if (isset($_SESSION['end-date'])) { ?>
+                                    <input type="date" class="filter form-control" name="end-date" id="end-date" min="2000-01-01" value="<?= $_SESSION['end-date'] ?>" onchange="requireDate()">
 
                                 <?php
                                 } else {
@@ -252,10 +313,9 @@ if (isset($_POST['search'])) {
                                     <option selected value="all">ทั้งหมด</option>
                                     <?php
                                     for ($i = 0; $i < count($filter[3]); $i++) {
-                                        if (!is_null($_POST['status']) && $_POST['Status_form_id'] != 'all') {
-                                            if ($_POST['status'] == $filter[3][$i]['Status_form_id']) {
+                                        if (!is_null($_SESSION['inpstatus']) && $_SESSION['inpstatus'] != 'all') {
+                                            if ($_SESSION['inpstatus'] == $filter[3][$i]['Status_form_id']) {
                                                 echo '<option selected value="' . $filter[3][$i]['Status_form_id'] . '">' . $filter[3][$i]['Status_form_name'] . '</option>';
-                                                $_POST['status'] = null;
                                             } else {
                                                 echo '<option value="' . $filter[3][$i]['Status_form_id'] . '">' . $filter[3][$i]['Status_form_name'] . '</option>';
                                             }
@@ -270,7 +330,6 @@ if (isset($_POST['search'])) {
                                 <div class="col-auto my-auto ">
                                     <button type="submit" class="btn btn-primary d-block mx-auto px-5" name="search">ค้นหา</button>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -357,7 +416,7 @@ if (isset($_POST['search'])) {
                     $Form_Work = $row[$j]['Form_Work'];
                     $Form_id = $row[$j]['Form_id'];
                     echo '<tr class="d-flex text-center fsub">
-                                <td class="col-3 col-sm-1" id="date">' . date("d/m/Y", strtotime($Form_date)) . '</td>';
+                                <td class="col-3 col-sm-1" id="date">' . convertDate($Form_date) . '</td>';
                     if ($row[$j]['Agency_id'] == 0) {
                         $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id'");
                         $agency = $sql->fetch();
@@ -400,6 +459,27 @@ if (isset($_POST['search'])) {
             </tbody>
         </table>
     </div>
+    <?php if (isset($_POST['search']) || isset($_GET['page'])) {?>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page=1">หน้าแรก</a></li> 
+                <?php for($page = 1; $page<= $number_of_page; $page++) {?>
+                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page=<?=$page?>"><?=$page?></a></li> 
+                <?php } ?>
+                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page=<?=$number_of_page?>">หน้าสุดท้าย</a></li>
+            </ul>
+        </nav>
+        <?php }else{?>
+        <nav aria-label="Page navigation example ">
+            <ul class="pagination justify-content-center ">
+                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page1=1">หน้าแรก</a></li> 
+                <?php for($page1 = 1; $page1<= $number_of_page1; $page1++) {?>
+                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page1=<?=$page1?>"><?=$page1?></a></li> 
+                <?php } ?>
+                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page1=<?=$number_of_page1?>">หน้าสุดท้าย</a></li>
+            </ul>
+        </nav>
+        <?php }?>
 
 </main>
 <script>

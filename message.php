@@ -15,40 +15,41 @@
 	error_reporting(E_ALL);
 	date_default_timezone_set("Asia/Bangkok");
 
+	$host_name = "http://itservice.vpservice-online.com";
 	//$sToken = "hNOcAJ5xaPHnoyn2Q7Feu1KEDNS5Q2BRcdGzw2wQaUC";
 	//$sMessage = "\n$R_address";
 
 	if( $row['Status_form_id'] == 5){
-		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
-		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/create_report.php?Form_id=$Form_id";
+		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/create_report.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 4){
-		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
-		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/requestUser.php?Form_id=$Form_id";
+		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestUser.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 3){
-		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
-		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/requestUser.php?Form_id=$Form_id";
+		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestUser.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 2){
-		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
-		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/requestUser.php?Form_id=$Form_id";
+		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestUser.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 1){
-		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
-		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/requestAdmin.php?Form_id=$Form_id";
+		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestAdmin.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 6){
-		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
-		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/check_report.php?Form_id=$Form_id";
+		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/check_report.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 7){
-		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
-		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/check_report.php?Form_id=$Form_id";
+		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/check_report.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 8){
-		$sToken = "7UnkbVm9J0jtvW7DuOvjaZmns4CXJjZYOdGLDE4NRcp";
-		$sMessage = "ของ $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\nhttp://localhost/IT_Onsite_Service/check_report.php?Form_id=$Form_id";
+		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sMessage = "ของ $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/check_report.php?Form_id=$Form_id";
 	}
 	
 	

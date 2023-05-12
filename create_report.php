@@ -11,39 +11,40 @@ $sql = $conn->query("SELECT * FROM itoss_agency WHERE state_id =1;");
 $filter[0] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_user WHERE state_id =1;");
 $filter[1] = $sql->fetchAll();
-$sql = $conn->query("SELECT * FROM itoss_jobtype;");
+$sql = $conn->query("SELECT * FROM itoss_jobtype WHERE state_id =1;");
 $jobChoice = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
 $Form_id = $_GET["Form_id"];
 
 if (isset($_POST['send_approve'])) {
-
+    if(count($_FILES['img_file']['name']) <= 5){
         $stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, NULL)");
         $stmt->bindParam(1, $_POST['Sign_image']);
         $stmt->execute();
         $id = $conn->lastInsertId();
-        $stmt = $conn->prepare("INSERT INTO itoss_report VALUES ('', ?, ?, ?, ?, ?, ? , ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO itoss_report VALUES ('', ?, ?, ?, ?, ?, now() , ?, now(), ?)");
         $stmt->bindParam(1, $_POST["Report_Detail"]);
         $stmt->bindParam(2, $_POST["Report_Start_Date"]);
         $stmt->bindParam(3, $_POST["Report_Stop_Date"]);
         $stmt->bindParam(4, $_POST["Report_Status"]);
         $stmt->bindParam(5, $_POST["Report_follow_date"]);
-        $stmt->bindParam(6, $_POST["Report_date_client"]);
-        $stmt->bindParam(7, $id);
-        $stmt->bindParam(8, $_POST["Report_date_client"]);
-        $stmt->bindParam(9, $Form_id);
+        // $stmt->bindParam(6, $_POST["Report_date_client"]);
+        $stmt->bindParam(6, $id);
+        // $stmt->bindParam(8, $_POST["Report_date_client"]);
+        $stmt->bindParam(7, $Form_id);
         $stmt->execute();
-
+        $Report_id = $conn->lastInsertId();
         $Status_form_id = $_POST["Report_Status"];
         $stmt = $conn->prepare("UPDATE itoss_form SET Status_form_id = '$Status_form_id' where Form_id = '$Form_id'");
         $stmt->execute();
+        $sql_img = $conn->query("SELECT itoss_img.img_file FROM itoss_img WHERE Report_id = $Report_id;");
+        while($img_row = $sql_img->fetch()){
+            $checkDel = unlink('./'.$img_row['img_file'].'');
+        }
+        $sql_img = $conn->query("DELETE FROM itoss_img WHERE Report_id = $Report_id;");
 
-        $stmt = $conn->query("SELECT * FROM itoss_report WHERE Form_id = $Form_id;");
-        $row = $stmt->fetch();
-        $Report_id = $row['Report_id'];
         $count = count($_FILES['img_file']['name']);
-        if ($count >= 3 && $count <= 5) {
             $date1 = date("dmY_His");
             foreach ($_FILES['img_file']['tmp_name'] as $key => $value) {
                 $file_names = $_FILES['img_file']['name'];
@@ -61,13 +62,13 @@ if (isset($_POST['send_approve'])) {
                 }
             }
             include("message.php");
-            $_SESSION['ch'] = 7;
+            $_SESSION['ch'] = $_POST["Report_Status"];
             echo '<script language="javascript">';
             echo 'location.href="indexUser.php"';
             echo '</script>';
-        } else {
-            echo '<script>toastr.warning("กรุณาอัพโหลดรูปภาพการทำงาน 3-5 รูป");</script>';
-        }
+    }else {
+        echo '<script>toastr.warning("อัพโหลดได้ไม่เกิน 5 รูป");</script>';
+    }
     
 }
 
@@ -149,7 +150,6 @@ $signUser = $sql_user->fetch();
             </div>
         </div>
         <div class="row mb-xl-3">
-
             <?php
 
             for ($i = 1; $i < count($jobChoice); $i++) {
@@ -173,10 +173,9 @@ $signUser = $sql_user->fetch();
                 }
             }
             $index = array_search('0', array_column($job, 'Jobtype_id'));
-            if (is_null($index)) {
+            if ($index !== false) {
                 $ch = 'checked';
                 $valueOther = $job[$index]['name_other']; ?>
-
                 <div class="col-12 col-lg-2 mb-0">
                     <div class="form-check">
                         <input type="checkbox" class="data form-check-input mb-2 my-xl-0 required" name="Jobtype_id[]" id="name0" value="0" onclick="deRequireCb('required')" disabled <?= $ch ?>>
@@ -205,7 +204,7 @@ $signUser = $sql_user->fetch();
             </div>
             <div class="row signBox my-3 my-xl-5">
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                    <img class="d-block w-100 h-100" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                 </div>
             </div>
             <div class="col-6 col-xl-6 mx-auto mb-5">
@@ -218,7 +217,7 @@ $signUser = $sql_user->fetch();
             </div>
             <div class="row signBox my-3 my-xl-5">
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
+                    <img class="d-block w-100 h-100" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
                 </div>
             </div>
             <div class="col-6 col-xl-6 mx-auto mb-5">
@@ -288,15 +287,15 @@ $signUser = $sql_user->fetch();
         <div class="row mb-5 justify-content-center">
             <div class="col-10 col-xl-3 me-0 align-self-center">
                 <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
-                <input class="form-control ms-0  col-xl-1" type="date" name="Report_date_client" id="start" value="<?= date('Y-m-d') ?>" required>
+                <input class="form-control ms-0  col-xl-1" type="date" name="Report_date_client" id="start" value="<?= date('Y-m-d') ?>" disabled>
             </div>
 
         </div>
         <div class="row">
             <div class="col-xl-6 mx-xl-auto">
                 <p class="ftitle fw-bold text-center">อัพโหลดรูปภาพ</p>
-                <input type="file" name="img_file[]" id="img_file" multiple="multiple" class="form-control" accept="image/*"> <br>
-                <p class="fsub fw-bold text-danger">*กรุณาอัพโหลดรูปภาพ 3-5 รูป </p>
+                <input type="file" name="img_file[]" id="img_file" multiple="multiple" class="form-control" accept="image/*" required> <br>
+                <p class="fsub fw-bold text-danger">*กรุณาอัพโหลดรูปภาพ </p>
             </div>
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">

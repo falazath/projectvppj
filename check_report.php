@@ -105,8 +105,8 @@ $signUser = $sql_user->fetch();
             <p class="text-dark text-center fhead fw-bold">คำขอปฏิบัติงาน</p>
         </div>
     </div>
-    <div class="col-auto col-xl-2 ms-auto">
-        <a class="btn btn-outline-success col-auto d-block ms-xl-auto me-xl-0 me-auto ms-2 " href="fileprint.php?Form_id=<?= $Form_id ?>" target="_blank">พิมพ์เอกสาร</a>
+    <div class="col-4 col-xl-2 ms-auto">
+        <a class="btn btn-outline-success col-auto d-block" href="fileprint.php?Form_id=<?= $Form_id ?>" target="_blank">พิมพ์เอกสาร</a>
     </div>
 
     <form action="" method="post">
@@ -293,12 +293,12 @@ $signUser = $sql_user->fetch();
                             </label>
                         </div>
 
-                        <div class="col-xl-12">
+                        <div class="col-xl-12 mt-1 mt-xl-2">
                             <?php
                             if ($i == count($report) - 1) {
-                                echo '<input type="date" class="data form-control mt-xl-2" name="Report_follow_date['.$i.']" id="follow-date' . $i . '" value="' . date('Y-m-d', strtotime($report[$i]['Report_follow_date'])) . '" disabled>';
+                                echo '<input type="date" class="data form-control" name="Report_follow_date['.$i.']" id="follow-date' . $i . '" value="' . date('Y-m-d', strtotime($report[$i]['Report_follow_date'])) . '" disabled>';
                             } else {
-                                echo '<input type="date" class="form-control mt-xl-2" name="Report_follow_date['.$i.']" id="follow-date' . $i . '" value="' . date('Y-m-d', strtotime($report[$i]['Report_follow_date'])) . '" disabled>';
+                                echo '<input type="date" class="form-control" name="Report_follow_date['.$i.']" id="follow-date' . $i . '" value="' . date('Y-m-d', strtotime($report[$i]['Report_follow_date'])) . '" disabled>';
                             }
                             ?>
                         </div>

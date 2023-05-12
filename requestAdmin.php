@@ -239,13 +239,13 @@ include($_SESSION['navbar']);
 
         <div class="row justify-content-around mb-3 mt-xl-5">
             <div class="col-auto col-xl-3 d-none" id="editStatus">
-                <button class="btn btn-primary d-block ms-xl-auto" data-bs-toggle="modal" data-bs-target="#create-text" type='button' name='edit' id='edit' value="2">แก้ไข</button>
+                <button class="btn btn-warning d-block ms-xl-auto" data-bs-toggle="modal" data-bs-target="#create-text" type='button' name='edit' id='edit' value="2">แก้ไข</button>
             </div>
             <div class="col-auto col-xl-3 d-none" id="approveStatus">
                 <button class="btn btn-primary d-block mx-xl-auto" data-bs-toggle="modal" type='submit' name='approve' id='approve' value="5">อนุมัติ</button>
             </div>
             <div class="col-auto col-xl-3 d-none" id="disapprovedStatus">
-                <button class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-text" type='button' name='Disapproved' id='Disapproved' value="4">ไม่อนุมัติ</button>
+                <button class="btn btn-danger d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-text" type='button' name='Disapproved' id='Disapproved' value="4">ไม่อนุมัติ</button>
             </div>
         </div>
         <div class="row justify-content-around mb-5 mt-xl-5">

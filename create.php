@@ -216,17 +216,17 @@ if (isset($_POST['save'])) {
         let a = $('#Agency_id').val();
         if (a == "0") {
             $('#other_agency').removeClass('d-none');
-            document.getElementById('other_job').required = true;
+            document.getElementById('other_agency').required = true;
         } else {
             $('#other_agency').addClass('d-none');
-            document.getElementById('other_job').required = false;
+            document.getElementById('other_agency').required = false;
         }
     });
 
     function deRequireCb(elClass) {
         el = document.getElementsByClassName(elClass);
 
-        var atLeastOneChecked = false; //at least one cb is checked
+        var atLeastOneChecked = 0; //at least one cb is checked
         for (i = 0; i < el.length; i++) {
             if (el[i].checked === true) {
                 atLeastOneChecked = true;

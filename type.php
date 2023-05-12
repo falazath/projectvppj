@@ -29,6 +29,11 @@ if (isset($_POST['createdp'])) {
         echo 'toastr.success("ลบประเภทงานเรียบร้อย");';
         echo '</script>';
     }
+} else if (isset($_POST['edit'])) {
+    $stmt = $conn->prepare("UPDATE itoss_jobtype SET Jobtype_name = ? WHERE Jobtype_id = ?");
+    $stmt->bindParam(1, $_POST["Jobtype_name"]);
+    $stmt->bindParam(2, $_POST["edit"]);
+    $stmt->execute();
 }
 include($_SESSION['navbar']);
 ?>
@@ -68,7 +73,8 @@ include($_SESSION['navbar']);
                 <table class="table table-light table-bordered">
                     <thead>
                         <tr class="d-flex text-center fsub">
-                            <th class="col-6 col-sm-10">ประเภทงาน</th>
+                            <th class="col-6 col-sm-8">ประเภทงาน</th>
+                            <th class="col-4 col-sm-2"></th>
                             <th class="col-4 col-sm-2"></th>
                         </tr>
                     </thead>
@@ -78,12 +84,36 @@ include($_SESSION['navbar']);
                         $stmt = $conn->query("SELECT * FROM itoss_jobtype WHERE state_id = 1 AND NOT Jobtype_id = 0 ;");
                         while ($row = $stmt->fetch()) { ?>
                             <tr class="d-flex text-center fsub">
-                                <td class="col-6 col-sm-10" id="name"><?= $row['Jobtype_name'] ?></td>
+                                <td class="col-6 col-sm-8" id="name"><?= $row['Jobtype_name'] ?></td>
                                 <td class="col-2 col-sm-2" id="user">
                                     <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#delete<?= $row['Jobtype_id'] ?>">
-                                        <img  src="./asset/icon/Delete.svg" alt="">
+                                        <img src="./asset/icon/Delete.svg" alt="">
                                     </button>
                                 </td>
+                                <td class="col-2 col-sm-2" id="user">
+                                    <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $row['Jobtype_id'] ?>">
+                                        <img src="./asset/icon/Setting.svg" alt="">
+                                    </button>
+                                </td>
+
+                                <form method="post">
+                                    <div class="modal fade" id="edit<?= $row['Jobtype_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-body">
+                                                    <p class="ftitle fw-bold text-center">แก้ไขชื่อประเภทงาน</p>
+                                                    <div class="col-xl-10 mx-auto">
+                                                        <input type="text" class="data form-control ftitle" name="Jobtype_name" value="<?= $row['Jobtype_name'] ?>">
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" name="edit" value="<?= $row['Jobtype_id'] ?>" class="btn btn-primary mx-auto">บันทึก</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
                                 <form method="post">
                                     <div class="modal fade" id="delete<?= $row['Jobtype_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
