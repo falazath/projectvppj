@@ -53,6 +53,22 @@ if (isset($_POST['save'])) {
     echo '</script>';
 
     $User_id = $conn->lastInsertId();
+}else if (isset($_POST['cancel'])) {
+    $stmt = $conn->query("SELECT * FROM itoss_form WHERE User_id = " . $_POST['cancel'] . "");
+    $del = $stmt->fetch();
+
+    if (!empty($del)) {
+        echo '<script language="javascript">';
+        echo 'alert("มีข้อมูลผู้ใช้งานยังใช้งานอยู่ ไม่สามารถลบได้");';
+        echo '</script>';
+    } else {
+        $stmt = $conn->prepare("UPDATE itoss_user SET state_id = 0 WHERE User_id = ?");
+        $stmt->bindParam(1, $_POST["cancel"]);
+        $stmt->execute();
+        echo '<script language="javascript">';
+        echo 'toastr.success("ลบผู้ใช้งานเรียบร้อย");';
+        echo '</script>';
+    }
 }
 ?>
 <main>
@@ -130,10 +146,11 @@ if (isset($_POST['save'])) {
             <thead>
                 <tr class="d-flex text-center fsub">
                     <th class="col-4 col-xl-2">Username</th>
-                    <th class="col-5 col-xl-3">ชื่อ-นามสกุล</th>
+                    <th class="col-5 col-xl-2">ชื่อ-นามสกุล</th>
                     <th class="col-5 col-xl-2">ตำแหน่ง</th>
                     <th class="col-5 col-xl-2">เบอร์ติดต่อ</th>
                     <th class="col-5 col-xl-2">แผนก</th>
+                    <th class="col-1 col-xl-1"></th>
                     <th class="col-1 col-xl-1"></th>
                 </tr>
             </thead>
@@ -142,17 +159,43 @@ if (isset($_POST['save'])) {
                 <?php
                 $stmt = $conn->query("SELECT * FROM itoss_user 
                         INNER JOIN itoss_department ON itoss_user.Department_id = itoss_department.Department_id
-                        INNER JOIN itoss_status ON itoss_user.Status_id = itoss_status.Status_id");
+                        INNER JOIN itoss_status ON itoss_user.Status_id = itoss_status.Status_id WHERE itoss_user.state_id= 1");
                 while ($row = $stmt->fetch()) { ?>
                     <tr class="d-flex text-center fsub">
                         <td class="col-4 col-xl-2" id="date"><?= $row['User_Username'] ?></td>
-                        <td class="col-5 col-xl-3" id="date"><?= $row['User_Name'] ?></td>
+                        <td class="col-5 col-xl-2" id="date"><?= $row['User_Name'] ?></td>
                         <td class="col-5 col-xl-2" id="date"><?= $row['User_Jop'] ?></td>
                         <td class="col-5 col-xl-2" id="date"><?= $row['User_Phone'] ?></td>
                         <td class="col-5 col-xl-2" id="date"><?= $row['Department_name'] ?></td>
                         <td class="col-1 col-xl-1" id="user"><a data-bs-toggle="modal" data-bs-target="#edit-User<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Setting.svg" alt=""></a></td>
+                        <td class="col-1 col-xl-1"><a href="#" data-bs-toggle="modal" data-bs-target="#cancel<?= $row['User_id'] ?>" id="cancel">
+                        <img src="./asset/icon/Delete.svg" alt="">
+                </a></td>
                     </tr>
-
+                    <div class="col-auto col-xl-3" id="cancelCol">
+                <!-- Button trigger modal -->
+                
+                
+                <!-- Modal -->
+                <form action="" method="post">
+                <div class="modal fade" id="cancel<?= $row['User_id'] ?>" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <p class="modal-title fhead fw-bold text-center">ยืนยันการยกเลิก</p>
+                            </div>
+                            <div class="modal-body my-3 my-xl-3 text-center">
+                                <p class="ftitle text-center d-inline">คุณต้องการยกเลิกคำขอปฏิบัติงานหรือไม่  </p>
+                            </div>
+                            <div class="modal-footer justify-content-center">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">กลับ</button>
+                                <button class="btn btn-danger ftitle" type="submit" name="cancel"  value="<?= $row['User_id'] ?>">ยืนยัน</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </form>
+            </div>
                     <form method="post">
                         <div class="modal fade" id="edit-User<?= $row['User_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
