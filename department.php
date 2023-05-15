@@ -10,7 +10,7 @@ include("connect.php");
 if (isset($_POST['createdp'])) {
   $sql = $conn->query("SELECT * FROM itoss_agency WHERE Agency_Name = '".$_POST["Agency_Name"]."'");
   $check = $sql->fetch();
-  if(!empty($del)){
+  if(empty($check)){
     $stmt = $conn->prepare("INSERT INTO itoss_agency VALUES ('', ?, 1)");
     $stmt->bindParam(1, $_POST["Agency_Name"]);
     $stmt->execute();
