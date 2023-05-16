@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+    header('location:index.php');
 }
 include("header.html");
 include("connect.php");
@@ -77,7 +77,6 @@ if (isset($_POST['search']) || isset($_GET['page'])) {
         $sql_job = $conn->query("SELECT itoss_jobtype.Jobtype_name,itoss_form.Form_id FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
                            itoss_job.Jobtype_id = ".$_SESSION['type']." AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
         while ($row = $sql_job->fetch()) {
-            var_dump($row['Form_id']) ;
             array_push($idJob, $row['Form_id']);
         };
     }else{
@@ -103,17 +102,26 @@ if (isset($_POST['search']) || isset($_GET['page'])) {
         }
         if (!empty($idForm)) {
             $data = array_intersect($idJob, $idForm);
-            print_r(array_key_last($data));
             $in = "(";
-            for ($i = 0; $i <= array_key_last($data); $i++) {
-                if (!empty($data[$i])) {
-                    echo $data[$i];
-                    $in .= "'" . $data[$i] . "'";
-                    if ($i != array_key_last($data)) {
-                        $in .= ",";
-                    }
-                }
+            $max = count($data);
+            $i = 0;
+            foreach($data as $key => $value){
+                            
+                            $in .= "'" . $value . "'";
+                            if ($i != $max-1) {
+                                $in .= ",";
+                            }
+                            $i++;
             }
+            // for ($i = 0; $i <= array_key_last($data); $i++) {
+            //     if (!empty($data[$i])) {
+            //         echo $data[$i];
+            //         $in .= "'" . $data[$i] . "'";
+            //         if ($i != array_key_last($data)) {
+            //             $in .= ",";
+            //         }
+            //     }
+            // }
             $in .= ")";
         }
     } else { //ถ้าไม่มี input ประเภทงาน
@@ -535,7 +543,9 @@ function convertDate($date){
         </div>
         </div>
 
-        <?php if (isset($_POST['search']) || isset($_GET['page'])) {?>
+        
+    </div>
+    <?php if (isset($_POST['search']) || isset($_GET['page'])) {?>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
                     <li class="page-item"><a class="page-link link-light" href="indexUser.php?page=1">หน้าแรก</a></li> 
@@ -556,8 +566,6 @@ function convertDate($date){
             </ul>
         </nav>
         <?php }?>
-    </div>
-
 </main>
 
 <script>

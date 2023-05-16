@@ -2,7 +2,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+    header('location:index.php');
 }
 include("header.html");
 include("connect.php");
@@ -25,7 +25,7 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
     isset($_POST['type']) ? $_SESSION['type'] = $_POST['type'] : $_SESSION['type'];
     isset($_POST['start-date']) ? $_SESSION['start-date'] = $_POST['start-date'] : $_SESSION['start-date'];
     isset($_POST['end-date']) ? $_SESSION['end-date'] = $_POST['end-date'] : $_SESSION['end-date'];
-    isset($_POST['status']) ? $_SESSION['status'] = $_POST['status'] : $_SESSION['status'];
+    isset($_POST['status']) ? $_SESSION['inpstatus'] = $_POST['status'] : $_SESSION['inpstatus'];
     
     $idJob = array();
     $sql = "SELECT DISTINCT itoss_form.Form_id FROM itoss_form
@@ -44,7 +44,6 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
         $sql_job = $conn->query("SELECT itoss_jobtype.Jobtype_name,itoss_form.Form_id FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
                            itoss_job.Jobtype_id = '".$_SESSION['type']."' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
         while ($row = $sql_job->fetch()) {
-            var_dump($row['Form_id']);
             array_push($idJob, $row['Form_id']);
         };
     } else {
@@ -53,8 +52,8 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
     if (!empty(strcmp('', $_SESSION['start-date'])) && !empty(strcmp('', $_SESSION['end-date']))) {
         $condition[] = "itoss_form.Form_date BETWEEN '".$_SESSION['start-date']."' AND '".$_SESSION['end-date']."'";
     }
-    if (!empty(strcmp('all', $_SESSION['status']))) {
-        $condition[] = "itoss_form.Status_form_id LIKE '".$_SESSION['status']."'";
+    if (!empty(strcmp('all', $_SESSION['inpstatus']))) {
+        $condition[] = "itoss_form.Status_form_id LIKE '".$_SESSION['inpstatus']."'";
     }
     if (count($condition) > 0) {
         $sql .= "WHERE " . implode(' AND ', $condition) . " ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;";
@@ -71,14 +70,15 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
         if (!empty($idForm)) {
             $data = array_intersect($idJob, $idForm);
             $in = "(";
-            for ($i = 0; $i <= array_key_last($data); $i++) {
-                if (!empty($data[$i])) {
-                    echo $data[$i];
-                    $in .= "'" . $data[$i] . "'";
-                    if ($i != array_key_last($data)) {
-                        $in .= ",";
-                    }
-                }
+            $max = count($data);
+            $i = 0;
+            foreach($data as $key => $value){
+                            
+                            $in .= "'" . $value . "'";
+                            if ($i != $max-1) {
+                                $in .= ",";
+                            }
+                            $i++;
             }
             $in .= ")";
         }
@@ -117,7 +117,7 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
     AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1 ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC; ");
     $data->execute();
     $row = $data->fetchAll();
-    unset($_SESSION['sector'],$_SESSION['user'],$_SESSION['type'],$_SESSION['start-date'],$_SESSION['end-date'],$_SESSION['status']);
+    unset($_SESSION['sector'],$_SESSION['user'],$_SESSION['type'],$_SESSION['start-date'],$_SESSION['end-date'],$_SESSION['inpstatus']);
 }
 
 function convertDate($date)
@@ -304,8 +304,8 @@ function colspanCheckRp()
                                 <option selected value="all">ทั้งหมด</option>
                                 <?php
                                 for ($i = 0; $i < count($filter[3]); $i++) {
-                                    if (!is_null($_SESSION['status']) && $_SESSION['status'] != 'all') {
-                                        if ($_SESSION['status'] == $filter[3][$i]['Status_form_id']) {
+                                    if (!is_null($_SESSION['inpstatus']) && $_SESSION['inpstatus'] != 'all') {
+                                        if ($_SESSION['inpstatus'] == $filter[3][$i]['Status_form_id']) {
                                             echo '<option selected value="' . $filter[3][$i]['Status_form_id'] . '">' . $filter[3][$i]['Status_form_name'] . '</option>';
                                         } else {
                                             echo '<option value="' . $filter[3][$i]['Status_form_id'] . '">' . $filter[3][$i]['Status_form_name'] . '</option>';

@@ -2,7 +2,16 @@
 
 session_start();
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+    if(isset($_GET['Form_id'])){
+        $_SESSION['Form_id'] = $_GET['Form_id'];
+        $_SESSION['page_link'] = 1;
+        header('location:index.php');
+    }
+}else if($_SESSION['status'] == 2){
+    header('location:requestUser.php?Form_id='.$_GET['Form_id'].'');
+}else{
+    unset($_SESSION['Form_id']);
+    unset($_SESSION['page_link']);
 }
 include('header.html');
 include("connect.php");
@@ -214,7 +223,7 @@ include($_SESSION['navbar']);
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                        <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                     </div>
                 
                 <div class="col-6 col-xl-6 mx-auto mb-5">

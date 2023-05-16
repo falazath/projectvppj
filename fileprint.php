@@ -5,7 +5,7 @@ session_start();
 include('header.html');
 include("connect.php");
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+	header('location:index.php');
 }
 
 $sql = $conn->query("SELECT * FROM itoss_jobtype;");

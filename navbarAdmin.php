@@ -45,7 +45,7 @@
                         <a class="btn ftitle d-block text-start" id="user" href="manageUser.php">จัดการบัญชีผู้ใช้</a>
                     </div>
                     <div class="col-12 mb-2">
-                        <a class="btn ftitle d-block text-start" id="excel" href="exportExcel.php">Export Excel</a>
+                        <a class="btn ftitle d-block text-start" id="excel" href="exportExcel.php">รายงาน</a>
                     </div>
                 </div>
             </div>

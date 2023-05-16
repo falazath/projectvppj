@@ -3,7 +3,14 @@ session_start();
 include('header.html');
 include("connect.php");
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+    if(isset($_GET['Form_id'])){
+        $_SESSION['Form_id'] = $_GET['Form_id'];
+        $_SESSION['page_link'] = 3;
+        header('location:index.php');
+    }
+}else{
+    unset($_SESSION['Form_id']);
+    unset($_SESSION['page_link']);
 }
 include($_SESSION['navbar']);
 
@@ -183,7 +190,7 @@ $signUser = $sql_user->fetch();
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                 </div>
                 <div class="col-6 col-xl-6 mx-auto mb-5">
                     <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $row['User_Name'] ?>" disabled>
@@ -194,7 +201,7 @@ $signUser = $sql_user->fetch();
                     <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
                 </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img class="w-100 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
+                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
                 </div>
                 <div class="col-6 col-xl-6 mx-auto mb-5">
                     <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $signAdmin['User_Name'] ?>" disabled>
@@ -313,7 +320,7 @@ $signUser = $sql_user->fetch();
                         <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                     </div>
                     <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <img class="w-100 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                        <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                     </div>
                     <div class="col-6 col-xl-6 mx-auto mb-5">
                         <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
@@ -330,7 +337,7 @@ $signUser = $sql_user->fetch();
                     if ($i == count($report) - 1) {
                     ?>
                         <div class="col-auto mx-auto col-xl-12 mx-xl-auto mb-xl-0" id="sent_img">
-                            <img class="d-block w-100 h-100" src="data:<?= $report[$i]['Sign_image'] ?>" alt="">
+                            <img class="d-block mx-auto w-75 h-auto" src="data:<?= $report[$i]['Sign_image'] ?>" alt="">
                         </div>
                         <div class="col-xl-12 mx-auto <?= $none ?>" id="signa">
                             <input type="hidden" name="Sign_id" id="Sign_id" value="<?= $report[$i]['Sign_id'] ?>" required>
@@ -342,7 +349,7 @@ $signUser = $sql_user->fetch();
                     } else {
                     ?>
                         <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                            <img class="w-100 h-auto" src="data:<?= $report[$i]['Sign_image'] ?>" alt="">
+                            <img class="w-75 h-auto" src="data:<?= $report[$i]['Sign_image'] ?>" alt="">
                         </div>
                     <?php
                     }
@@ -401,6 +408,9 @@ $signUser = $sql_user->fetch();
                 }
                 ?>
             </div>
+            <?php
+            if ($row['User_id'] == $_SESSION['id']) {
+            ?>
             <div class="col-auto col-xl-3" id="saveCol">
                 <input type="hidden" name="index" value="<?= count($report) - 1 ?>">
                 <button class="btn btn-primary d-block mx-auto mx-xl-auto ftitle d-none" type="submit" name="save" id="save" value="<?= $report[count($report) - 1]['Report_id'] ?>" onclick="checkEmpty()">บันทึก</button>
@@ -438,6 +448,7 @@ $signUser = $sql_user->fetch();
                 }
         ?>
         </div>
+        <?php } ?>
     </form>
     <form action="" method="post" enctype="multipart/form-data">
         <div class="modal fade" id="upload" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true"><!--อัพรูปภาพการปฏิบัติงาน-->

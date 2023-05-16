@@ -2,7 +2,7 @@
 session_start();
 include("header.html");
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+    header('location:index.php');
 }
 include("connect.php");
 if (isset($_POST['createdp'])) {

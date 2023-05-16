@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+    header('location:index.php');
 }
 include("header.html");
 include("connect.php");
@@ -96,13 +96,15 @@ if (isset($_POST['search']) || isset($_GET['page'])) {
         if (!empty($idForm)) {
             $data = array_intersect($idJob, $idForm);
             $in = "(";
-            for ($i = 0; $i <= array_key_last($data); $i++) {
-                if (!empty($data[$i])) {
-                    $in .= "'" . $data[$i] . "'";
-                    if ($i != array_key_last($data)) {
-                        $in .= ",";
-                    }
-                }
+            $max = count($data);
+            $i = 0;
+            foreach($data as $key => $value){
+                            
+                            $in .= "'" . $value . "'";
+                            if ($i != $max-1) {
+                                $in .= ",";
+                            }
+                            $i++;
             }
             $in .= ")";
         }

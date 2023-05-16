@@ -1,4 +1,5 @@
 <?php
+	include("connect.php");
 	$stmt = $conn->prepare("SELECT * FROM itoss_form
     INNER JOIN itoss_user ON itoss_form.User_id = itoss_user.User_id 
     INNER JOIN itoss_status_form ON itoss_form.Status_form_id = itoss_status_form.Status_form_id
@@ -20,35 +21,35 @@
 	//$sMessage = "\n$R_address";
 
 	if( $row['Status_form_id'] == 5){
-		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sToken = "ywRtDO72nKeXNqnAGPI6wBAgfiC0tVTIGbQDi3vqfkD";
 		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/create_report.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 4){
-		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sToken = "ywRtDO72nKeXNqnAGPI6wBAgfiC0tVTIGbQDi3vqfkD";
 		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestUser.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 3){
-		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
-		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestUser.php?Form_id=$Form_id";
+		$sToken = "ywRtDO72nKeXNqnAGPI6wBAgfiC0tVTIGbQDi3vqfkD";
+		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestUser.php?Form_id=$Form_id&status_id=".$row['Status_form_id']."";
 	}
 	else if( $row['Status_form_id'] == 2){
-		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sToken = "ywRtDO72nKeXNqnAGPI6wBAgfiC0tVTIGbQDi3vqfkD";
 		$sMessage = "ของ : $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestUser.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 1){
-		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sToken = "ywRtDO72nKeXNqnAGPI6wBAgfiC0tVTIGbQDi3vqfkD";
 		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/requestAdmin.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 6){
-		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sToken = "ywRtDO72nKeXNqnAGPI6wBAgfiC0tVTIGbQDi3vqfkD";
 		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/check_report.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 7){
-		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sToken = "ywRtDO72nKeXNqnAGPI6wBAgfiC0tVTIGbQDi3vqfkD";
 		$sMessage = "มีฟอร์มใหม่ส่งเข้ามา จาก $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/check_report.php?Form_id=$Form_id";
 	}
 	else if( $row['Status_form_id'] == 8){
-		$sToken = "vNxUORwycWKbUHwD0XFCCO5lBUlalElBD00XRF5vShh";
+		$sToken = "ywRtDO72nKeXNqnAGPI6wBAgfiC0tVTIGbQDi3vqfkD";
 		$sMessage = "ของ $UserName ตำแหน่งงาน $UserJop\nสถานะ : $Status\n$host_name/check_report.php?Form_id=$Form_id";
 	}
 	

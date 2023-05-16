@@ -2,10 +2,24 @@
 session_start();
 include("connect.php");
 if (!isset($_SESSION['id'])) {
-	header('location:login.php');
+	header('location:index.php');
 }
 include('header.html');
 if (isset($_POST['send_approve'])) {
+	if(isset($_GET['User_id'])){
+		$stmt = $conn->prepare("UPDATE itoss_sign SET Sign_image=? WHERE User_id = ?");
+		$stmt->bindParam(1, $_POST['Sign_image']);
+		$stmt->bindParam(2, $_GET['User_id']);
+		$stmt->execute();
+
+		if ($_SESSION['status'] == 1) {
+			$_SESSION['Sign_image'] = $_POST['Sign_image'];
+			echo '<script language="javascript">';
+			echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="manageUser.php"';
+			echo '</script>';
+		} 
+	}
+	else{
 		$stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, ?)");
 		$stmt->bindParam(1, $_POST['Sign_image']);
 		$stmt->bindParam(2, $_SESSION['id']);
@@ -16,12 +30,14 @@ if (isset($_POST['send_approve'])) {
 			echo '<script language="javascript">';
 			echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="indexAdmin.php"';
 			echo '</script>';
-		} else if ($_SESSION['status'] == 2) {
+		} else if ($_SESSION['status'] == 2 || $_SESSION['status'] == 3) {
 			$_SESSION['Sign_image'] = $_POST['Sign_image'];
 			echo '<script language="javascript">';
 			echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="indexUser.php"';
 			echo '</script>';
 		}
+	}
+		
 }
 ?>
 

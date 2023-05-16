@@ -18,7 +18,7 @@
   isset($_POST['User_Password']) ? $pass = $_POST['User_Password'] : $pass = NULL;
   if ((isset($_POST['sign-in']))) {
     include("connect.php");
-    $stmt = $conn->prepare("SELECT * FROM itoss_user WHERE User_Username LIKE ? AND User_Password LIKE ?");
+    $stmt = $conn->prepare("SELECT * FROM itoss_user WHERE User_Username LIKE ? AND User_Password LIKE ? and State_id = 1");
     $stmt->bindParam(1, $user);
     $stmt->bindParam(2, $pass);
     $stmt->execute();
@@ -40,16 +40,33 @@
         if ($row1['Sign_image'] == NULL) {
           header('location: sent.php');
         } else {
-          $_SESSION['Sign_image'] = $row1['Sign_image'];
-          header('location: indexAdmin.php');
+          if($_SESSION['page_link'] == 1 || $_SESSION['page_link'] == 2){
+            header('location: requestAdmin.php?Form_id='.$_SESSION['Form_id'].'');
+          }
+          else if($_SESSION['page_link'] == 3){
+            header('location: check_report.php?Form_id='.$_SESSION['Form_id'].'');
+          }else{
+            $_SESSION['Sign_image'] = $row1['Sign_image'];
+            header('location: indexAdmin.php');
+          }
+
         }
       } else if ($_SESSION['status'] == 2 || $_SESSION['status'] == 3) {
         $_SESSION['navbar'] = 'navbar.php';
         if ($row1['Sign_image'] == NULL) {
           header('location: sent.php');
         } else {
-          $_SESSION['Sign_image'] = $row1['Sign_image'];
-          header('location: indexUser.php');
+          if($_SESSION['page_link'] == 1){
+            header('location: requestUser.php?Form_id='.$_SESSION['Form_id'].'');
+          }
+          else if($_SESSION['page_link'] == 2){
+            header('location: create_report.php?Form_id='.$_SESSION['Form_id'].'');
+          }else if($_SESSION['page_link'] == 3){
+            header('location: check_report.php?Form_id='.$_SESSION['Form_id'].'');
+          }else{
+                    $_SESSION['Sign_image'] = $row1['Sign_image'];
+                    header('location: indexUser.php');
+          }
         }
       }
     } else {

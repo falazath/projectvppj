@@ -1,11 +1,22 @@
 <?php
 session_start();
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+    if(isset($_GET['Form_id'])){
+        $_SESSION['Form_id'] = $_GET['Form_id'];
+        $_SESSION['page_link'] = 2;
+        header('location:index.php');
+    }
+}
+else if($_SESSION['status'] == 1){
+    header('location:requestAdmin.php?Form_id='.$_GET['Form_id'].'');
+}else{
+    unset($_SESSION['Form_id']);
+    unset($_SESSION['page_link']);
 }
 include('header.html');
 include("connect.php");
 include($_SESSION['navbar']);
+
 
 $sql = $conn->query("SELECT * FROM itoss_agency WHERE state_id =1;");
 $filter[0] = $sql->fetchAll();
@@ -196,35 +207,30 @@ $signUser = $sql_user->fetch();
             </div>
         </div>
     </div>
-
     <div class="row mb-xl-5 ">
-        <div class="col-12 col-xl-6">
-            <div class="col-12 col-xl-3 mx-xl-auto mb-3">
-                <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
-            </div>
-            <div class="row signBox my-3 my-xl-5">
+            <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
+                <div class="col-12 col-xl-3 mx-xl-auto mb-3">
+                    <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
+                </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img class="d-block w-100 h-100" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                </div>
+                <div class="col-6 col-xl-6 mx-auto mb-5">
+                    <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $row['User_Name'] ?>" disabled>
                 </div>
             </div>
-            <div class="col-6 col-xl-6 mx-auto mb-5">
-                <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
-            </div>
-        </div>
-        <div class="col-12 col-xl-6">
-            <div class="col-12 col-xl-3 mx-xl-auto mb-3">
-                <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
-            </div>
-            <div class="row signBox my-3 my-xl-5">
+            <div class="col-12 col-xl-6 mx-xl-auto">
+                <div class="col-12 col-xl-3 mx-xl-auto mb-3">
+                    <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
+                </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img class="d-block w-100 h-100" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
+                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
+                </div>
+                <div class="col-6 col-xl-6 mx-auto mb-5">
+                    <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $signAdmin['User_Name'] ?>" disabled>
                 </div>
             </div>
-            <div class="col-6 col-xl-6 mx-auto mb-5">
-                <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $signAdmin['User_Name'] ?>" disabled>
-            </div>
         </div>
-    </div>
     <hr>
     <form action="" method="post" enctype="multipart/form-data">
 
@@ -287,7 +293,7 @@ $signUser = $sql_user->fetch();
         <div class="row mb-5 justify-content-center">
             <div class="col-10 col-xl-3 me-0 align-self-center">
                 <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
-                <input class="form-control ms-0  col-xl-1" type="date" name="Report_date_client" id="start" value="<?= date('Y-m-d') ?>" disabled>
+                <input class="form-control ms-0 col-xl-1" type="date" name="Report_date_client" id="start" value="<?= date('Y-m-d') ?>" disabled>
             </div>
 
         </div>
@@ -310,7 +316,6 @@ $signUser = $sql_user->fetch();
 
 
     <?php
-
     $conn = null;
     ?>
 

@@ -2,7 +2,7 @@
 session_start();
 include("header.html");
 if (!isset($_SESSION['id'])) {
-  header('location:login.php');
+  header('location:index.php');
 }
 include($_SESSION['navbar']);
 include("connect.php");

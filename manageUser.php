@@ -3,7 +3,7 @@ session_start();
 include("header.html");
 include("connect.php");
 if (!isset($_SESSION['id'])) {
-    header('location:login.php');
+    header('location:index.php');
 }
 $sql = $conn->query("SELECT * FROM itoss_department");
 $department = $sql->fetchAll();
@@ -162,40 +162,34 @@ if (isset($_POST['save'])) {
                         INNER JOIN itoss_status ON itoss_user.Status_id = itoss_status.Status_id WHERE itoss_user.state_id= 1");
                 while ($row = $stmt->fetch()) { ?>
                     <tr class="d-flex text-center fsub">
-                        <td class="col-4 col-xl-2" id="date"><?= $row['User_Username'] ?></td>
-                        <td class="col-5 col-xl-2" id="date"><?= $row['User_Name'] ?></td>
-                        <td class="col-5 col-xl-2" id="date"><?= $row['User_Jop'] ?></td>
-                        <td class="col-5 col-xl-2" id="date"><?= $row['User_Phone'] ?></td>
-                        <td class="col-5 col-xl-2" id="date"><?= $row['Department_name'] ?></td>
-                        <td class="col-1 col-xl-1" id="user"><a data-bs-toggle="modal" data-bs-target="#edit-User<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Setting.svg" alt=""></a></td>
-                        <td class="col-1 col-xl-1"><a href="#" data-bs-toggle="modal" data-bs-target="#cancel<?= $row['User_id'] ?>" id="cancel">
-                        <img src="./asset/icon/Delete.svg" alt="">
-                </a></td>
+                        <td class="col-4 col-xl-2"><?= $row['User_Username'] ?></td>
+                        <td class="col-5 col-xl-2"><?= $row['User_Name'] ?></td>
+                        <td class="col-5 col-xl-2"><?= $row['User_Jop'] ?></td>
+                        <td class="col-5 col-xl-2"><?= $row['User_Phone'] ?></td>
+                        <td class="col-5 col-xl-2"><?= $row['Department_name'] ?></td>
+                        <td class="col-1 col-xl-1"><a data-bs-toggle="modal" data-bs-target="#edit-User<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Setting.svg" alt=""></a></td>
+                        <td class="col-1 col-xl-1"><a data-bs-toggle="modal" data-bs-target="#cancel<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Delete.svg" alt=""></a></td>
                     </tr>
-                    <div class="col-auto col-xl-3" id="cancelCol">
-                <!-- Button trigger modal -->
-                
-                
-                <!-- Modal -->
-                <form action="" method="post">
-                <div class="modal fade" id="cancel<?= $row['User_id'] ?>" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <p class="modal-title fhead fw-bold text-center">ยืนยันการยกเลิก</p>
-                            </div>
-                            <div class="modal-body my-3 my-xl-3 text-center">
-                                <p class="ftitle text-center d-inline">คุณต้องการยกเลิกคำขอปฏิบัติงานหรือไม่  </p>
-                            </div>
-                            <div class="modal-footer justify-content-center">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">กลับ</button>
-                                <button class="btn btn-danger ftitle" type="submit" name="cancel"  value="<?= $row['User_id'] ?>">ยืนยัน</button>
+
+                        <form action="" method="post">
+                        <div class="modal fade" id="cancel<?= $row['User_id'] ?>" tabindex="-1" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <p class="modal-title fhead fw-bold text-center">ยืนยันการยกเลิก</p>
+                                    </div>
+                                    <div class="modal-body my-3 my-xl-3 text-center">
+                                        <p class="ftitle text-center d-inline">คุณต้องการลบบัญชีผู้ใช้หรือไม่  </p>
+                                    </div>
+                                    <div class="modal-footer justify-content-center">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">กลับ</button>
+                                        <button class="btn btn-danger ftitle" type="submit" name="cancel"  value="<?= $row['User_id'] ?>">ยืนยัน</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                </form>
-            </div>
+                        </form>
+            
                     <form method="post">
                         <div class="modal fade" id="edit-User<?= $row['User_id'] ?>" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
@@ -245,6 +239,9 @@ if (isset($_POST['save'])) {
                                                 ?>
                                             </select>
                                         </div>
+                                        <div class="ftitle fw-bold text-center mt-4 mb-2">
+                                            <a class="btn btn-primary"  name="edit-sent" href="sent.php?User_id=<?=$row['User_id']?>">แก้ไขลายเซ็น</a>
+                                        </div>
                                     </div>
                                     <div class="modal-footer justify-content-around">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">กลับ</button>
@@ -260,7 +257,6 @@ if (isset($_POST['save'])) {
             </tbody>
         </table>
     </div>
-    </form>
 </main>
 
 <script>
@@ -273,6 +269,29 @@ if (isset($_POST['save'])) {
         }
     });
 </script>
+<script src="./libs/jquery.js"></script>
+	<script src="./libs/jSignature.min.noconflict.js"></script>
+	<script>
+		(function($) {
+
+			$(document).ready(function() {
+
+				var $sigdiv = $("#signature").jSignature({
+						'UndoButton': false
+					}),
+					$tools = $('#tools')
+
+				$("#send_approve").on('click', function() {
+					var data = $sigdiv.jSignature('getData', 'image');
+					$("#Sign_image").val(data);
+				});
+				$('<input class="btn btn-secondary d-block mx-auto" type="button" value="ล้างลายเซ็น">').bind('click', function(e) {
+					$sigdiv.jSignature('reset')
+				}).appendTo($tools)
+			})
+
+		})(jQuery)
+	</script>
 </body>
 
 </html>
