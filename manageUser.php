@@ -17,8 +17,40 @@ if (isset($_POST['save'])) {
         echo 'window.location.href = "manageUser.php"; ';
         echo "alert('กรุณาใส่รหัสอย่างน้อย 6 ตัว ไม่เกิน 20 ตัว');";
         echo '</script>';
-    } else {
-        $stmt = $conn->prepare("INSERT INTO itoss_user VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?)");
+    } else{
+        $flag = false;
+        $sql = $conn->query("SELECT * FROM itoss_user WHERE state_id = 1");
+        while($check = $sql->fetch()){
+            if($_POST['User_Username'] == $check['User_Username']){
+                $flag = true;
+            }
+        }
+        if(!$flag){
+            $stmt = $conn->prepare("INSERT INTO itoss_user VALUES ('', ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->bindParam(1, $_POST["User_Name"]);
+            $stmt->bindParam(2, $_POST["User_Jop"]);
+            $stmt->bindParam(3, $_POST["User_Phone"]);
+            $stmt->bindParam(4, $_POST["User_Username"]);
+            $stmt->bindParam(5, $_POST["User_Password"]);
+            $stmt->bindParam(6, $_POST["Status_id"]);
+            $stmt->bindParam(7, $_POST["Department_id"]);
+            $stmt->bindParam(8, $_POST["state_id"]);
+            $stmt->execute();
+            echo '<script language="javascript">';
+            echo 'alert("ข้อมูล User ถูกเพิ่มแล้ว"); location.href="manageUser.php"';
+            echo '</script>';
+            $User_id = $conn->lastInsertId();
+        }else{
+            echo '<script language="javascript">';
+            echo 'toastr.error("Username มีผู้ใช้งานอยู่แล้ว");';
+            echo '</script>';
+        }
+    }
+} else if (isset($_POST['edit'])) {
+    $sql = $conn->query("SELECT * FROM itoss_user WHERE User_Username = '".$_POST["User_Username"]."'");
+    $check = $sql->fetch();
+    if(empty($check)){
+        $stmt = $conn->prepare("UPDATE itoss_user SET User_Name=?, User_Jop=?, User_Phone=?, User_Username=?, User_Password=?, Status_id=?, Department_id=?, state_id=? WHERE User_id=?"); // เตรยีมคา สง่ั SQL ส าหรบัแกไ้ข
         $stmt->bindParam(1, $_POST["User_Name"]);
         $stmt->bindParam(2, $_POST["User_Jop"]);
         $stmt->bindParam(3, $_POST["User_Phone"]);
@@ -27,36 +59,23 @@ if (isset($_POST['save'])) {
         $stmt->bindParam(6, $_POST["Status_id"]);
         $stmt->bindParam(7, $_POST["Department_id"]);
         $stmt->bindParam(8, $_POST["state_id"]);
+        $stmt->bindParam(9, $_POST['edit']);
         $stmt->execute();
-
+    
         echo '<script language="javascript">';
-        echo 'alert("ข้อมูล User ถูกเพิ่มแล้ว"); location.href="manageUser.php"';
+        echo 'toastr.success("แก้ไขเรียบร้อย"); location.href="manageUser.php"';
         echo '</script>';
-
-        $User_id = $conn->lastInsertId();
+    }else{
+        echo '<script language="javascript">';
+        echo 'toastr.warning("Username มีผู้ใช้งานอยู่แล้ว");';
+        echo '</script>';
     }
-} else if (isset($_POST['edit'])) {
-    $stmt = $conn->prepare("UPDATE itoss_user SET User_Name=?, User_Jop=?, User_Phone=?, User_Username=?, User_Password=?, Status_id=?, Department_id=?, state_id=? WHERE User_id=?"); // เตรยีมคา สง่ั SQL ส าหรบัแกไ้ข
-    $stmt->bindParam(1, $_POST["User_Name"]);
-    $stmt->bindParam(2, $_POST["User_Jop"]);
-    $stmt->bindParam(3, $_POST["User_Phone"]);
-    $stmt->bindParam(4, $_POST["User_Username"]);
-    $stmt->bindParam(5, $_POST["User_Password"]);
-    $stmt->bindParam(6, $_POST["Status_id"]);
-    $stmt->bindParam(7, $_POST["Department_id"]);
-    $stmt->bindParam(8, $_POST["state_id"]);
-    $stmt->bindParam(9, $_POST['edit']);
-    $stmt->execute();
-
-    echo '<script language="javascript">';
-    echo 'alert("แก้ไขแล้ว"); location.href="manageUser.php"';
-    echo '</script>';
+    
 
     $User_id = $conn->lastInsertId();
 }else if (isset($_POST['cancel'])) {
     $stmt = $conn->query("SELECT * FROM itoss_form WHERE User_id = " . $_POST['cancel'] . "");
     $del = $stmt->fetch();
-
     if (!empty($del)) {
         echo '<script language="javascript">';
         echo 'alert("มีข้อมูลผู้ใช้งานยังใช้งานอยู่ ไม่สามารถลบได้");';

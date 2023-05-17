@@ -4,6 +4,8 @@ include("header.html");
 if (!isset($_SESSION['id'])) {
     header('location:index.php');
 }
+include($_SESSION['navbar']);
+
 include("connect.php");
 if (isset($_POST['createdp'])) {
     $stmt = $conn->prepare("INSERT INTO itoss_jobtype VALUES ('', ?,1)");
@@ -19,7 +21,7 @@ if (isset($_POST['createdp'])) {
 
     if (empty($del)) {
         echo '<script language="javascript">';
-        echo 'alert("มีข้อมูลหน่วยงานนี้ที่ยังใช้งานอยู่ ไม่สามารถลบได้");';
+        echo 'toastr.warning("มีข้อมูลหน่วยงานนี้ที่ยังใช้งานอยู่ ไม่สามารถลบได้");';
         echo '</script>';
     } else {
         $stmt = $conn->prepare("UPDATE itoss_jobtype SET state_id = 0 WHERE Jobtype_id = ?");
@@ -30,12 +32,22 @@ if (isset($_POST['createdp'])) {
         echo '</script>';
     }
 } else if (isset($_POST['edit'])) {
-    $stmt = $conn->prepare("UPDATE itoss_jobtype SET Jobtype_name = ? WHERE Jobtype_id = ?");
-    $stmt->bindParam(1, $_POST["Jobtype_name"]);
-    $stmt->bindParam(2, $_POST["edit"]);
-    $stmt->execute();
+    $sql = $conn->query("SELECT * FROM itoss_jobtype WHERE Jobtype_name = '".$_POST["Jobtype_name"]."'");
+    $check = $sql->fetch();
+    if(empty($check)){
+        $stmt = $conn->prepare("UPDATE itoss_jobtype SET Jobtype_name = ? WHERE Jobtype_id = ?");
+        $stmt->bindParam(1, $_POST["Jobtype_name"]);
+        $stmt->bindParam(2, $_POST["edit"]);
+        $stmt->execute();
+        echo '<script language="javascript">';
+        echo 'toastr.success("แก้ไขประเภทงานเรียบร้อย");';
+        echo '</script>';
+    }else{
+        echo '<script language="javascript">';
+        echo 'toastr.warning("ชื่อประเภทงานนี้ถูกใช้งานแล้ว");';
+        echo '</script>';
+    }
 }
-include($_SESSION['navbar']);
 ?>
 <main>
     <div class="row justify-content-center mt-5 ">
@@ -44,7 +56,7 @@ include($_SESSION['navbar']);
         </div>
     </div>
     <div class="row">
-        <div class="col-xl-6 mx-auto">
+        <div class="col-sm-8 col-xl-6 mx-auto my-0">
             <div class="row">
                 <div class="col mb-3">
                     <button type="button" class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-dp">เพิ่มประเภทงาน</button>
@@ -91,7 +103,7 @@ include($_SESSION['navbar']);
                                     </button>
                                 </td>
                                 <td class="col-2 col-sm-2" id="user">
-                                    <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $row['Jobtype_id'] ?>">
+                                    <button class="btn my-0" type="button" data-bs-toggle="modal" data-bs-target="#edit<?= $row['Jobtype_id'] ?>">
                                         <img src="./asset/icon/Setting.svg" alt="">
                                     </button>
                                 </td>

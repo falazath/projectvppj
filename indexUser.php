@@ -83,7 +83,8 @@ if (isset($_POST['search']) || isset($_GET['page'])) {
         $idJob = null;
     }
     if (!empty(strcmp('', $_SESSION['start-date'])) && !empty(strcmp('', $_SESSION['end-date']))) {
-        $condition[] = "itoss_form.Form_date BETWEEN ".$_SESSION['start-date']." AND ".$_SESSION['end-date']."";
+        // echo '<script>alert();</script>';
+        $condition[] = "itoss_form.Form_date BETWEEN '".$_SESSION['start-date']."' AND '".$_SESSION['end-date']."'";
     }
     if (!empty(strcmp('all', $_SESSION['inpstatus']))) {
         $condition[] = "itoss_form.Status_form_id LIKE ".$_SESSION['inpstatus']."";

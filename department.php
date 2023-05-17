@@ -24,14 +24,22 @@ if (isset($_POST['createdp'])) {
     echo '</script>';
   }
 } else if (isset($_POST['editname'])) {
-  $stmt = $conn->prepare("UPDATE itoss_agency SET Agency_Name = ? where Agency_id = ?");
-  $stmt->bindParam(1, $_POST["Agency_Name"]);
-  $stmt->bindParam(2, $_POST["editname"]);
-  $stmt->execute();
-
-  echo '<script language="javascript">';
-  echo 'toastr.success("เปลี่ยนชื่อหน่วยงานเรียบร้อย")';
-  echo '</script>';
+  $sql = $conn->query("SELECT * FROM itoss_agency WHERE Agency_Name = '".$_POST["Agency_Name"]."'");
+  $check = $sql->fetch();
+  if(empty($check)){
+    $stmt = $conn->prepare("UPDATE itoss_agency SET Agency_Name = ? where Agency_id = ?");
+    $stmt->bindParam(1, $_POST["Agency_Name"]);
+    $stmt->bindParam(2, $_POST["editname"]);
+    $stmt->execute();
+  
+    echo '<script language="javascript">';
+    echo 'toastr.success("เปลี่ยนชื่อหน่วยงานเรียบร้อย")';
+    echo '</script>';
+  }else{
+    echo '<script language="javascript">';
+    echo 'toastr.warning("ชื่อนี้ถูกใช้งานอยู่")';
+    echo '</script>';
+  }
 } else if (isset($_POST['delete'])) {
   if($_POST['state_id'] == 0){
     $stmt = $conn->query("SELECT * FROM itoss_form WHERE Agency_id = " . $_POST['delete'] . "");
@@ -91,7 +99,7 @@ if (isset($_POST['createdp'])) {
       </div>
     </form>
   </div>
-  <div class="overflow-x-auto col-sm-6 mx-auto">
+  <div class="overflow-x-auto col-sm-8 col-xl-6 mx-auto">
   <div class="col mb-3">
       <button type="button" class="btn btn-primary d-block me-xl-auto" data-bs-toggle="modal" data-bs-target="#create-dp">เพิ่มหน่วยงาน</button>
     </div>

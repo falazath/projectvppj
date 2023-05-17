@@ -19,8 +19,16 @@ $filter[2] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
 //-Value filter
+isset($_SESSION['sector']) ? : $_SESSION['sector'] = 'all';
+isset($_SESSION['user']) ? : $_SESSION['user'] = 'all';
+isset($_SESSION['type']) ? : $_SESSION['type'] = 'all';
+isset($_SESSION['start-date']) ? : $_SESSION['start-date'] = '';
+isset($_SESSION['end-date']) ? : $_SESSION['end-date'] = '';
+isset($_SESSION['inpstatus']) ? : $_SESSION['inpstatus'] = 'all';
+
 if (isset($_POST['search']) || isset($_POST['colFilter'])) {
-    isset($_POST['sector']) ? $_SESSION['sector'] = $_POST['sector']: $_SESSION['sector'] = $_SESSION['sector'] ;
+    
+    isset($_POST['sector']) ? $_SESSION['sector'] = $_POST['sector']: $_SESSION['sector'];
     isset($_POST['user']) ? $_SESSION['user'] = $_POST['user'] : $_SESSION['user'];
     isset($_POST['type']) ? $_SESSION['type'] = $_POST['type'] : $_SESSION['type'];
     isset($_POST['start-date']) ? $_SESSION['start-date'] = $_POST['start-date'] : $_SESSION['start-date'];
@@ -331,8 +339,8 @@ function colspanCheckRp()
     </div>
 
 </form>
-<div class="row mb-xl-2">
-    <div class="dropdown col-xl-2 ms-xl-auto">
+<div class="row mb-xl-2 mb-2">
+    <div class="dropdown col-sm-auto col-xl-2 ms-auto">
         <button type="button" class="btn btn-secondary dropdown-toggle d-block ms-xl-auto" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
             เลือกคอลัมน์
         </button>
@@ -412,7 +420,9 @@ function colspanCheckRp()
                 </label>
             </div>
         </div>
-        <button type="submit" class="btn btn-primary " name="colFilter">เลือกคอลัมน์</button>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary " name="colFilter">เลือกคอลัมน์</button>
+        </div>
         </form>
     </div>
     <!-- ปุ่มกด export Excel -->
@@ -471,13 +481,13 @@ function colspanCheckRp()
                 ?>
             </tr>
             <?php
-            if (isset($_POST['repTime']) || isset($_POST['repStatus'])) {
+            if (isset($_POST['repTime']) || isset($_POST['repStatus']) || !isset($_POST['colFilter'])) {
                 echo '<tr>';
-                if (isset($_POST['repTime'])) {
+                if (isset($_POST['repTime']) || !isset($_POST['colFilter'])) {
                     echo '<th class="table-success">เริ่ม</th>';
                     echo '<th class="table-success">เสร็จสิ้น</th>';
                 }
-                if (isset($_POST['repStatus'])) {
+                if (isset($_POST['repStatus']) || !isset($_POST['colFilter'])) {
                     echo '<th class="table-success">ปิดงาน</th>';
                     echo '<th class="table-success">ติดตามงาน</th>';
                 }

@@ -18,7 +18,7 @@
   isset($_POST['User_Password']) ? $pass = $_POST['User_Password'] : $pass = NULL;
   if ((isset($_POST['sign-in']))) {
     include("connect.php");
-    $stmt = $conn->prepare("SELECT * FROM itoss_user WHERE User_Username LIKE ? AND User_Password LIKE ? and State_id = 1");
+    $stmt = $conn->prepare("SELECT * FROM itoss_user WHERE User_Username = ? AND User_Password = ? and State_id = 1");
     $stmt->bindParam(1, $user);
     $stmt->bindParam(2, $pass);
     $stmt->execute();
