@@ -2,7 +2,7 @@
 <body>
 <nav class="navbar">
     <div class="container-fluid">
-        <button class="navbar-toggler position-fixed bg-white opacity-100" style="left: 0; top: 0; margin:2px" type="button" data-bs-toggle="offcanvas"
+        <button class="navbar-toggler position-fixed bg-white opacity-100" style="left: 0; top: 0; margin:2px;z-index: 1;" type="button" data-bs-toggle="offcanvas"
             data-bs-target="#offcanvasNavbarLight" aria-controls="offcanvasNavbarLight">
             <span class="navbar-toggler-icon"></span>
         </button>

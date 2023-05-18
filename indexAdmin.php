@@ -422,12 +422,12 @@ if (isset($_POST['search']) || isset($_GET['page'])) {
                     if ($row[$j]['Agency_id'] == 0) {
                         $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id'");
                         $agency = $sql->fetch();
-                        echo  '<td class="col-4 col-sm-2" id="sector">' . $agency['name'] . '</td>';
+                        echo  '<td class="col-4 col-sm-2 text-break" id="sector">' . $agency['name'] . '</td>';
                     } else {
-                        echo  '<td class="col-4 col-sm-2" id="sector">' . $Agency_Name . '</td>';
+                        echo  '<td class="col-4 col-sm-2 text-break" id="sector">' . $Agency_Name . '</td>';
                     }
-                    echo '<td class="col-4 col-sm-2" id="user">' . $User_Name . '</td>';
-                    echo  '<td class="col-4 col-sm-1" id="cate-work">'; // column ประเภทงาน
+                    echo '<td class="col-4 col-sm-2 text-break" id="user">' . $User_Name . '</td>';
+                    echo  '<td class="col-4 col-sm-1 text-break" id="cate-work">'; // column ประเภทงาน
                     $sql = $conn->query("SELECT * FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
                            itoss_form.Form_id = '$Form_id' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
                     $job = $sql->fetchAll();
@@ -443,7 +443,7 @@ if (isset($_POST['search']) || isset($_GET['page'])) {
                         
                     }
                     echo '</td>';
-                    echo    '<td class="col-8 col-sm-4 text-start">
+                    echo    '<td class="col-8 col-sm-4 text-start text-break">
                                 ' . $Form_Work . '
                                 </td>
                                 <td class="col-3 col-sm-1 '.$bg.'" id="status">' . $Status_form_name . '</td>

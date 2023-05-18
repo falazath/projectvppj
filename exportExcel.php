@@ -211,7 +211,7 @@ function colspanCheckRp()
 <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
     <div class="navbar navbar-expand-lg">
         <div class="container-fluid">
-            <button class="navbar-toggler btn btn-success border border-2 fsub position-fixed bottom-0 end-0 bg-white m-2" id="filterBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPhone" aria-controls="filterPhone" aria-label="Toggle navigation">
+            <button class="navbar-toggler btn btn-success border border-2 fsub position-fixed bottom-0 end-0 bg-white m-2"  id="filterBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPhone" aria-controls="filterPhone" aria-label="Toggle navigation">
                 <img src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt="">
             </button>
             <div class="offcanvas offcanvas-bottom" tabindex="-1" id="filterPhone" aria-labelledby="offcanvasBottomLabel">
@@ -439,7 +439,7 @@ function colspanCheckRp()
 <!-- ข้อมูลใน ไฟล์ excel -->
 <div class="overflow-x-auto">
     <!--ตาราง-->
-    <table class="table table-bordered border-dark text-center" id="tableExport">
+    <table class="table table-bordered border-dark text-center fsub" style="width:150%" id="tableExport">
         <thead class="text-center fsub table-info">
             <tr>
                 <th class="table-primary" colspan="<?= colspanCheckRq() ?>" id="rq">คำขอปฏิบัติงาน</th>
@@ -519,16 +519,16 @@ function colspanCheckRp()
                     <tr>
                         <?php
                         if (isset($_POST['reqDate']) || !isset($_POST['colFilter'])) {
-                            echo '<td>' . convertDate($row[$i]['Form_date']) . '</td>';
+                            echo '<td class="text-break" style="width:5%">' . convertDate($row[$i]['Form_date']) . '</td>';
                         }
                         if (isset($_POST['reqSector']) || !isset($_POST['colFilter'])) {
-                            echo '<td>' . $row[$i]['Agency_Name'] . '</td>';
+                            echo '<td class="text-break" style="width:7%">' . $row[$i]['Agency_Name'] . '</td>';
                         }
                         if (isset($_POST['reqUser']) || !isset($_POST['colFilter'])) {
-                            echo '<td>' . $row[$i]['User_Name'] . '</td>';
+                            echo '<td class="text-break" style="width:10%">' . $row[$i]['User_Name'] . '</td>';
                         }
                         if (isset($_POST['reqType']) || !isset($_POST['colFilter'])) {
-                            echo '<td>';
+                            echo '<td class="text-break" style="width:5%">';
                             $sql = $conn->query("SELECT * FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND itoss_form.Form_id = " . $row[$i]['Form_id'] . " AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
                             $job = $sql->fetchAll();
                             for ($k = 0; $k < count($job); $k++) {
@@ -544,43 +544,43 @@ function colspanCheckRp()
                             echo '</td>';
                         }
                         if (isset($_POST['reqDetail']) || !isset($_POST['colFilter'])) {
-                            echo '<td>' . $row[$i]['Form_Work'] . '</td>';
+                            echo '<td class="text-break" style="width:15%">' . $row[$i]['Form_Work'] . '</td>';
                         }
                         if (isset($_POST['reqAssign']) || !isset($_POST['colFilter'])) {
-                            echo '<td>';
+                            echo '<td class="text-break" style="width:10%">';
                             $sql = $conn->query("SELECT * FROM itoss_user WHERE User_id = " . $row[$i]['assign_id'] . "");
                             $assign = $sql->fetch();
                             echo $assign['User_Name'];
                             echo '</td>';
                         }
                         if (isset($_POST['reqStatus']) || !isset($_POST['colFilter'])) {
-                            echo '<td>' . $row[$i]['Status_form_name'] . '</td>';
+                            echo '<td class="text-break" style="width:4%">' . $row[$i]['Status_form_name'] . '</td>';
                         }
                         if (!empty(count($report))) {
                             if (isset($_POST['repDetail']) || !isset($_POST['colFilter'])) {
-                                echo '<td>' . $report[$j]['Report_Detail'] . '</td>';
+                                echo '<td class="text-break" style="width:15%">' . $report[$j]['Report_Detail'] . '</td>';
                             }
                             if (isset($_POST['repTime']) || !isset($_POST['colFilter'])) {
-                                echo '<td>' . convertDate(date('d-m-Y',strtotime($report[$j]['Report_Start_Date']))) . ' '.date('H:i',strtotime($report[$j]['Report_Start_Date'])).'</td>';
-                                echo '<td>' . convertDate(date('d-m-Y',strtotime($report[$j]['Report_Stop_Date']))) . ' '.date('H:i',strtotime($report[$j]['Report_Stop_Date'])).'</td>';
+                                echo '<td class="text-break" style="width:5%">' . convertDate(date('d-m-Y',strtotime($report[$j]['Report_Start_Date']))) . ' '.date('H:i',strtotime($report[$j]['Report_Start_Date'])).'</td>';
+                                echo '<td class="text-break" style="width:5%">' . convertDate(date('d-m-Y',strtotime($report[$j]['Report_Stop_Date']))) . ' '.date('H:i',strtotime($report[$j]['Report_Stop_Date'])).'</td>';
                             }
                             if (isset($_POST['repStatus']) || !isset($_POST['colFilter'])) {
                                 if ($report[$j]['Report_Status'] == 7) {
-                                    echo '<td>ปิดงาน</td>
+                                    echo '<td style="width:3%">ปิดงาน</td>
                             <td></td>';
                                 } else if ($report[$j]['Report_Status'] == 6) {
                                     echo '<td></td>
-                                        <td>'.convertDate(date('d-m-Y',strtotime($report[$j]['Report_follow_date']))).'</td>';
+                                        <td style="width:4%">'.convertDate(date('d-m-Y',strtotime($report[$j]['Report_follow_date']))).'</td>';
                                 }
                             }
                             if (isset($_POST['repUser']) || !isset($_POST['colFilter'])) {
-                                echo '<td>' . $row[$i]['User_Name'] . '</td>';
+                                echo '<td class="text-break" style="width:10%">' . $row[$i]['User_Name'] . '</td>';
                             }
                             if (isset($_POST['repClient']) || !isset($_POST['colFilter'])) {
-                                echo '<td>' . $row[$i]['Form_Name'] . '</td>';
+                                echo '<td class="text-break" style="width:10%">' . $row[$i]['Form_Name'] . '</td>';
                             }
                             if (isset($_POST['repAssign']) || !isset($_POST['colFilter'])) {
-                                echo '<td>';
+                                echo '<td class="text-break" style="width:10%">';
                             $sql = $conn->query("SELECT * FROM itoss_user WHERE User_id = " . $row[$i]['assign_id'] . "");
                             $assign = $sql->fetch();
                             echo $assign['User_Name'];

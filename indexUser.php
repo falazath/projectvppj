@@ -280,7 +280,7 @@ function convertDate($date){
     </div>
     <!--ตัวกรอง-->
     <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
-        <div class="navbar navbar-expand-lg">
+        <div class="navbar navbar-expand-lg" style="z-index: 0;">
             <div class="container-fluid">
                 <button class="navbar-toggler btn btn-success border border-2 fsub position-fixed bottom-0 end-0 bg-white m-2" id="filterBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPhone" aria-controls="filterPhone" aria-label="Toggle navigation">
                     <img src="./asset/icon/Filterph.svg" class="h-100 w-100 d-block mx-auto" alt="">
@@ -500,12 +500,12 @@ function convertDate($date){
                     if ($row[$j]['Agency_id'] == 0) {
                         $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id'");
                         $agency = $sql->fetch();
-                        echo  '<td class="col-4 col-sm-2" id="sector">' . $agency['name'] . '</td>';
+                        echo  '<td class="col-4 col-sm-2 text-break" id="sector">' . $agency['name'] . '</td>';
                     } else {
-                        echo  '<td class="col-4 col-sm-2" id="sector">' . $Agency_Name . '</td>';
+                        echo  '<td class="col-4 col-sm-2 text-break" id="sector">' . $Agency_Name . '</td>';
                     }
-                    echo '<td class="col-4 col-sm-2" id="user">' . $User_Name . '</td>';
-                    echo  '<td class="col-4 col-sm-1" id="cate-work">'; // column ประเภทงาน
+                    echo '<td class="col-4 col-sm-2 text-break" id="user">' . $User_Name . '</td>';
+                    echo  '<td class="col-4 col-sm-1 text-break" id="cate-work">'; // column ประเภทงาน
                     $sql = $conn->query("SELECT * FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
                            itoss_form.Form_id = '$Form_id' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id ORDER BY itoss_job.Job_id ASC");
                     $job = $sql->fetchAll();
@@ -520,11 +520,11 @@ function convertDate($date){
                         }
                     }
                     echo '</td>';
-                    echo    '<td class="col-8 col-sm-4 text-start">
+                    echo    '<td class="col-8 col-sm-4 text-start text-break">
                                 ' . $Form_Work . '
                                 </td>
-                                <td class="col-3 col-sm-1 ' . $bg . '" id="status">' . $Status_form_name . '</td>
-                                <td class="col-2 col-sm-1">';
+                                <td class="col-3 col-sm-1 text-break ' . $bg . '" id="status">' . $Status_form_name . '</td>
+                                <td class="col-2 col-sm-1 text-break">';
                     if ($row[$j]['User_id'] == $_SESSION['id']) {
                         if ($Status_form_id < 5) {
                             echo '<a href="requestUser.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
