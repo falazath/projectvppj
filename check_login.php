@@ -32,7 +32,7 @@
       $stmt1 = $conn->query("SELECT * FROM itoss_sign where User_id = '$User_id'");
       $row1 = $stmt1->fetch();
 
-      $sql = $conn->query("SELECT itoss_agency.Agency_Name,itoss_form.Form_Work FROM itoss_form,itoss_agency 
+      $sql = $conn->query("SELECT itoss_form.Form_id,itoss_agency.Agency_Name,itoss_form.Form_Work,itoss_agency.Agency_id FROM itoss_form,itoss_agency 
       WHERE itoss_agency.Agency_id = itoss_form.Agency_id AND User_id = ".$_SESSION['id']." AND Form_date = '".date('Y-m-d')."'");
       $_SESSION['check'] = $sql->fetchAll();
       if ($_SESSION['status'] == 1) {
@@ -71,7 +71,7 @@
       }
     } else {
       echo '<script type="text/javascript">';
-      echo 'window.location.href = "login.php";';
+      echo 'window.location.href = "index.php";';
       echo "alert('ชื่อผู้ใช้งาน หรือรหัสผ่านไม่ถูกต้อง');";
       echo '</script>';
     }

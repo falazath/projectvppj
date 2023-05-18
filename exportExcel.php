@@ -19,22 +19,22 @@ $filter[2] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_status_form");
 $filter[3] = $sql->fetchAll();
 //-Value filter
-isset($_SESSION['sector']) ? : $_SESSION['sector'] = 'all';
-isset($_SESSION['user']) ? : $_SESSION['user'] = 'all';
-isset($_SESSION['type']) ? : $_SESSION['type'] = 'all';
-isset($_SESSION['start-date']) ? : $_SESSION['start-date'] = '';
-isset($_SESSION['end-date']) ? : $_SESSION['end-date'] = '';
-isset($_SESSION['inpstatus']) ? : $_SESSION['inpstatus'] = 'all';
+isset($_SESSION['sector']) ?: $_SESSION['sector'] = 'all';
+isset($_SESSION['user']) ?: $_SESSION['user'] = 'all';
+isset($_SESSION['type']) ?: $_SESSION['type'] = 'all';
+isset($_SESSION['start-date']) ?: $_SESSION['start-date'] = '';
+isset($_SESSION['end-date']) ?: $_SESSION['end-date'] = '';
+isset($_SESSION['inpstatus']) ?: $_SESSION['inpstatus'] = 'all';
 
 if (isset($_POST['search']) || isset($_POST['colFilter'])) {
-    
-    isset($_POST['sector']) ? $_SESSION['sector'] = $_POST['sector']: $_SESSION['sector'];
+
+    isset($_POST['sector']) ? $_SESSION['sector'] = $_POST['sector'] : $_SESSION['sector'];
     isset($_POST['user']) ? $_SESSION['user'] = $_POST['user'] : $_SESSION['user'];
     isset($_POST['type']) ? $_SESSION['type'] = $_POST['type'] : $_SESSION['type'];
     isset($_POST['start-date']) ? $_SESSION['start-date'] = $_POST['start-date'] : $_SESSION['start-date'];
     isset($_POST['end-date']) ? $_SESSION['end-date'] = $_POST['end-date'] : $_SESSION['end-date'];
     isset($_POST['status']) ? $_SESSION['inpstatus'] = $_POST['status'] : $_SESSION['inpstatus'];
-    
+
     $idJob = array();
     $sql = "SELECT DISTINCT itoss_form.Form_id FROM itoss_form
          INNER JOIN itoss_agency ON itoss_agency.Agency_id = itoss_form.Agency_id
@@ -43,14 +43,14 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
     $condition = array();
     $dateSql;
     if (!empty(strcmp('all', $_SESSION['sector']))) {
-        $condition[] = "itoss_form.Agency_id LIKE '".$_SESSION['sector']."'";
+        $condition[] = "itoss_form.Agency_id LIKE '" . $_SESSION['sector'] . "'";
     }
     if (!empty(strcmp('all', $_SESSION['user']))) {
-        $condition[] = "itoss_form.User_id LIKE '".$_SESSION['user']."'";
+        $condition[] = "itoss_form.User_id LIKE '" . $_SESSION['user'] . "'";
     }
     if (!empty(strcmp('all', $_SESSION['type']))) {
         $sql_job = $conn->query("SELECT itoss_jobtype.Jobtype_name,itoss_form.Form_id FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
-                           itoss_job.Jobtype_id = '".$_SESSION['type']."' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
+                           itoss_job.Jobtype_id = '" . $_SESSION['type'] . "' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
         while ($row = $sql_job->fetch()) {
             array_push($idJob, $row['Form_id']);
         };
@@ -58,10 +58,10 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
         $idJob = null;
     }
     if (!empty(strcmp('', $_SESSION['start-date'])) && !empty(strcmp('', $_SESSION['end-date']))) {
-        $condition[] = "itoss_form.Form_date BETWEEN '".$_SESSION['start-date']."' AND '".$_SESSION['end-date']."'";
+        $condition[] = "itoss_form.Form_date BETWEEN '" . $_SESSION['start-date'] . "' AND '" . $_SESSION['end-date'] . "'";
     }
     if (!empty(strcmp('all', $_SESSION['inpstatus']))) {
-        $condition[] = "itoss_form.Status_form_id LIKE '".$_SESSION['inpstatus']."'";
+        $condition[] = "itoss_form.Status_form_id LIKE '" . $_SESSION['inpstatus'] . "'";
     }
     if (count($condition) > 0) {
         $sql .= "WHERE " . implode(' AND ', $condition) . " ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;";
@@ -80,13 +80,13 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
             $in = "(";
             $max = count($data);
             $i = 0;
-            foreach($data as $key => $value){
-                            
-                            $in .= "'" . $value . "'";
-                            if ($i != $max-1) {
-                                $in .= ",";
-                            }
-                            $i++;
+            foreach ($data as $key => $value) {
+
+                $in .= "'" . $value . "'";
+                if ($i != $max - 1) {
+                    $in .= ",";
+                }
+                $i++;
             }
             $in .= ")";
         }
@@ -103,10 +103,9 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
     }
 
     if (!empty($data)) {
-        $sql_in = $conn->query("SELECT * FROM itoss_form,itoss_agency,itoss_status_form,itoss_user,itoss_report
+        $sql_in = $conn->query("SELECT * FROM itoss_form,itoss_agency,itoss_status_form,itoss_user
         WHERE itoss_form.Agency_id = itoss_agency.Agency_id
         AND itoss_form.Status_form_id = itoss_status_form.Status_form_id
-        AND itoss_report.Form_id = itoss_form.Form_id 
         AND itoss_form.User_id = itoss_user.User_id
         AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1 AND itoss_form.Form_id IN $in ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC;");
         $row = $sql_in->fetchAll();
@@ -117,15 +116,14 @@ if (isset($_POST['search']) || isset($_POST['colFilter'])) {
     }
 } else {
 
-    $data = $conn->prepare("SELECT * FROM itoss_form,itoss_agency,itoss_status_form,itoss_user,itoss_report
+    $data = $conn->prepare("SELECT * FROM itoss_form,itoss_agency,itoss_status_form,itoss_user
     WHERE itoss_form.Agency_id = itoss_agency.Agency_id
     AND itoss_form.Status_form_id = itoss_status_form.Status_form_id
-    AND itoss_report.Form_id = itoss_form.Form_id 
     AND itoss_form.User_id = itoss_user.User_id
     AND itoss_agency.state_id = 1 AND itoss_user.state_id = 1 ORDER BY itoss_form.Form_date DESC,itoss_form.Form_id DESC; ");
     $data->execute();
     $row = $data->fetchAll();
-    unset($_SESSION['sector'],$_SESSION['user'],$_SESSION['type'],$_SESSION['start-date'],$_SESSION['end-date'],$_SESSION['inpstatus']);
+    unset($_SESSION['sector'], $_SESSION['user'], $_SESSION['type'], $_SESSION['start-date'], $_SESSION['end-date'], $_SESSION['inpstatus']);
 }
 
 function convertDate($date)
@@ -184,10 +182,11 @@ function colspanCheckRq()
     isset($_POST['reqType']) ? $colspan++ : '';
     isset($_POST['reqDetail']) ? $colspan++ : '';
     isset($_POST['reqAssign']) ? $colspan++ : '';
+    isset($_POST['reqStatus']) ? $colspan++ : '';
     if (!empty($colspan)) {
         return $colspan;
     } else {
-        return 6;
+        return 7;
     }
 }
 function colspanCheckRp()
@@ -209,7 +208,7 @@ function colspanCheckRp()
 
 <!-- Body -->
 <!-- Filter -->
-<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>"  method="post">
+<form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
     <div class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <button class="navbar-toggler btn btn-success border border-2 fsub position-fixed bottom-0 end-0 bg-white m-2" id="filterBtn" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPhone" aria-controls="filterPhone" aria-label="Toggle navigation">
@@ -345,84 +344,90 @@ function colspanCheckRp()
             เลือกคอลัมน์
         </button>
         <form class="dropdown-menu p-4" method="post">
-        <div class="mb-3">
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqDate" id="req-date" onclick="deRequireCb('request')" required>
-                <label class="form-check-label ms-1 my-0" for="req-date">
-                    วันที่
-                </label>
+            <div class="mb-3">
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqDate" id="req-date" onclick="deRequireCb('request')" required>
+                    <label class="form-check-label ms-1 my-0" for="req-date">
+                        วันที่
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqSector" id="req-sector" onclick="deRequireCb('request')" required>
+                    <label class="form-check-label ms-1 my-0" for="req-sector">
+                        หน่วยงาน
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqUser" id="req-user" onclick="deRequireCb('request')" required>
+                    <label class="form-check-label ms-1 my-0" for="req-user">
+                        เจ้าหน้าที่
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqType" id="req-type" onclick="deRequireCb('request')" required>
+                    <label class="form-check-label ms-1 my-0" for="req-type">
+                        ประเภทงาน
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqDetail" id="req-detail" onclick="deRequireCb('request')" required>
+                    <label class="form-check-label ms-1 my-0" for="req-detail">
+                        รายละเอียดคำขอ
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqAssign" id="req-assign" onclick="deRequireCb('request')" required>
+                    <label class="form-check-label ms-1 my-0" for="req-assign">
+                        ผู้มอบหมาย
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqStatus" id="req-status" onclick="deRequireCb('request')" required>
+                    <label class="form-check-label ms-1 my-0" for="req-status">
+                        สถานะคำขอ
+                    </label>
+                </div>
+                <hr>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 report" name="repDetail" id="rep-detail" onclick="deRequireCb('report')" required>
+                    <label class="form-check-label ms-1 my-0" for="rep-detail">
+                        รายละเอียดรายงาน
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 report" name="repTime" id="rep-time" onclick="deRequireCb('report')" required>
+                    <label class="form-check-label ms-1 my-0" for="rep-time">
+                        เวลาดำเนินงาน
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 report" name="repStatus" id="rep-status" onclick="deRequireCb('report')" required>
+                    <label class="form-check-label ms-1 my-0" for="rep-statuts">
+                        สถานะ
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 report" name="repUser" id="rep-user" onclick="deRequireCb('report')" required>
+                    <label class="form-check-label ms-1 my-0" for="rep-user">
+                        เจ้าหน้าที่
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 report" name="repClient" id="rep-client" onclick="deRequireCb('report')" required>
+                    <label class="form-check-label ms-1 my-0" for="rep-client">
+                        ผู้ตรวจสอบ
+                    </label>
+                </div>
+                <div class="form-check mb-xl-2">
+                    <input type="checkbox" class="checkbox form-check-input my-0 report" name="repAssign" id="rep-assign" onclick="deRequireCb('report')" required>
+                    <label class="form-check-label ms-1 my-0" for="rep-assign">
+                        ผู้อนุมัติ
+                    </label>
+                </div>
             </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqSector" id="req-sector" onclick="deRequireCb('request')" required>
-                <label class="form-check-label ms-1 my-0" for="req-sector">
-                    หน่วยงาน
-                </label>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary " name="colFilter">เลือกคอลัมน์</button>
             </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqUser" id="req-user" onclick="deRequireCb('request')" required>
-                <label class="form-check-label ms-1 my-0" for="req-user">
-                    เจ้าหน้าที่
-                </label>
-            </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqType" id="req-type" onclick="deRequireCb('request')" required>
-                <label class="form-check-label ms-1 my-0" for="req-type">
-                    ประเภทงาน
-                </label>
-            </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqDetail" id="req-detail" onclick="deRequireCb('request')" required>
-                <label class="form-check-label ms-1 my-0" for="req-detail">
-                    รายละเอียดคำขอ
-                </label>
-            </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 request" name="reqAssign" id="req-assign" onclick="deRequireCb('request')" required>
-                <label class="form-check-label ms-1 my-0" for="req-assign">
-                    ผู้มอบหมาย
-                </label>
-            </div>
-            <hr>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 report" name="repDetail" id="rep-detail" onclick="deRequireCb('report')" required>
-                <label class="form-check-label ms-1 my-0" for="rep-detail">
-                    รายละเอียดรายงาน
-                </label>
-            </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 report" name="repTime" id="rep-time" onclick="deRequireCb('report')" required>
-                <label class="form-check-label ms-1 my-0" for="rep-time">
-                    เวลาดำเนินงาน
-                </label>
-            </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 report" name="repStatus" id="rep-status" onclick="deRequireCb('report')" required>
-                <label class="form-check-label ms-1 my-0" for="rep-statuts">
-                    สถานะ
-                </label>
-            </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 report" name="repUser" id="rep-user" onclick="deRequireCb('report')" required>
-                <label class="form-check-label ms-1 my-0" for="rep-user">
-                    เจ้าหน้าที่
-                </label>
-            </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 report" name="repClient" id="rep-client" onclick="deRequireCb('report')" required>
-                <label class="form-check-label ms-1 my-0" for="rep-client">
-                    ผู้ตรวจสอบ
-                </label>
-            </div>
-            <div class="form-check mb-xl-2">
-                <input type="checkbox" class="checkbox form-check-input my-0 report" name="repAssign" id="rep-assign" onclick="deRequireCb('report')" required>
-                <label class="form-check-label ms-1 my-0" for="rep-assign">
-                    ผู้อนุมัติ
-                </label>
-            </div>
-        </div>
-        <div class="col-auto">
-            <button type="submit" class="btn btn-primary " name="colFilter">เลือกคอลัมน์</button>
-        </div>
         </form>
     </div>
     <!-- ปุ่มกด export Excel -->
@@ -460,6 +465,9 @@ function colspanCheckRp()
                 if (isset($_POST['reqAssign']) || !isset($_POST['colFilter'])) {
                     echo '<th class="table-primary" rowspan="2">ผู้มอบหมาย</th>';
                 }
+                if (isset($_POST['reqStatus']) || !isset($_POST['colFilter'])) {
+                    echo '<th class="table-primary" rowspan="2">สถานะคำขอ</th>';
+                }
                 if (isset($_POST['repDetail']) || !isset($_POST['colFilter'])) {
                     echo '<th class="table-success" rowspan="2">รายละเอียดรายงาน</th>';
                 }
@@ -467,7 +475,7 @@ function colspanCheckRp()
                     echo '<th class="table-success" colspan="2">เวลาดำเนินงาน</th>';
                 }
                 if (isset($_POST['repStatus']) || !isset($_POST['colFilter'])) {
-                    echo '<th class="table-success" colspan="2">สถานะ</th>';
+                    echo '<th class="table-success" colspan="2">สถานะรายงาน</th>';
                 }
                 if (isset($_POST['repUser']) || !isset($_POST['colFilter'])) {
                     echo '<th class="table-success" rowspan="2">เจ้าหน้าที่</th>';
@@ -498,74 +506,114 @@ function colspanCheckRp()
         <tbody>
             <?php
             for ($i = 0; $i < count($row); $i++) {
+                $sql_report = $conn->query("SELECT * FROM itoss_report WHERE Form_id = '" . $row[$i]['Form_id'] . "'");
+                $report = $sql_report->fetchAll();
+                if (empty(count($report))) {
+                    $count = 1;
+                } else {
+                    $count = count($report);
+                }
+                for ($j = 0; $j < $count; $j++) {
             ?>
 
-                <tr>
-                    <?php
-                    if (isset($_POST['reqDate']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . convertDate($row[$i]['Form_date']) . '</td>';
-                    }
-                    if (isset($_POST['reqSector']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . $row[$i]['Agency_Name'] . '</td>';
-                    }
-                    if (isset($_POST['reqUser']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . $row[$i]['User_Name'] . '</td>';
-                    }
-                    if (isset($_POST['reqType']) || !isset($_POST['colFilter'])) {
-                        echo '<td>';
-                        $sql = $conn->query("SELECT * FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND itoss_form.Form_id = " . $row[$i]['Form_id'] . " AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
-                        $job = $sql->fetchAll();
-                        for ($j = 0; $j < count($job); $j++) {
-                            if ($j != 0) {
-                                echo '/';
-                            }
-                            if ($job[$j]['Jobtype_id'] == 0) {
-                                echo $job[$j]['name_other'];
-                            } else {
-                                echo $job[$j]['Jobtype_name'];
-                            }
+                    <tr>
+                        <?php
+                        if (isset($_POST['reqDate']) || !isset($_POST['colFilter'])) {
+                            echo '<td>' . convertDate($row[$i]['Form_date']) . '</td>';
                         }
-                        echo '</td>';
-                    }
-                    if (isset($_POST['reqDetail']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . $row[$i]['Form_Work'] . '</td>';
-                    }
-                    if (isset($_POST['reqAssign']) || !isset($_POST['colFilter'])) {
-                        echo '<td>';
-                        $sql = $conn->query("SELECT * FROM itoss_user WHERE User_id = " . $row[$i]['assign_id'] . "");
-                        $assign = $sql->fetch();
-                        echo $assign['User_Name'];
-                        echo '</td>';
-                    }
-                    if (isset($_POST['repDetail']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . $row[$i]['Report_Detail'] . '</td>';
-                    }
-                    if (isset($_POST['repTime']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . $row[$i]['Report_Start_Date'] . '</td>';
-                        echo '<td>' . $row[$i]['Report_Stop_Date'] . '</td>';
-                    }
-                    if (isset($_POST['repStatus']) || !isset($_POST['colFilter'])) {
-                        if ($row[$i]['Report_Status'] == 7) {
-                            echo '<td>ปิดงาน</td>
+                        if (isset($_POST['reqSector']) || !isset($_POST['colFilter'])) {
+                            echo '<td>' . $row[$i]['Agency_Name'] . '</td>';
+                        }
+                        if (isset($_POST['reqUser']) || !isset($_POST['colFilter'])) {
+                            echo '<td>' . $row[$i]['User_Name'] . '</td>';
+                        }
+                        if (isset($_POST['reqType']) || !isset($_POST['colFilter'])) {
+                            echo '<td>';
+                            $sql = $conn->query("SELECT * FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND itoss_form.Form_id = " . $row[$i]['Form_id'] . " AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id");
+                            $job = $sql->fetchAll();
+                            for ($k = 0; $k < count($job); $k++) {
+                                if ($k != 0) {
+                                    echo '/';
+                                }
+                                if ($job[$k]['Jobtype_id'] == 0) {
+                                    echo $job[$k]['name_other'];
+                                } else {
+                                    echo $job[$k]['Jobtype_name'];
+                                }
+                            }
+                            echo '</td>';
+                        }
+                        if (isset($_POST['reqDetail']) || !isset($_POST['colFilter'])) {
+                            echo '<td>' . $row[$i]['Form_Work'] . '</td>';
+                        }
+                        if (isset($_POST['reqAssign']) || !isset($_POST['colFilter'])) {
+                            echo '<td>';
+                            $sql = $conn->query("SELECT * FROM itoss_user WHERE User_id = " . $row[$i]['assign_id'] . "");
+                            $assign = $sql->fetch();
+                            echo $assign['User_Name'];
+                            echo '</td>';
+                        }
+                        if (isset($_POST['reqStatus']) || !isset($_POST['colFilter'])) {
+                            echo '<td>' . $row[$i]['Status_form_name'] . '</td>';
+                        }
+                        if (!empty(count($report))) {
+                            if (isset($_POST['repDetail']) || !isset($_POST['colFilter'])) {
+                                echo '<td>' . $report[$j]['Report_Detail'] . '</td>';
+                            }
+                            if (isset($_POST['repTime']) || !isset($_POST['colFilter'])) {
+                                echo '<td>' . convertDate(date('d-m-Y',strtotime($report[$j]['Report_Start_Date']))) . ' '.date('H:i',strtotime($report[$j]['Report_Start_Date'])).'</td>';
+                                echo '<td>' . convertDate(date('d-m-Y',strtotime($report[$j]['Report_Stop_Date']))) . ' '.date('H:i',strtotime($report[$j]['Report_Stop_Date'])).'</td>';
+                            }
+                            if (isset($_POST['repStatus']) || !isset($_POST['colFilter'])) {
+                                if ($report[$j]['Report_Status'] == 7) {
+                                    echo '<td>ปิดงาน</td>
                             <td></td>';
-                        } else if ($row[$i]['Report_Status'] == 6) {
-                            echo '<td></td>
-                        <td>ติดตามงาน</td>';
+                                } else if ($report[$j]['Report_Status'] == 6) {
+                                    echo '<td></td>
+                                        <td>'.convertDate(date('d-m-Y',strtotime($report[$j]['Report_follow_date']))).'</td>';
+                                }
+                            }
+                            if (isset($_POST['repUser']) || !isset($_POST['colFilter'])) {
+                                echo '<td>' . $row[$i]['User_Name'] . '</td>';
+                            }
+                            if (isset($_POST['repClient']) || !isset($_POST['colFilter'])) {
+                                echo '<td>' . $row[$i]['Form_Name'] . '</td>';
+                            }
+                            if (isset($_POST['repAssign']) || !isset($_POST['colFilter'])) {
+                                echo '<td>';
+                            $sql = $conn->query("SELECT * FROM itoss_user WHERE User_id = " . $row[$i]['assign_id'] . "");
+                            $assign = $sql->fetch();
+                            echo $assign['User_Name'];
+                            echo '</td>';
+                            }
+                        } else {
+                            if (isset($_POST['repDetail']) || !isset($_POST['colFilter'])) {
+                                echo '<td></td>';
+                            }
+                            if (isset($_POST['repTime']) || !isset($_POST['colFilter'])) {
+                                echo '<td></td>';
+                                echo '<td></td>';
+                            }
+                            if (isset($_POST['repStatus']) || !isset($_POST['colFilter'])) {
+                                    echo '<td></td>
+                                <td></td>';
+                            
+                            }
+                            if (isset($_POST['repUser']) || !isset($_POST['colFilter'])) {
+                                echo '<td></td>';
+                            }
+                            if (isset($_POST['repClient']) || !isset($_POST['colFilter'])) {
+                                echo '<td></td>';
+                            }
+                            if (isset($_POST['repAssign']) || !isset($_POST['colFilter'])) {
+                                echo '<td></td>';
+                            }
                         }
-                    }
-                    if (isset($_POST['repUser']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . $row[$i]['User_Name'] . '</td>';
-                    }
-                    if (isset($_POST['repClient']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . $row[$i]['Form_Name'] . '</td>';
-                    }
-                    if (isset($_POST['repAssign']) || !isset($_POST['colFilter'])) {
-                        echo '<td>' . $assign['User_Name'] . '</td>';
-                    }
-                    ?>
+                        ?>
 
-                </tr>
+                    </tr>
             <?php
+                }
             }
             ?>
         </tbody>

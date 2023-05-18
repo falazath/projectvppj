@@ -22,7 +22,6 @@ if (isset($_POST['save'])) {
         $status = 5;
         $id = $_POST['User_id'];
         $assign = $_SESSION['id'];
-        
     } else if ($_SESSION['status'] == 2) {
         $status = 1;
         $id = $_SESSION['id'];
@@ -42,13 +41,23 @@ if (isset($_POST['save'])) {
     while ($row = $stmt->fetch()) {
         $Form_id = $row['Form_id'];
     }
+    $flag = true;
     foreach ($_POST['Jobtype_id'] as $value) {
         if ($value == 0) {
-            $stmt = $conn->prepare("INSERT INTO itoss_job VALUES ('', ?, ? , ?)");
-            $stmt->bindParam(1, $value);
-            $stmt->bindParam(2, $_POST["Jobtype_orther_name"]);
-            $stmt->bindParam(3, $Form_id);
-            $stmt->execute();
+            $stmt = $conn->query("SELECT * FROM itoss_jobtype WHERE Jobtype_name = '" . $_POST["Jobtype_orther_name"] . "' AND state_id = 1");
+            $check = $stmt->fetch();
+            if (empty($check)) {
+                $stmt = $conn->prepare("INSERT INTO itoss_job VALUES ('', ?, ? , ?)");
+                $stmt->bindParam(1, $value);
+                $stmt->bindParam(2, $_POST["Jobtype_orther_name"]);
+                $stmt->bindParam(3, $Form_id);
+                $stmt->execute();
+            } else {
+                echo '<script language="javascript">';
+                echo 'toastr.warning("ประเภทงาน ถูกใช้งานแล้ว");';
+                echo '</script>';
+                $flag = false;
+            }
         } else {
             $stmt = $conn->prepare("INSERT INTO itoss_job VALUES ('', ?,'', ?)");
             $stmt->bindParam(1, $value);
@@ -57,21 +66,30 @@ if (isset($_POST['save'])) {
         }
     }
     if ($_POST["Agency_id"] == 0) {
-        $stmt = $conn->prepare("INSERT INTO other_agency VALUES ('', ? , ?)");
-        $stmt->bindParam(1, $_POST["other_agency"]);
-        $stmt->bindParam(2, $Form_id);
-        $stmt->execute();
+        $stmt = $conn->query("SELECT * FROM itoss_agency WHERE Agency_Name = '" . $_POST["other_agency"] . "' AND state_id = 1");
+        $check = $stmt->fetch();
+        if (empty($check)) {
+            $stmt = $conn->prepare("INSERT INTO other_agency VALUES ('', ? , ?)");
+            $stmt->bindParam(1, $_POST["other_agency"]);
+            $stmt->bindParam(2, $Form_id);
+            $stmt->execute();
+        }else{
+            echo '<script language="javascript">';
+                echo 'toastr.warning("หน่วยงาน ถูกใช้งานแล้ว");';
+                echo '</script>';
+                $flag =false;
+        }
     }
     include("message.php");
 
-    if ($_SESSION['status'] == 1) {
+    if ($_SESSION['status'] == 1 && $flag) {
         echo '<script language="javascript">';
         echo 'toastr.success("สร้างคำขอปฏิบัติการเรียบร้อย");';
         echo 'location.href="indexAdmin.php"';
         echo '</script>';
-    } else if ($_SESSION['status'] == 2) {
+    } else if ($_SESSION['status'] == 2 && $flag) {
         $_SESSION['ch'] = 1;
-       echo '<script>location.href = "indexUser.php";</script>';
+        echo '<script>location.href = "indexUser.php";</script>';
     }
 }
 

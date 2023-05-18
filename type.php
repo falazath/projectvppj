@@ -8,20 +8,28 @@ include($_SESSION['navbar']);
 
 include("connect.php");
 if (isset($_POST['createdp'])) {
-    $stmt = $conn->prepare("INSERT INTO itoss_jobtype VALUES ('', ?,1)");
-    $stmt->bindParam(1, $_POST["inp_name"]);
-    $stmt->execute();
+    $sql = $conn->query("SELECT * FROM itoss_jobtype WHERE Jobtype_name = '" . $_POST["inp_name"] . "'");
+    $check = $sql->fetch();
+    if (empty($check)) {
+        $stmt = $conn->prepare("INSERT INTO itoss_jobtype VALUES ('', ?,1)");
+        $stmt->bindParam(1, $_POST["inp_name"]);
+        $stmt->execute();
 
-    echo '<script language="javascript">';
-    echo 'location.href="type.php"';
-    echo '</script>';
+        echo '<script language="javascript">';
+        echo 'location.href="type.php"';
+        echo '</script>';
+    } else {
+        echo '<script language="javascript">';
+        echo 'toastr.warning("ชื่อประเภทงานนี้ถูกใช้งานแล้ว");';
+        echo '</script>';
+    }
 } else if (isset($_POST['delete'])) {
     $stmt = $conn->query("SELECT * FROM itoss_form WHERE Agency_id = " . $_POST['delete'] . "");
     $del = $stmt->fetch();
 
-    if (empty($del)) {
+    if (!empty($del)) {
         echo '<script language="javascript">';
-        echo 'toastr.warning("มีข้อมูลหน่วยงานนี้ที่ยังใช้งานอยู่ ไม่สามารถลบได้");';
+        echo 'toastr.warning("มีข้อมูลประเภทงานนี้ที่ยังใช้งานอยู่ ไม่สามารถลบได้");';
         echo '</script>';
     } else {
         $stmt = $conn->prepare("UPDATE itoss_jobtype SET state_id = 0 WHERE Jobtype_id = ?");
@@ -32,9 +40,9 @@ if (isset($_POST['createdp'])) {
         echo '</script>';
     }
 } else if (isset($_POST['edit'])) {
-    $sql = $conn->query("SELECT * FROM itoss_jobtype WHERE Jobtype_name = '".$_POST["Jobtype_name"]."'");
+    $sql = $conn->query("SELECT * FROM itoss_jobtype WHERE Jobtype_name = '" . $_POST["Jobtype_name"] . "'");
     $check = $sql->fetch();
-    if(empty($check)){
+    if (empty($check)) {
         $stmt = $conn->prepare("UPDATE itoss_jobtype SET Jobtype_name = ? WHERE Jobtype_id = ?");
         $stmt->bindParam(1, $_POST["Jobtype_name"]);
         $stmt->bindParam(2, $_POST["edit"]);
@@ -42,7 +50,7 @@ if (isset($_POST['createdp'])) {
         echo '<script language="javascript">';
         echo 'toastr.success("แก้ไขประเภทงานเรียบร้อย");';
         echo '</script>';
-    }else{
+    } else {
         echo '<script language="javascript">';
         echo 'toastr.warning("ชื่อประเภทงานนี้ถูกใช้งานแล้ว");';
         echo '</script>';

@@ -8,7 +8,8 @@ if (!isset($_SESSION['id'])) {
         $_SESSION['page_link'] = 3;
         header('location:index.php');
     }
-}else{
+}
+else{
     unset($_SESSION['Form_id']);
     unset($_SESSION['page_link']);
 }
@@ -54,7 +55,7 @@ if (isset($_POST['save'])) {
     $Report_id = $_POST['editPhoto'];
     $stmt = $conn->query("DELETE FROM itoss_img WHERE Report_id = '$Report_id'");
     $count = count($_FILES['img_file']['name']);
-    if ($count >= 3 && $count <= 5) {
+    if ($count >= 1 && $count <= 5) {
         $date1 = date("dmY_His");
         foreach ($_FILES['img_file']['tmp_name'] as $key => $value) {
             $file_names = $_FILES['img_file']['name'];
@@ -72,7 +73,7 @@ if (isset($_POST['save'])) {
             }
         }
     } else {
-        echo "ERROR";
+        echo '<script>toastr.error("สร้างคำขอเรียบร้อย");</script>';
     }
 }
 
@@ -379,7 +380,7 @@ $signUser = $sql_user->fetch();
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary mx-auto" data-bs-dismiss="modal">กลับ</button>
                             <?php
-                            if ($row['User_id'] == $_SESSION['id']) {
+                            if ($row['User_id'] == $_SESSION['id'] && $i==count($report)-1) {
                                 echo '<button type="button" class="btn btn-primary mx-auto" data-bs-toggle="modal" data-bs-target="#upload" id="newUpload">อัพโหลดใหม่</button>';
                             }
                             ?>
@@ -461,7 +462,7 @@ $signUser = $sql_user->fetch();
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary mx-auto" data-bs-dismiss="modal">กลับ</button>
-                        <button type="submit" class="btn btn-primary mx-auto" name="editPhoto" value="<?= $report[0]['Report_id'] ?>">อัพโหลด</button>
+                        <button type="submit" class="btn btn-primary mx-auto" name="editPhoto" value="<?= $report[count($report)-1]['Report_id'] ?>">อัพโหลด</button>
                     </div>
                 </div>
             </div>

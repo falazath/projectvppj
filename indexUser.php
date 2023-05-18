@@ -244,14 +244,22 @@ function convertDate($date){
                     <div class="container-fluid">
                         <?php
                         for ($i = 0; $i < count(isset($_SESSION['check']) ? $_SESSION['check'] : array()); $i++) {
+                            if($_SESSION['check'][$i]['Agency_id'] == 0){
+                                $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = ".$_SESSION['check'][$i]['Form_id']."");
+                                $agency = $sql->fetch();
+                                $name = $agency['name'];
+                            }else{
+                                $name = $_SESSION['check'][$i]['Agency_Name'];
+                            }
                         ?>
                             <div class="row">
                                 <div class="col">
-                                    <p class="ftitle fw-bold"><?= $_SESSION['check'][$i]['Agency_Name'] ?></p>
+                                    <p class="ftitle fw-bold"><?=($i+1).'. '. $name ?></p>
                                     <p class="ftitle">รายละเอียด: </p>
                                     <?= $_SESSION['check'][$i]['Form_Work'] ?>
                                 </div>
                             </div>
+                            <hr>
                         <?php
                         }
                         unset($_SESSION['check']);
