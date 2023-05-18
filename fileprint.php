@@ -124,176 +124,194 @@ FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_
 	?>
 	<main class="bg-white">
 		<div class="container">
-			<div class="row mt-0">
-				<div class="col-auto me-auto">
-					<img src="./asset/Logo/VP.svg" alt="">
-				</div>
-				<div class="col-auto">
-					<button button id="hid" onclick="window.print();" class="btn btn-primary"> พิมพ์ </button>
-				</div>
-			</div>
-			<div class="row my-2">
-				<div class="col">
-					<p class="fhead text-center fw-bold mb-0">บันทึกการปฏิบัติงานของไอที</p>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-auto ms-auto me-3">
-					<p class="fpr text-end mb-0">วันที่ <?= convertDate($row["Form_date"]) ?></p>
-				</div>
-			</div>
-			<div class="row border border-2 border-dark mx-3">
-				<div class="col">
-					<div class="row mt-3">
-						<div class="col-6">
-							<p class="fpr"><b> ชื่อผู้ติดต่อ : </b><?= $row["Form_Name"] ?></p>
-						</div>
-						<div class="col-6">
-							<p class="fpr"><b>หน่วยงาน : </b><?= $agency ?></p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-6">
-							<p class="fpr"><b>เบอร์โทรศัพท์ :</b> <?= $row["Form_Phone"] ?></p>
-						</div>
-						<div class="col-6">
-							<p class="fpr"><b>ประเภทงาน :</b> <?= $type ?></p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col">
-							<p class="fpr mb-0"><b>รายละเอียดการปฏิบัติงาน :</b></p>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-11 ms-3 detail">
-							<p>wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww</p>
-							<?= $row["Form_Work"] ?>
-							<?= $row["Form_Work"] ?>
-							<?= $row["Form_Work"] ?>
-							<?= $row["Form_Work"] ?>
-						</div>
+			<div class="row mt-2">
 
-					</div>
-					<div class="row">
-						<div class="col-4 ms-auto">
-							<div class="row">
-								<div class="col">
-									<img class="d-block w-100 h-auto float-end" src="data:<?= $signAdmin['Sign_image'] ?>" id="sign_admin" alt="">
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-12">
-									<p class="fpr text-center me-4">ผู้มอบหมายงาน</p>
-								</div>
-
-							</div>
-
-						</div>
-					</div>
-				</div>
 			</div>
 			<?php
-			for ($i = count($report) - 1; $i >= 0; $i--) {
+			$sql_report = $conn->query("SELECT * FROM itoss_report WHERE Form_id = '" . $row['Form_id'] . "'");
+			$report = $sql_report->fetchAll();
+			$sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '" . $row['Form_id'] . "' ORDER BY id DESC LIMIT 1");
+			$data = $sql->fetch();
+			$agency = isset($data['name']) ? $data['name'] : $row['Agency_Name'];
+			if (empty(count($report))) {
+				$count = 1;
+			} else {
+				$count = count($report);
+			}
+			for ($i = 0; $i < $count; $i++) {
 			?>
 
-				<div class="row border border-2 border-dark mx-3 mt-4">
-					<div class="col">
-						<div class="row">
-							<div class="col">
-								<p class="fpr fw-bold mb-0">รายละเอียดการปฏิบัติงาน :</p>
-							</div>
+				<div class="mt-5" style="page-break-after: always">
+
+					<div class="row mt-0">
+						<div class="col-auto me-auto">
+							<img src="./asset/Logo/VP.svg" alt="">
 						</div>
-						<div class="row">
-							<div class="col ms-3 detail">
-								<?= $report[$i]['Report_Detail'] ?>
-								<?= $report[$i]['Report_Detail'] ?>
-								<?= $report[$i]['Report_Detail'] ?>
-								<?= $report[$i]['Report_Detail'] ?>
-								<?= $report[$i]['Report_Detail'] ?>
+						<?php
+						if ($i == 0) {
+						?>
+							<div class="col-auto ms-auto">
+								<button button id="hid" onclick="window.print();" class="btn btn-primary"> กดเพื่อพิมพ์เอกสาร </button>
+							</div>
+						<?php
+						}
+						?>
+					</div>
+					<div class="row my-2">
+						<div class="col">
+							<p class="fhead text-center fw-bold mb-0">บันทึกการปฏิบัติงานของไอที</p>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-auto ms-auto me-3">
+							<p class="fpr text-end mb-0">วันที่ <?= convertDate($row["Form_date"]) ?></p>
+						</div>
+					</div>
+					<div class="row border border-2 border-dark mx-3">
+						<div class="col">
+							<div class="row mt-3">
+								<div class="col-5">
+									<p class="fpr"><b> ชื่อผู้ติดต่อ : </b><?= $row["Form_Name"] ?></p>
+								</div>
+								<div class="col-7">
+									<p class="fpr"><b>หน่วยงาน : </b><?= $agency ?></p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-5">
+									<p class="fpr"><b>เบอร์โทรศัพท์ :</b> <?= $row["Form_Phone"] ?></p>
+								</div>
+								<div class="col-7">
+									<p class="fpr"><b>ประเภทงาน :</b> <?= $type ?></p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<p class="fpr mb-0"><b>รายละเอียดการปฏิบัติงาน :</b></p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-11 ms-3 detail">
+									<?= $row["Form_Work"] ?>
+								</div>
 
 							</div>
-						</div>
-						<div class="row">
-							<div class="col mt-2">
-								<p class="fpr mb-1"><b>เวลาดำเนินงาน</b></p>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-5 ms-3">
-								<p class="fpr"><b>เริ่ม : </b><?= convertDate($report[$i]['Report_Start_Date']) . ' ' . date('H:i', strtotime($report[$i]['Report_Start_Date'])) ?></p>
-							</div>
-							<div class="col-6">
-								<p class="fpr"><b>เสร็จสิ้น : </b><?= convertDate($report[$i]['Report_Stop_Date']) . ' ' . date('H:i', strtotime($report[$i]['Report_Stop_Date'])) ?></p>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<?php if ($report[$i]['Report_Status'] == 6) { ?>
-									<p class="fpr"><b>สถานะงาน :</b> ติดตามงาน</p>
-								<?php } else if ($report[$i]['Report_Status'] == 7) { ?>
-									<p class="fpr"><b>สถานะงาน :</b> ปิดงาน</p>
-								<?php } ?>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-4">
-								<div class="row">
-									<div class="col">
-										<img class="d-block w-100 h-auto mx-auto" src="data:<?= $signUser['Sign_image'] ?>" id="sign_User" alt="">
+							<div class="row">
+								<div class="col-4 ms-auto">
+									<div class="row">
+										<div class="col">
+											<img class="d-block w-100 h-auto float-end" src="data:<?= $signAdmin['Sign_image'] ?>" id="sign_admin" alt="">
+										</div>
 									</div>
-								</div>
-								<div class="row">
-									<div class="col-auto mx-auto">
-										<p class="fpr fw-bold mb-0">วันที่ <?= convertDate($report[$i]['Report_date_user']) ?></p>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-auto mx-auto">
-										<p class="fpr fw-bold">เจ้าหน้าที่ไอที</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-4 mt-5">
-								<div class="row">
-									<div class="col">
-										<img class="d-block w-100 h-auto mx-auto" src="data:<?= $signAdmin['Sign_image'] ?>" id="sign_IT" alt="">
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-auto mx-auto">
-										<p class="fpr fw-bold mb-0">วันที่ <?= convertDate(date('d-m-Y')) ?></p>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-auto mx-auto">
-										<p class="fw-bold" style="font-size: 15px;">หัวหน้าเทคโนโลยีสารสนเทศ</p>
-									</div>
-								</div>
-							</div>
-							<div class="col-4">
-								<div class="row">
-									<div class="col">
-										<img class="d-block w-100 h-auto mx-auto" src="data:<?= $report[$i]['Sign_image'] ?>" id="sign_client" alt="">
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-auto mx-auto">
-										<p class="fpr fw-bold mb-0">วันที่ <?= convertDate($report[$i]['Report_date_client']) ?></p>
-									</div>
-								</div>
-								<div class="row">
-									<div class="col-auto mx-auto">
-										<p class="fpr fw-bold">ผู้ใช้บริการ</p>
+									<div class="row">
+										<div class="col-12">
+											<p class="fpr text-center me-4">ผู้มอบหมายงาน</p>
+										</div>
 
 									</div>
+
 								</div>
 							</div>
+						</div>
+					</div>
+					<div class="row border border-2 border-dark mx-3 mt-4">
+						<div class="col">
+							<div class="row">
+								<div class="col">
+									<p class="fpr fw-bold mb-0">รายละเอียดการปฏิบัติงาน :</p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-11 ms-3 detail">
+									<?= $report[$i]['Report_Detail'] ?>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col mt-2">
+									<p class="fpr mb-1"><b>เวลาดำเนินงาน</b></p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-5 ms-3">
+									<p class="fpr"><b>เริ่ม : </b><?= convertDate($report[$i]['Report_Start_Date']) . ' ' . date('H:i', strtotime($report[$i]['Report_Start_Date'])) ?></p>
+								</div>
+								<div class="col-6">
+									<p class="fpr"><b>เสร็จสิ้น : </b><?= convertDate($report[$i]['Report_Stop_Date']) . ' ' . date('H:i', strtotime($report[$i]['Report_Stop_Date'])) ?></p>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<?php if ($report[$i]['Report_Status'] == 6) { ?>
+										<p class="fpr"><b>สถานะงาน :</b> ติดตามงาน วันที่ <?= convertDate($report[$i]['Report_follow_date']) ?></p>
+									<?php } else if ($report[$i]['Report_Status'] == 7) { ?>
+										<p class="fpr"><b>สถานะงาน :</b> ปิดงาน</p>
+									<?php } ?>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-4">
+									<div class="row">
+										<div class="col">
+											<img class="d-block w-100 h-auto mx-auto" src="data:<?= $signUser['Sign_image'] ?>" id="sign_User" alt="">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-auto mx-auto">
+											<p class="fpr fw-bold mb-0">วันที่ <?= convertDate($report[$i]['Report_date_user']) ?></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-auto mx-auto">
+											<p class="fpr fw-bold">เจ้าหน้าที่ไอที</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-4 mt-5">
+									<div class="row">
+										<div class="col">
+											<img class="d-block w-100 h-auto mx-auto" src="data:<?= $signAdmin['Sign_image'] ?>" id="sign_IT" alt="">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-auto mx-auto">
+											<p class="fpr fw-bold mb-0">วันที่ <?= convertDate(date('d-m-Y')) ?></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-auto mx-auto">
+											<p class="fw-bold" style="font-size: 15px;">หัวหน้าเทคโนโลยีสารสนเทศ</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-4">
+									<div class="row">
+										<div class="col">
+											<?php
+											$sql = $conn->query("SELECT * FROM itoss_sign WHERE Sign_id = " . $report[$i]['Report_sign_client'] . "");
+											$signClient = $sql->fetch();
+											?>
+											<img class="d-block w-100 h-auto mx-auto" src="data:<?= $signClient['Sign_image'] ?>" id="sign_client" alt="">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-auto mx-auto">
 
+											<p class="fpr fw-bold mb-0">วันที่ <?= convertDate($report[$i]['Report_date_client']) ?></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-auto mx-auto">
+											<p class="fpr fw-bold">ผู้ใช้บริการ</p>
+
+										</div>
+									</div>
+								</div>
+
+							</div>
 						</div>
 					</div>
 				</div>
-
+				<hr id="hid" class="my-5">
 			<?php
 			}
 			?>
