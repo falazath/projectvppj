@@ -2,14 +2,14 @@
 
 session_start();
 if (!isset($_SESSION['id'])) {
-    if(isset($_GET['Form_id'])){
+    if (isset($_GET['Form_id'])) {
         $_SESSION['Form_id'] = $_GET['Form_id'];
         $_SESSION['page_link'] = 1;
         header('location:index.php');
     }
-}else if($_SESSION['status'] == 2){
-    header('location:requestUser.php?Form_id='.$_GET['Form_id'].'');
-}else{
+} else if ($_SESSION['status'] == 2 || $_SESSION['status']==3) {
+    header('location:requestUser.php?Form_id=' . $_GET['Form_id'] . '');
+} else {
     unset($_SESSION['Form_id']);
     unset($_SESSION['page_link']);
 }
@@ -76,7 +76,7 @@ $sql_job = $conn->query("SELECT itoss_job.Job_id,itoss_job.Jobtype_id,itoss_job.
 FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id AND itoss_job.Form_id = '$Form_id'");
 $job = $sql_job->fetchAll();
 
-$sqlAdmin = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $_SESSION['id'] . "");
+$sqlAdmin = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $row['assign_id'] . "");
 $signAdmin = $sqlAdmin->fetch();
 
 $stmt3 = $conn->query("SELECT * FROM itoss_text INNER JOIN itoss_user ON itoss_user.User_id = itoss_text.editor where Form_id = '$Form_id' ORDER BY Text_id DESC");
@@ -127,7 +127,7 @@ include($_SESSION['navbar']);
             <div class="col-12 col-xl-12 mb-2">
                 <p class="ftitle d-inline fw-bold mb-0">รายละเอียดการแก้ไขงาน</p>
                 <p class="d-inline"><?= $row3['User_Name'] ?></p>
-                <div class="form-control text-light" id="Detail" cols="30" rows="10">
+                <div class="form-control text-light text-break" id="Detail" cols="30" rows="10">
                     <?= $text ?>
                 </div>
             </div>
@@ -135,12 +135,12 @@ include($_SESSION['navbar']);
         </div>
 
         <div class="row justify-content-start mb-0 mb-xl-3" id="dsk">
-            <div class="col-12 col-xl-4 mb-2 mb-xl-0">
+            <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-0">
                 <p class="ftitle fw-bold mb-0" id="demo">ชื่อผู้ติดต่อ</p>
                 <input type="hidden" name="Form_date" value="<?= $row['Form_date'] ?>">
                 <input type="text" class="data form-control ftitle" name="Form_Name" id="contact" value="<?= $row["Form_Name"] ?>" disabled>
             </div>
-            <div class="col-12 col-xl-4 mb-2 mb-xl-0">
+            <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-0">
                 <p class="ftitle fw-bold mb-0">หน่วยงาน</p>
                 <select class="form-select data form-control ftitle" id="Agency_id" name="Agency_id" disabled>
                     <option selected value="<?= $row["Agency_id"] ?>"><?= $agency ?></option>
@@ -155,7 +155,7 @@ include($_SESSION['navbar']);
                 </select>
                 <input class="d-none form-control mt-1" type="text" name="other_agency" id="other_agency" placeholder="กรอกชื่อหน่วยงาน">
             </div>
-            <div class="col-12 col-xl-4 mb-2 mb-xl-0">
+            <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-0">
                 <p class="ftitle fw-bold mb-0">เบอร์โทรศัพท์</p>
                 <input type="text" class="data form-control ftitle" name="Form_Phone" value="<?= $row["Form_Phone"] ?>" disabled>
             </div>
@@ -200,7 +200,9 @@ include($_SESSION['navbar']);
                         อื่น ๆ
                     </label>
                 </div>
-                <input class="data d-none form-control mt-1" type="text" name="Jobtype_orther_name" id="other_job" value="<?= $valueOther ?>" placeholder="กรอกประเภทงาน" disabled>
+                <div class="col col-sm-3 mt-2">
+                    <input class="data d-none form-control mt-1" type="text" name="Jobtype_orther_name" id="other_job" value="<?= $valueOther ?>" placeholder="กรอกประเภทงาน" disabled>
+                </div>
             </div>
 
         </div>
@@ -209,7 +211,7 @@ include($_SESSION['navbar']);
         <div class="row mb-0 mb-xl-3 mb-xl-0">
             <div class="col-12 col-xl-12 mb-2">
                 <p class="ftitle fw-bold mb-0">รายละเอียดงาน</p>
-                <div class="data form-control text-light" name="Form_Work" id="show-detail" cols="30" rows="10">
+                <div class="data form-control text-light text-break" name="Form_Work" id="show-detail" cols="30" rows="10">
                     <?= $row['Form_Work'] ?>
                 </div>
                 <textarea class="data form-control text-light d-none" name="Form_Work" id="detail" cols="30" rows="10">
@@ -217,15 +219,15 @@ include($_SESSION['navbar']);
                     </textarea>
             </div>
         </div>
-        <div class="row mb-xl-5 mb-5">
+        <div class="row mb-xl-5">
             <div class="col-12 col-xl-6 mx-xl-auto" id="colSignUser">
                 <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                        <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
-                    </div>
-                
+                    <img class="d-block mx-auto w-50 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                </div>
+
                 <div class="col-6 col-xl-6 mx-auto mb-5">
                     <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $row['User_Name'] ?>" disabled>
                 </div>
@@ -234,16 +236,14 @@ include($_SESSION['navbar']);
                 <div class="col-12 col-xl-6 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
                 </div>
-                <div class="col-12 col-xl-12 mx-auto mb-xl-0">
-                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>"><br>
+                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                    <img class="d-block mx-auto w-50 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>">
                 </div>
                 <div class="col-6 col-xl-3 mx-auto">
                     <input type="text" class="ftitle form-control text-center" id="name-user" name="User_Name" value="<?= $signAdmin['User_Name'] ?>" disabled>
 
                 </div>
             </div>
-        </div>
-
         </div>
 
         <div class="row justify-content-around mb-3 mt-xl-5">

@@ -2,6 +2,8 @@
 session_start();
 if (!isset($_SESSION['id'])) {
   header('location:index.php');
+}else if($_SESSION['status']==1){
+  header('location:indexAdmin.php');
 }
 include('header.html');
 include('navbar.php');

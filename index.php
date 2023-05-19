@@ -6,7 +6,7 @@ include('header.html');
         <div class="col-10 col-xl-6 login align-self-center position-absolute top-50 start-50 translate-middle">
             <img class="m-5 d-block mx-auto w-75 h-auto" src="./asset/Logo/VP.svg" alt="">
             <div class="row justify-content-center">
-              <div class="col col-sm-4 col-xl-8 d-block mx-auto">
+              <div class="col col-sm-12 col-xl-8 d-block mx-auto">
                   <p class="text-dark text-center fhead fw-bold">It Onsite Service </p>
               </div>
             </div>

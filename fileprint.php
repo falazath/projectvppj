@@ -6,6 +6,12 @@ include('header.html');
 <body>
 
 	<style>
+		@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700&display=swap');
+
+		* {
+			font-family: 'Sarabun', sans-serif;
+		}
+
 		@media print {
 			#hid {
 				display: none;
@@ -55,7 +61,8 @@ FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_
 
 	$sqlAdmin = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = " . $row['assign_id'] . "");
 	$signAdmin = $sqlAdmin->fetch();
-
+	$sqlFinal = $conn->query("SELECT * FROM itoss_sign INNER JOIN itoss_user ON itoss_sign.User_id = itoss_user.User_id where itoss_sign.User_id = 2");
+	$sign = $sqlFinal->fetch();
 	$stmt5 = $conn->query("SELECT * FROM itoss_report INNER JOIN itoss_sign ON itoss_report.Report_sign_client = itoss_sign.Sign_id where itoss_report.Form_id = '$Form_id' ORDER BY Report_id DESC");
 	$report = $stmt5->fetchAll();
 
@@ -141,11 +148,11 @@ FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_
 			for ($i = 0; $i < $count; $i++) {
 			?>
 
-				<div class="mt-5" style="page-break-after: always">
+				<div style="page-break-after: always">
 
 					<div class="row mt-0">
 						<div class="col-auto me-auto">
-							<img src="./asset/Logo/VP.svg" alt="">
+							<img class="w-75 h-auto" src="./asset/Logo/VP.svg" alt="">
 						</div>
 						<?php
 						if ($i == 0) {
@@ -157,41 +164,41 @@ FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_
 						}
 						?>
 					</div>
-					<div class="row my-2">
+					<div class="row my-4">
 						<div class="col">
-							<p class="fhead text-center fw-bold mb-0">บันทึกการปฏิบัติงานของไอที</p>
+							<p class="ftitle text-center fw-bold mb-0">IT onsite service</p>
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-auto ms-auto me-3">
-							<p class="fpr text-end mb-0">วันที่ <?= convertDate($row["Form_date"]) ?></p>
+						<div class="col-auto ms-auto me-3 mb-1">
+							<p class="fsub text-end mb-0">วันที่ <?= convertDate($row["Form_date"]) ?></p>
 						</div>
 					</div>
 					<div class="row border border-2 border-dark mx-3">
 						<div class="col">
 							<div class="row mt-3">
 								<div class="col-5">
-									<p class="fpr"><b> ชื่อผู้ติดต่อ : </b><?= $row["Form_Name"] ?></p>
+									<p class="fsub"><b> ชื่อผู้ติดต่อ : </b><?= $row["Form_Name"] ?></p>
 								</div>
 								<div class="col-7">
-									<p class="fpr"><b>หน่วยงาน : </b><?= $agency ?></p>
+									<p class="fsub"><b>หน่วยงาน : </b><?= $agency ?></p>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-5">
-									<p class="fpr"><b>เบอร์โทรศัพท์ :</b> <?= $row["Form_Phone"] ?></p>
+									<p class="fsub"><b>เบอร์โทรศัพท์ :</b> <?= $row["Form_Phone"] ?></p>
 								</div>
 								<div class="col-7">
-									<p class="fpr"><b>ประเภทงาน :</b> <?= $type ?></p>
+									<p class="fsub"><b>ประเภทงาน :</b> <?= $type ?></p>
 								</div>
 							</div>
-							<div class="row">
+							<div class="row mb-2">
 								<div class="col">
-									<p class="fpr mb-0"><b>รายละเอียดการปฏิบัติงาน :</b></p>
+									<p class="fsub mb-0"><b>รายละเอียดการปฏิบัติงาน :</b></p>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-11 ms-3 detail">
+								<div class="col-11 ms-3 detail fsub">
 									<?= $row["Form_Work"] ?>
 								</div>
 
@@ -200,109 +207,106 @@ FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_
 								<div class="col-4 ms-auto">
 									<div class="row">
 										<div class="col">
-											<img class="d-block w-100 h-auto float-end" src="data:<?= $signAdmin['Sign_image'] ?>" id="sign_admin" alt="">
+											<img class="d-block w-50 h-auto mx-auto" src="data:<?= $signAdmin['Sign_image'] ?>" id="sign_admin" alt="">
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-12">
-											<p class="fpr text-center me-4">ผู้มอบหมายงาน</p>
+											<p class="fbody text-center">ผู้มอบหมายงาน</p>
 										</div>
-
 									</div>
-
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="row border border-2 border-dark mx-3 mt-4">
 						<div class="col">
-							<div class="row">
+							<div class="row mb-2 mt-3">
 								<div class="col">
-									<p class="fpr fw-bold mb-0">รายละเอียดการปฏิบัติงาน :</p>
+									<p class="fsub fw-bold mb-0">รายละเอียดการปฏิบัติงาน :</p>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-11 ms-3 detail">
+								<div class="col-11 ms-3 detail fsub">
 									<?= $report[$i]['Report_Detail'] ?>
 								</div>
 							</div>
-							<div class="row">
+							<div class="row mt-3">
 								<div class="col mt-2">
-									<p class="fpr mb-1"><b>เวลาดำเนินงาน</b></p>
+									<p class="fsub mb-1"><b>เวลาดำเนินงาน</b></p>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col-5 ms-3">
-									<p class="fpr"><b>เริ่ม : </b><?= convertDate($report[$i]['Report_Start_Date']) . ' ' . date('H:i', strtotime($report[$i]['Report_Start_Date'])) ?></p>
+									<p class="fsub"><b>เริ่ม : </b><?= convertDate($report[$i]['Report_Start_Date']) . ' ' . date('H:i', strtotime($report[$i]['Report_Start_Date'])) ?></p>
 								</div>
 								<div class="col-6">
-									<p class="fpr"><b>เสร็จสิ้น : </b><?= convertDate($report[$i]['Report_Stop_Date']) . ' ' . date('H:i', strtotime($report[$i]['Report_Stop_Date'])) ?></p>
+									<p class="fsub"><b>เสร็จสิ้น : </b><?= convertDate($report[$i]['Report_Stop_Date']) . ' ' . date('H:i', strtotime($report[$i]['Report_Stop_Date'])) ?></p>
 								</div>
 							</div>
 							<div class="row">
 								<div class="col">
 									<?php if ($report[$i]['Report_Status'] == 6) { ?>
-										<p class="fpr"><b>สถานะงาน :</b> ติดตามงาน วันที่ <?= convertDate($report[$i]['Report_follow_date']) ?></p>
+										<p class="fsub"><b>สถานะงาน :</b> ติดตามงาน วันที่ <?= convertDate($report[$i]['Report_follow_date']) ?></p>
 									<?php } else if ($report[$i]['Report_Status'] == 7) { ?>
-										<p class="fpr"><b>สถานะงาน :</b> ปิดงาน</p>
+										<p class="fsub"><b>สถานะงาน :</b> ปิดงาน</p>
 									<?php } ?>
 								</div>
 							</div>
 							<div class="row">
-								<div class="col-4">
+								<div class="col-4 align-self-end">
 									<div class="row">
 										<div class="col">
-											<img class="d-block w-100 h-auto mx-auto" src="data:<?= $signUser['Sign_image'] ?>" id="sign_User" alt="">
+											<img class="d-block w-50 h-auto mx-auto" src="data:<?= $signUser['Sign_image'] ?>" id="sign_User" alt="">
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-auto mx-auto">
-											<p class="fpr fw-bold mb-0">วันที่ <?= convertDate($report[$i]['Report_date_user']) ?></p>
+											<p class="fbody mb-0">วันที่ <?= convertDate($report[$i]['Report_date_user']) ?></p>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-auto mx-auto">
-											<p class="fpr fw-bold">เจ้าหน้าที่ไอที</p>
+											<p class="fbody">เจ้าหน้าที่ไอที</p>
 										</div>
 									</div>
 								</div>
-								<div class="col-4 mt-5">
-									<div class="row">
-										<div class="col">
-											<img class="d-block w-100 h-auto mx-auto" src="data:<?= $signAdmin['Sign_image'] ?>" id="sign_IT" alt="">
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-auto mx-auto">
-											<p class="fpr fw-bold mb-0">วันที่ <?= convertDate(date('d-m-Y')) ?></p>
-										</div>
-									</div>
-									<div class="row">
-										<div class="col-auto mx-auto">
-											<p class="fw-bold" style="font-size: 15px;">หัวหน้าเทคโนโลยีสารสนเทศ</p>
-										</div>
-									</div>
-								</div>
-								<div class="col-4">
+								<div class="col-4 align-self-end">
 									<div class="row">
 										<div class="col">
 											<?php
 											$sql = $conn->query("SELECT * FROM itoss_sign WHERE Sign_id = " . $report[$i]['Report_sign_client'] . "");
 											$signClient = $sql->fetch();
 											?>
-											<img class="d-block w-100 h-auto mx-auto" src="data:<?= $signClient['Sign_image'] ?>" id="sign_client" alt="">
+											<img class="d-block w-50 h-auto mx-auto" src="data:<?= $signClient['Sign_image'] ?>" id="sign_client" alt="">
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-auto mx-auto">
 
-											<p class="fpr fw-bold mb-0">วันที่ <?= convertDate($report[$i]['Report_date_client']) ?></p>
+											<p class="fbody mb-0">วันที่ <?= convertDate($report[$i]['Report_date_client']) ?></p>
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-auto mx-auto">
-											<p class="fpr fw-bold">ผู้ใช้บริการ</p>
-
+											<p class="fbody">ผู้ตรวจสอบ</p>
+										</div>
+									</div>
+								</div>
+								<div class="col-4">
+									<div class="row">
+										<div class="col">
+											<img class="d-block w-75 h-100 mx-auto" src="data:<?= $sign['Sign_image'] ?>" id="sign_IT" alt="">
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-auto mx-auto">
+											<p class="fbody mb-0">วันที่ <?= convertDate(date('d-m-Y')) ?></p>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-auto mx-auto">
+											<p class="fbody">หัวหน้าเทคโนโลยีสารสนเทศ</p>
 										</div>
 									</div>
 								</div>
@@ -326,6 +330,6 @@ FROM itoss_job,itoss_jobtype WHERE itoss_job.Jobtype_id = itoss_jobtype.Jobtype_
 			}
 		}
 	</script>
-</body>
+	</body>
 
 </html>

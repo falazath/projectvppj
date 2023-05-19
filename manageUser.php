@@ -4,6 +4,8 @@ include("header.html");
 include("connect.php");
 if (!isset($_SESSION['id'])) {
     header('location:index.php');
+}else if($_SESSION['status']==3  || $_SESSION['status']==2){
+    header('location:indexUser.php');
 }
 $sql = $conn->query("SELECT * FROM itoss_department");
 $department = $sql->fetchAll();
@@ -47,7 +49,7 @@ if (isset($_POST['save'])) {
         }
     }
 } else if (isset($_POST['edit'])) {
-    $sql = $conn->query("SELECT * FROM itoss_user WHERE User_Username = '".$_POST["User_Username"]."'");
+    $sql = $conn->query("SELECT * FROM itoss_user WHERE User_Username = '".$_POST["User_Username"]."' AND NOT User_id = '".$_POST['edit']."'");
     $check = $sql->fetch();
     if(empty($check)){
         $stmt = $conn->prepare("UPDATE itoss_user SET User_Name=?, User_Jop=?, User_Phone=?, User_Username=?, User_Password=?, Status_id=?, Department_id=?, state_id=? WHERE User_id=?"); // เตรยีมคา สง่ั SQL ส าหรบัแกไ้ข
@@ -165,12 +167,11 @@ if (isset($_POST['save'])) {
             <thead>
                 <tr class="d-flex text-center fsub">
                     <th class="col-4 col-xl-2">Username</th>
-                    <th class="col-5 col-xl-2">ชื่อ-นามสกุล</th>
+                    <th class="col-4 col-xl-2">ชื่อ-นามสกุล</th>
                     <th class="col-5 col-xl-2">ตำแหน่ง</th>
-                    <th class="col-5 col-xl-2">เบอร์ติดต่อ</th>
+                    <th class="col-4 col-xl-2">เบอร์ติดต่อ</th>
                     <th class="col-5 col-xl-2">แผนก</th>
-                    <th class="col-1 col-xl-1"></th>
-                    <th class="col-1 col-xl-1"></th>
+                    <th class="col-4 col-xl-1"></th>
                 </tr>
             </thead>
             <tbody>
@@ -182,12 +183,12 @@ if (isset($_POST['save'])) {
                 while ($row = $stmt->fetch()) { ?>
                     <tr class="d-flex text-center fsub">
                         <td class="col-4 col-xl-2"><?= $row['User_Username'] ?></td>
-                        <td class="col-5 col-xl-2"><?= $row['User_Name'] ?></td>
+                        <td class="col-4 col-xl-2"><?= $row['User_Name'] ?></td>
                         <td class="col-5 col-xl-2"><?= $row['User_Jop'] ?></td>
-                        <td class="col-5 col-xl-2"><?= $row['User_Phone'] ?></td>
+                        <td class="col-4 col-xl-2"><?= $row['User_Phone'] ?></td>
                         <td class="col-5 col-xl-2"><?= $row['Department_name'] ?></td>
-                        <td class="col-1 col-xl-1"><a data-bs-toggle="modal" data-bs-target="#edit-User<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Setting.svg" alt=""></a></td>
-                        <td class="col-1 col-xl-1"><a data-bs-toggle="modal" data-bs-target="#cancel<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Delete.svg" alt=""></a></td>
+                        <td class="col-2 col-xl-1"><a data-bs-toggle="modal" data-bs-target="#edit-User<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Setting.svg" alt=""></a></td>
+                        <td class="col-2 col-xl-1"><a data-bs-toggle="modal" data-bs-target="#cancel<?= $row['User_id'] ?>" href="#"><img src="./asset/icon/Delete.svg" alt=""></a></td>
                     </tr>
 
                         <form action="" method="post">
@@ -198,7 +199,7 @@ if (isset($_POST['save'])) {
                                         <p class="modal-title fhead fw-bold text-center">ยืนยันการยกเลิก</p>
                                     </div>
                                     <div class="modal-body my-3 my-xl-3 text-center">
-                                        <p class="ftitle text-center d-inline">คุณต้องการลบบัญชีผู้ใช้หรือไม่  </p>
+                                        <p class="ftitle text-center d-inline">คุณต้องการลบบัญชี <b><?=$row['User_Name']?></b> หรือไม่  </p>
                                     </div>
                                     <div class="modal-footer justify-content-center">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">กลับ</button>

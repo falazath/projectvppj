@@ -2,6 +2,9 @@
 session_start();
 if (!isset($_SESSION['id'])) {
     header('location:index.php');
+}else if($_SESSION['status']==1){
+    header('location:indexAdmin.php');
+
 }
 include("header.html");
 include("connect.php");
@@ -44,7 +47,7 @@ if (isset($_SESSION['ch'])) { //toastr
 //Value filter
 $sql = $conn->query("SELECT * FROM itoss_agency WHERE state_id =1;");
 $filter[0] = $sql->fetchAll();
-$sql = $conn->query("SELECT * FROM itoss_user WHERE state_id =1;");
+$sql = $conn->query("SELECT * FROM itoss_user WHERE state_id =1 AND Status_id = 2;");
 $filter[1] = $sql->fetchAll();
 $sql = $conn->query("SELECT * FROM itoss_jobtype WHERE state_id =1;;");
 $filter[2] = $sql->fetchAll();
@@ -254,7 +257,7 @@ function convertDate($date){
                         ?>
                             <div class="row">
                                 <div class="col">
-                                    <p class="ftitle fw-bold"><?=($i+1).'. '. $name ?></p>
+                                    <p class="ftitle fw-bold text-break"><?=($i+1).'. '. $name ?></p>
                                     <p class="ftitle">รายละเอียด: </p>
                                     <?= $_SESSION['check'][$i]['Form_Work'] ?>
                                 </div>
@@ -274,7 +277,7 @@ function convertDate($date){
     </div>
 
     <div class="row justify-content-center">
-        <div class="col col-sm-3 col-xl-3 d-block mx-auto">
+        <div class="col col-sm-4 col-xl-3 d-block mx-auto">
             <p class="text-dark text-center fhead fw-bold">รายการคำขอปฏิบัติงาน</p>
         </div>
     </div>
@@ -454,27 +457,31 @@ function convertDate($date){
         <table class="table table-light table-bordered">
             <thead>
                 <tr class="d-flex text-center fsub table-info">
-                    <th class="col-3 col-sm-1">วันที่</th>
-                    <th class="col-4 col-sm-2">หน่วยงาน</th>
-                    <th class="col-4 col-sm-2">เจ้าหน้าที่</th>
-                    <th class="col-4 col-sm-1">ประเภทงาน</th>
-                    <th class="col-8 col-sm-4">รายละเอียดงาน</th>
-                    <th class="col-3 col-sm-1">สถานะ</th>
-                    <th class="col-2 col-sm-1"></th>
+                    <th class="col-3 col-sm-2 col-xl-1 align-middle">วันที่</th>
+                    <th class="col-4 col-sm-3 col-xl-2">หน่วยงาน</th>
+                    <th class="col-4 col-sm-2 col-xl-2">เจ้าหน้าที่</th>
+                    <th class="col-4 col-sm-2 col-xl-1">ประเภทงาน</th>
+                    <th class="col-8 col-sm-4 col-xl-4">รายละเอียดงาน</th>
+                    <th class="col-3 col-sm-2 col-xl-1">สถานะ</th>
+                    <th class="col-2 col-sm-1 col-xl-1"></th>
                 </tr>
             </thead>
             <tbody>
                 <!--สถานะ:รออนุมัติ-->
                 <?php
                 for ($j = 0; $j < count($row); $j++) {
-                    if ($row[$j]['Status_form_id'] == 1 || ($row[$j]['Status_form_id']) == 5  || ($row[$j]['Status_form_id']) == 7) {
+                    if (($row[$j]['Status_form_id']) == 8 || ($row[$j]['Status_form_id']) == 5) {
                         $bg = 'table-success';
-                    } else if ($row[$j]['Status_form_id'] == 2 || ($row[$j]['Status_form_id']) == 6) {
+                    } else if ($row[$j]['Status_form_id'] == 7) {
                         $bg = 'table-warning';
                     } else if ($row[$j]['Status_form_id'] == 3 || ($row[$j]['Status_form_id']) == 4) {
                         $bg = 'table-danger';
-                    } else if ($row[$j]['Status_form_id'] == 8) {
+                    } else if ($row[$j]['Status_form_id'] == 2) {
                         $bg = 'table-secondary';
+                    }else if (  $row[$j]['Status_form_id'] == 1 ){
+                        $bg = 'table-primary';
+                    }else if (  $row[$j]['Status_form_id'] == 6 ){
+                        $bg = 'table-dark';
                     }
                     for ($k = 0; $k < count($filter[0]); $k++) {
                         if ($row[$j]['Agency_id'] == $filter[0][$k]['Agency_id']) {
@@ -496,16 +503,16 @@ function convertDate($date){
                     $Form_Work = $row[$j]['Form_Work'];
                     $Form_id = $row[$j]['Form_id'];
                     echo '<tr class="d-flex text-center fsub">
-                                <td class="col-3 col-sm-1" >' . convertDate($Form_date) . '</td>';
+                                <td class="col-3 col-sm-2 col-xl-1" >' . convertDate($Form_date) . '</td>';
                     if ($row[$j]['Agency_id'] == 0) {
                         $sql = $conn->query("SELECT * FROM other_agency WHERE Form_id = '$Form_id'");
                         $agency = $sql->fetch();
-                        echo  '<td class="col-4 col-sm-2 text-break" id="sector">' . $agency['name'] . '</td>';
+                        echo  '<td class="col-4 col-sm-3 col-xl-2 text-break" id="sector">' . $agency['name'] . '</td>';
                     } else {
-                        echo  '<td class="col-4 col-sm-2 text-break" id="sector">' . $Agency_Name . '</td>';
+                        echo  '<td class="col-4 col-sm-3 col-xl-2 text-break" id="sector">' . $Agency_Name . '</td>';
                     }
-                    echo '<td class="col-4 col-sm-2 text-break" id="user">' . $User_Name . '</td>';
-                    echo  '<td class="col-4 col-sm-1 text-break" id="cate-work">'; // column ประเภทงาน
+                    echo '<td class="col-4 col-sm-2 col-xl-2 text-break" id="user">' . $User_Name . '</td>';
+                    echo  '<td class="col-4 col-sm-2 col-xl-1 text-break" id="cate-work">'; // column ประเภทงาน
                     $sql = $conn->query("SELECT * FROM itoss_job,itoss_form,itoss_jobtype WHERE itoss_job.Form_id = itoss_form.Form_id AND 
                            itoss_form.Form_id = '$Form_id' AND itoss_job.Jobtype_id = itoss_jobtype.Jobtype_id ORDER BY itoss_job.Job_id ASC");
                     $job = $sql->fetchAll();
@@ -520,11 +527,11 @@ function convertDate($date){
                         }
                     }
                     echo '</td>';
-                    echo    '<td class="col-8 col-sm-4 text-start text-break">
+                    echo    '<td class="col-8 col-sm-4 col-xl-4 text-start text-break">
                                 ' . $Form_Work . '
                                 </td>
-                                <td class="col-3 col-sm-1 text-break ' . $bg . '" id="status">' . $Status_form_name . '</td>
-                                <td class="col-2 col-sm-1 text-break">';
+                                <td class="col-3 col-sm-2 col-xl-1 text-break ' . $bg . '" id="status">' . $Status_form_name . '</td>
+                                <td class="col-2 col-sm-1 col-xl-1 text-break">';
                     if ($row[$j]['User_id'] == $_SESSION['id']) {
                         if ($Status_form_id < 5) {
                             echo '<a href="requestUser.php?Form_id=' . $Form_id . '"><img src="./asset/icon/Paper.svg" alt=""></a>';
@@ -557,21 +564,36 @@ function convertDate($date){
     <?php if (isset($_POST['search']) || isset($_GET['page'])) {?>
         <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page=1">หน้าแรก</a></li> 
-                <?php for($page = 1; $page<= $number_of_page; $page++) {?>
-                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page=<?=$page?>"><?=$page?></a></li> 
+                    <li class="page-item"><a class="page-link" href="indexUser.php?page=1"><<</a></li> 
+                <?php for($page = 1; $page<= $number_of_page; $page++) {
+                    isset($_GET['page'])?$ch = $_GET['page']:$ch=1;
+                    if($_GET['page'] == $page){
+                        $active = 'active';
+                    }else{
+                        $active = '';
+                    }
+                    ?>
+                    <li class="page-item"><a class="page-link <?=$active?>" href="indexUser.php?page=<?=$page?>"><?=$page?></a></li> 
                 <?php } ?>
-                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page=<?=$number_of_page?>">หน้าสุดท้าย</a></li>
+                    <li class="page-item"><a class="page-link" href="indexUser.php?page=<?=$number_of_page?>">>></a></li>
             </ul>
         </nav>
         <?php }else{?>
         <nav aria-label="Page navigation example ">
             <ul class="pagination justify-content-center ">
-                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page1=1">หน้าแรก</a></li> 
-                <?php for($page1 = 1; $page1<= $number_of_page1; $page1++) {?>
-                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page1=<?=$page1?>"><?=$page1?></a></li> 
+                    <li class="page-item"><a class="page-link" href="indexUser.php?page1=1"><<</a></li> 
+                <?php for($page1 = 1; $page1<= $number_of_page1; $page1++) {
+                    isset($_GET['page1'])?$ch = $_GET['page1']:$ch=1;
+                    if($ch == $page1){
+                        $active = 'active';
+                    }else{
+                        $active = '';
+                    }
+                    ?>
+                    
+                    <li class="page-item"><a class="page-link <?=$active?>" href="indexUser.php?page1=<?=$page1?>"><?=$page1?></a></li> 
                 <?php } ?>
-                    <li class="page-item"><a class="page-link link-light" href="indexUser.php?page1=<?=$number_of_page1?>">หน้าสุดท้าย</a></li>
+                    <li class="page-item"><a class="page-link" href="indexUser.php?page1=<?=$number_of_page1?>">>></a></li>
             </ul>
         </nav>
         <?php }?>

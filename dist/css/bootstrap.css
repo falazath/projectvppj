@@ -1918,13 +1918,13 @@ progress {
 
 .table-primary {
   --bs-table-color: #000;
-  --bs-table-bg: #cfe2ff;
-  --bs-table-border-color: #bacbe6;
-  --bs-table-striped-bg: #c5d7f2;
+  --bs-table-bg: #ADADAD;
+  --bs-table-border-color: #ADADAD;
+  --bs-table-striped-bg: #BBBBBB;
   --bs-table-striped-color: #000;
-  --bs-table-active-bg: #bacbe6;
+  --bs-table-active-bg: #BBBBBB;
   --bs-table-active-color: #000;
-  --bs-table-hover-bg: #bfd1ec;
+  --bs-table-hover-bg: #BBBBBB;
   --bs-table-hover-color: #000;
   color: var(--bs-table-color);
   border-color: var(--bs-table-border-color);
@@ -1945,7 +1945,7 @@ progress {
 }
 
 .table-success {
-  --bs-table-color: #000;
+  --bs-table-color: #fff;
   --bs-table-bg: #44C566;
   --bs-table-border-color: #bcd0c7;
   --bs-table-striped-bg: #c7dbd2;
@@ -4708,10 +4708,10 @@ textarea.form-control-lg {
   display: block;
   padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
   font-size: var(--bs-pagination-font-size);
-  color: var(--bs-pagination-color);
+  color: #000;
   text-decoration: none;
-  background-color: #2B8C45;
-  border: var(--bs-pagination-border-width) solid var(--bs-pagination-border-color);
+  background-color: #fff;
+  border: 0px solid#fff;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 @media (prefers-reduced-motion: reduce) {
@@ -4721,28 +4721,28 @@ textarea.form-control-lg {
 }
 .page-link:hover {
   z-index: 2;
-  color: var(--bs-pagination-hover-color);
-  background-color: #35AC54;
+  color: #fff;
+  background-color: #4B785E;
   border-color: var(--bs-pagination-hover-border-color);
 }
 .page-link:focus {
   z-index: 3;
   color: var(--bs-pagination-focus-color);
-  background-color: #35AC54;
+  background-color: #4B785E;
   outline: 0;
   box-shadow: var(--bs-pagination-focus-box-shadow);
 }
 .page-link.active, .active > .page-link {
   z-index: 3;
   color: var(--bs-pagination-active-color);
-  background-color: #35AC54;
+  background-color: #20603C;
   border-color: var(--bs-pagination-active-border-color);
 }
 .page-link.disabled, .disabled > .page-link {
-  color: var(--bs-pagination-disabled-color);
+  color: #999999;
   pointer-events: none;
-  background-color: var(--bs-pagination-disabled-bg);
-  border-color: var(--bs-pagination-disabled-border-color);
+  background-color: #5F7769;
+  border-color: #5F7769;
 }
 
 .page-item:not(:first-child) .page-link {

@@ -6,7 +6,7 @@ if (!isset($_SESSION['id'])) {
 }
 include('header.html');
 if (isset($_POST['send_approve'])) {
-	if(isset($_GET['User_id'])){
+	if (isset($_GET['User_id'])) {
 		$stmt = $conn->prepare("UPDATE itoss_sign SET Sign_image=? WHERE User_id = ?");
 		$stmt->bindParam(1, $_POST['Sign_image']);
 		$stmt->bindParam(2, $_GET['User_id']);
@@ -17,9 +17,8 @@ if (isset($_POST['send_approve'])) {
 			echo '<script language="javascript">';
 			echo 'alert("บันทึกลายเซ็นแล้ว"); location.href="manageUser.php"';
 			echo '</script>';
-		} 
-	}
-	else{
+		}
+	} else {
 		$stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, ?)");
 		$stmt->bindParam(1, $_POST['Sign_image']);
 		$stmt->bindParam(2, $_SESSION['id']);
@@ -37,7 +36,6 @@ if (isset($_POST['send_approve'])) {
 			echo '</script>';
 		}
 	}
-		
 }
 ?>
 
@@ -48,25 +46,29 @@ if (isset($_POST['send_approve'])) {
 			<form method="post">
 				<div class="form-floating mb-3">
 					<div id="content">
-						<input type="hidden" name="Sign_image" id="Sign_image" value="..." rows="3" cols="50" style="width : 100%; height : 100px;"></input></p>
+						<input type="hidden" name="Sign_image" id="Sign_image" value="..." rows="3" cols="50" style="width : 100%; height : 100px;"></input>
 						<h2><b>
 								<center>ลายเซ็น<center><b></h2>
 					</div>
-					<div class="form-floating border border-2">
-						<div id="signature"></div>
-					</div>
-					<div class="form-floating">
-						<div class="row justify-content-center">
-							<div class="col-3">
-								<div class="mt-xl-5" id="tools"></div>
-							</div>
-							<div class="col-3">
-								<button class="btn btn-primary d-block mx-auto my-5" type="submit" name='send_approve' id='send_approve' value="บันทึก">บันทึก</button>
+					<div class="row">
+						<div class="col">
+							<div class="form-floating border border-2">
+								<div id="signature"></div>
 							</div>
 						</div>
 					</div>
+					<div class="form-floating">
+						<div class="row justify-content-center my-5">
+							<div class="col-auto">
+								<div class="mt-xl-5" id="tools"></div>
+							</div>
+							<div class="col-3">
+								<button class="btn btn-primary d-block mx-auto" type="submit" name='send_approve' id='send_approve' value="บันทึก">บันทึก</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</form>
-		</div>
 	</div>
 	<script src="./libs/jquery.js"></script>
 	<script src="./libs/jSignature.min.noconflict.js"></script>

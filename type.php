@@ -3,6 +3,8 @@ session_start();
 include("header.html");
 if (!isset($_SESSION['id'])) {
     header('location:index.php');
+}else if($_SESSION['status']==2 || $_SESSION['status']== 3){
+    header('location:indexUser.php');
 }
 include($_SESSION['navbar']);
 
@@ -93,9 +95,8 @@ if (isset($_POST['createdp'])) {
                 <table class="table table-light table-bordered">
                     <thead>
                         <tr class="d-flex text-center fsub">
-                            <th class="col-6 col-sm-8">ประเภทงาน</th>
-                            <th class="col-4 col-sm-2"></th>
-                            <th class="col-4 col-sm-2"></th>
+                            <th class="col-8 col-sm-8">ประเภทงาน</th>
+                            <th class="col-4 col-sm-4"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -104,7 +105,7 @@ if (isset($_POST['createdp'])) {
                         $stmt = $conn->query("SELECT * FROM itoss_jobtype WHERE state_id = 1 AND NOT Jobtype_id = 0 ;");
                         while ($row = $stmt->fetch()) { ?>
                             <tr class="d-flex text-center fsub">
-                                <td class="col-6 col-sm-8" id="name"><?= $row['Jobtype_name'] ?></td>
+                                <td class="col-8 col-sm-8" id="name"><?= $row['Jobtype_name'] ?></td>
                                 <td class="col-2 col-sm-2" id="user">
                                     <button class="btn" type="button" data-bs-toggle="modal" data-bs-target="#delete<?= $row['Jobtype_id'] ?>">
                                         <img src="./asset/icon/Delete.svg" alt="">
@@ -148,7 +149,7 @@ if (isset($_POST['createdp'])) {
                                                 </div>
                                                 <div class="modal-footer justify-content-center">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-                                                    <button type="submit" class="btn btn-primary" name="delete" value="<?= $row['Jobtype_id'] ?>" class="btn btn-primary mx-auto">ยืนยัน</button>
+                                                    <button type="submit" class="btn btn-danger" name="delete" value="<?= $row['Jobtype_id'] ?>" class="btn btn-primary mx-auto">ยืนยัน</button>
                                                 </div>
                                             </div>
                                         </div>

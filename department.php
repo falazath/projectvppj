@@ -3,6 +3,8 @@ session_start();
 include("header.html");
 if (!isset($_SESSION['id'])) {
   header('location:index.php');
+}else if($_SESSION['status']==3 || $_SESSION['status']==2){
+  header('location:indexUser.php');
 }
 include($_SESSION['navbar']);
 include("connect.php");
@@ -24,7 +26,7 @@ if (isset($_POST['createdp'])) {
     echo '</script>';
   }
 } else if (isset($_POST['editname'])) {
-  $sql = $conn->query("SELECT * FROM itoss_agency WHERE Agency_Name = '".$_POST["Agency_Name"]."'");
+  $sql = $conn->query("SELECT * FROM itoss_agency WHERE Agency_Name = '".$_POST["Agency_Name"]."' AND NOT Agency_id = '".$_POST["editname"]."'");
   $check = $sql->fetch();
   if(empty($check)){
     $stmt = $conn->prepare("UPDATE itoss_agency SET Agency_Name = ? where Agency_id = ?");

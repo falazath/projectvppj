@@ -107,7 +107,7 @@ $signUser = $stmt4->fetch();
 ?>
 <main>
     <div class="row justify-content-center mt-5 ">
-        <div class="col col-sm-3 col-xl d-block mx-auto ">
+        <div class="col-12 col-sm-12 col-xl d-block mx-auto ">
             <p class="text-dark text-center fhead fw-bold">คำขอปฏิบัติงาน</p>
             <p class="text-end ftitle text-danger">สถานะ : <?= $row['Status_form_name'] ?></p>
         </div>
@@ -118,7 +118,7 @@ $signUser = $stmt4->fetch();
                 <p class="ftitle d-inline fw-bold mb-0">รายละเอียดการแก้ไขงาน</p>
                 <p class="d-inline"><?= $row3['User_Name'] ?></p>
 
-                <div class="form-control text-light" id="Detail" cols="30" rows="10">
+                <div class="form-control text-light text-break" id="Detail" cols="30" rows="10">
                     <?= $text ?>
                 </div>
             </div>
@@ -126,13 +126,13 @@ $signUser = $stmt4->fetch();
         </div>
 
         <div class="row justify-content-start mb-0 mb-xl-3" id="dsk">
-            <div class="col-12 col-xl-4 mb-2 mb-xl-0"> <!--ชื่อผู้ติดต่อ-->
+            <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-0 text-break"> <!--ชื่อผู้ติดต่อ-->
                 <label class="ftitle fw-bold form-label mb-0">ชื่อผู้ติดต่อ</label>
                 <input type="hidden" name="Form_date" value="<?= $row['Form_date'] ?>">
                 <input type="text" class="data form-control ftitle" name="Form_Name" id="contact" value="<?= $row["Form_Name"] ?>" disabled required>
                 <input type="hidden" name="Status_form_id" value="1">
             </div>
-            <div class="col-12 col-xl-4 mb-2 mb-xl-0"> <!--หน่วยงาน-->
+            <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-0"> <!--หน่วยงาน-->
                 <p class="ftitle fw-bold mb-0">หน่วยงาน</p>
                 <select class="form-select data form-control ftitle" id="Agency_id" name="Agency_id" disabled required>
                     <option selected value="<?= $row["Agency_id"] ?>"><?= $agency ?></option>
@@ -146,7 +146,7 @@ $signUser = $stmt4->fetch();
                 </select>
                 <input class="d-none form-control mt-1" type="text" name="other_agency" id="other_agency" placeholder="กรอกชื่อหน่วยงาน">
             </div>
-            <div class="col-12 col-xl-4 mb-2 mb-xl-0"> <!--เบอร์โทรศัพท์-->
+            <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-0 text-break"> <!--เบอร์โทรศัพท์-->
                 <p class="ftitle fw-bold mb-0">เบอร์โทรศัพท์</p>
                 <input type="text" class="data form-control ftitle" name="Form_Phone" value="<?= $row["Form_Phone"] ?>" disabled>
             </div>
@@ -194,27 +194,29 @@ $signUser = $stmt4->fetch();
                         อื่น ๆ
                     </label>
                 </div>
-                <input class="d-none form-control mt-1 mb-2" type="text" name="Jobtype_orther_name" id="other_job" value="<?= $valueOther ?>" placeholder="กรอกประเภทงาน" disabled>
+                <div class="col col-sm-3">
+                    <input class="d-none form-control mt-1 mb-2" type="text" name="Jobtype_orther_name" id="other_job" value="<?= $valueOther ?>" placeholder="กรอกประเภทงาน" disabled>
+                </div>
             </div>
         </div>
         <div class="row mb-3 mb-xl-3 mb-xl-0">
-            <div class="col-12 col-xl-12 mb-2">
+            <div class="col-12 col-sm-12 col-xl-12 mb-2">
                 <p class="ftitle fw-bold mb-0">รายละเอียดงาน</p>
-                <div class="data form-control text-light" name="Form_Work" id="show-detail" cols="30" rows="10">
+                <div class="data form-control text-light text-break" name="Form_Work" id="show-detail" cols="30" rows="10">
                     <?= $row['Form_Work'] ?>
                 </div>
-                <textarea class="data form-control text-light d-none" name="Form_Work" id="detail" cols="30" rows="10">
+                <textarea class="data form-control text-light d-none text-break" name="Form_Work" id="detail" cols="30" rows="10">
                         <?= $row['Form_Work'] ?>
                     </textarea>
             </div>
         </div>
-        <div class="row mb-xl-5 ">
+        <div class="row mb-sm-0 mb-xl-5 ">
             <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
                 <div class="col-12 col-xl-3 mx-xl-auto mb-3">
                     <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
                 </div>
                 <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+                    <img class="d-block mx-auto w-50 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
                 </div>
 
                 <div class="col-6 col-xl-6 mx-auto mb-5">
@@ -222,13 +224,13 @@ $signUser = $stmt4->fetch();
                 </div>
             </div>
         </div>
-        <div class="row justify-content-around mb-5 mt-xl-5">
-            <div class="col-auto col-xl-3 d-flex" id="homeCol">
-                <a class="btn btn-secondary mx-xl-auto ftitle mx-auto" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
+        <div class="row justify-content-center mb-5 mt-xl-5">
+            <div class="col-auto col-xl-3 align-items-center" id="homeCol">
+                <a class="btn btn-secondary mx-xl-auto ftitle col-sm-auto mx-sm-auto" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
             </div>
-            <div class="col-auto col-xl-3" id="saveCol">
-                <button class="btn btn-primary d-block me-auto ms-2 mx-xl-auto d-none" type="submit" name="save" id="save">บันทึก</button>
-                <button class="btn btn-warning d-block ms-2 mx-xl-auto  ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
+            <div class="col-auto col-sm-4 col-xl-3" id="saveCol">
+                <button class="btn btn-primary d-block me-auto ms-2 mx-xl-auto mx-sm-auto d-none" type="submit" name="save" id="save">บันทึก</button>
+                <button class="btn btn-warning d-block ms-2 mx-xl-auto mx-sm-auto ftitle" type="button" id="edit" onclick="disableFalse()">แก้ไข</button>
             </div>
             <div class="col-auto col-xl-3" id="cancelCol">
                 <!-- Button trigger modal -->
@@ -329,9 +331,16 @@ $signUser = $stmt4->fetch();
     const topic = box.getElementsByTagName('p');
     var user = <?= $row['User_id'] ?>;
     var id = <?= $_SESSION['id'] ?>;
+
+    const home = document.getElementById('home');
+    const cancelCol = document.getElementById('cancelCol');
+    const homeCol = document.getElementById('homeCol');
+    const saveCol = document.getElementById('saveCol');
     const userSignBox = document.getElementById('userSignBox');
     var str;
     if (user == id) {
+        // alert(status+' '+status1)
+
         if (status == 1) {
             userSignBox.classList.add('mx-auto');
         }
@@ -340,43 +349,41 @@ $signUser = $stmt4->fetch();
             topic[0].innerText = 'รายละเอียดที่ต้องการแก้ไข โดย ';
         } else if (status == 2 && status1 == 3) {
             userSignBox.classList.add('mx-auto');
-            document.getElementById('homeCol').classList.remove('ms-auto');
-            document.getElementById('home').classList.add('mx-xl-auto');
-            document.getElementById('home').classList.remove('ms-xl-auto', 'me-xl-0', 'me-2');
-            document.getElementById('home').classList.add('btn-primary');
-            document.getElementById('home').classList.remove('btn-secondary');
-            document.getElementById('saveCol').classList.add('d-none');
-            document.getElementById('cancelCol').classList.add('d-none');
+            homeCol.classList.remove('ms-auto');
+            home.classList.add('mx-xl-auto');
+            home.classList.remove('ms-xl-auto', 'me-xl-0', 'me-2');
+            home.classList.add('btn-primary');
+            home.classList.remove('btn-secondary');
+            saveCol.classList.add('d-none');
+            cancelCol.classList.add('d-none');
             
         } else if (status == 4) {
             box.classList.remove('d-none');
             topic[0].innerText = 'สาเหตุที่ไม่อนุมัติ โดย';
-            document.getElementById('homeCol').classList.remove('ms-auto');
-            document.getElementById('home').classList.add('mx-auto');
-            document.getElementById('home').classList.remove('ms-auto', 'me-xl-5', 'me-2');
-            document.getElementById('home').classList.add('btn-primary');
-            document.getElementById('home').classList.remove('btn-secondary');
-            document.getElementById('cancelCol').classList.add('d-none');
-
-            document.getElementById('saveCol').classList.add('d-none');
-        } else if (status == 5) {
-            document.getElementById('homeCol').classList.remove('ms-auto');
-            document.getElementById('home').classList.add('mx-xl-auto');
-            document.getElementById('home').classList.remove('me-xl-0', 'ms-xl-auto');
-            document.getElementById('home').classList.add('btn-primary');
-            document.getElementById('home').classList.remove('btn-secondary');
-
-            document.getElementById('saveCol').classList.add('d-none');
-
+            homeCol.classList.remove('ms-auto');
+            home.classList.add('mx-auto');
+            home.classList.remove('ms-auto', 'me-xl-5', 'me-2');
+            home.classList.add('btn-primary');
+            home.classList.remove('btn-secondary');
+            cancelCol.classList.add('d-none');
+            saveCol.classList.add('d-none');
+        } else if (status == 5 || status == 3 ) {
+            homeCol.classList.remove('ms-auto');
+            home.classList.add('mx-xl-auto');
+            home.classList.remove('me-xl-0', 'ms-xl-auto');
+            home.classList.add('btn-primary');
+            home.classList.remove('btn-secondary');
+            saveCol.classList.add('d-none');
+            cancelCol.classList.add('d-none');
         }
     } else {
-        document.getElementById('homeCol').classList.remove('ms-auto');
-        document.getElementById('home').classList.add('mx-xl-auto');
-        document.getElementById('home').classList.remove('me-xl-0', 'ms-xl-auto', 'me-2');
-        document.getElementById('home').classList.add('btn-primary');
-        document.getElementById('home').classList.remove('btn-secondary');
-        document.getElementById('saveCol').classList.add('d-none');
-        document.getElementById('cancelCol').classList.add('d-none');
+        homeCol.classList.remove('ms-auto');
+        home.classList.add('mx-xl-auto');
+        home.classList.remove('me-xl-0', 'ms-xl-auto', 'me-2');
+        home.classList.add('btn-primary');
+        home.classList.remove('btn-secondary');
+        saveCol.classList.add('d-none');
+        cancelCol.classList.add('d-none');
     }
 
     $('#Agency_id').change(function() {

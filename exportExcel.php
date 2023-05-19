@@ -3,6 +3,8 @@
 session_start();
 if (!isset($_SESSION['id'])) {
     header('location:index.php');
+}else if($_SESSION['status']== 2 || $_SESSION['status']== 3){
+    header('location:indexUser.php');
 }
 include("header.html");
 include("connect.php");

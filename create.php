@@ -2,7 +2,9 @@
 session_start();
 if (!isset($_SESSION['id'])) {
     header('location:index.php');
-}
+}else if($_SESSION['status']==3){
+    header('location:indexUser.php');
+  }
 include('header.html');
 include("connect.php");
 include($_SESSION['navbar']);
@@ -81,7 +83,6 @@ if (isset($_POST['save'])) {
         }
     }
     include("message.php");
-
     if ($_SESSION['status'] == 1 && $flag) {
         echo '<script language="javascript">';
         echo 'toastr.success("สร้างคำขอปฏิบัติการเรียบร้อย");';
@@ -102,11 +103,11 @@ if (isset($_POST['save'])) {
     </div>
     <form action="<?= $_SERVER['PHP_SELF'] ?>" method="post">
         <div class="row justify-content-start mb-2" id="dsk">
-            <div class="col-12 col-lg-4 mb-2">
+            <div class="col-12 col-sm-6 col-lg-4 mb-2">
                 <label class="ftitle fw-bold form-label mb-0">ชื่อผู้ติดต่อ</label>
                 <input type="text" class="form-control" name="Form_Name" placeholder="กรอกชื่อผู้ติดต่อ" required>
             </div>
-            <div class="col-12 col-lg-4 mb-2">
+            <div class="col-12 col-sm-6 col-lg-4 mb-2">
                 <p class="ftitle fw-bold mb-0">หน่วยงาน</p>
                 <select class="form-select" id="Agency_id" name="Agency_id" required>
                     <option selected disabled value="">เลือกหน่วยงาน</option>
@@ -120,7 +121,7 @@ if (isset($_POST['save'])) {
                 </select>
                 <input class="d-none form-control mt-1" type="text" name="other_agency" id="other_agency" value="" placeholder="กรอกข้อมูลอื่นๆ">
             </div>
-            <div class="col-12 col-lg-4 mb-0">
+            <div class="col-12 col-sm-6 col-lg-4 mb-0">
                 <p class="ftitle fw-bold mb-0">เบอร์โทรศัพท์</p>
                 <input type="number" class="form-control" name="Form_Phone" placeholder="กรอกเบอร์โทรศัพท์">
             </div>
@@ -156,7 +157,7 @@ if (isset($_POST['save'])) {
         </div>
 
         <div class="row mb-3">
-            <div class="col-11 col-lg-12">
+            <div class="col-11 col-sm-12 col-lg-12 mt-sm-1">
                 <p class="ftitle fw-bold mb-0">รายละเอียดงาน</p>
                 <textarea class="form-control" name="Form_Work" id="detail" cols="30" rows="10" required></textarea>
             </div>
@@ -167,7 +168,7 @@ if (isset($_POST['save'])) {
                 <?php
                 if ($_SESSION['status'] == 1) { ?>
                     <select class="form-select" id="User_id" name="User_id" required>
-                        <option selected disabled>เลือกเจ้าหน้าที่รับผิดชอบ</option>
+                        <option selected disabled value="">เลือกเจ้าหน้าที่รับผิดชอบ</option>
                         <?php
                         for ($i = 0; $i < count($filter[1]); $i++) {
 
@@ -181,10 +182,10 @@ if (isset($_POST['save'])) {
             </div>
         </div>
         <div class="row justify-content-around mb-5 mt-lg-5">
-            <div class="col col-lg-4 ms-auto">
+            <div class="col col-sm-auto col-lg-4 ms-auto">
                 <a class="col-lg-3 btn btn-secondary d-block ms-auto me-2 me-lg-5 ftitle" href="indexUser.php" id="home">ยกเลิก</a>
             </div>
-            <div class="col col-lg-4 me-auto">
+            <div class="col col-sm-auto col-lg-4 me-auto">
                 <button class="btn btn-primary d-block me-auto ms-2 ms-lg-5" type="submit" name="save" value="<?= $Form_id ?>">บันทึก</button>
             </div>
         </div>

@@ -1,15 +1,16 @@
 <?php
 session_start();
 if (!isset($_SESSION['id'])) {
-    if(isset($_GET['Form_id'])){
+    if (isset($_GET['Form_id']) || $_SESSION['status'] == 3) {
         $_SESSION['Form_id'] = $_GET['Form_id'];
         $_SESSION['page_link'] = 2;
         header('location:index.php');
     }
-}
-else if($_SESSION['status'] == 1){
-    header('location:requestAdmin.php?Form_id='.$_GET['Form_id'].'');
-}else{
+} else if ($_SESSION['status'] == 1) {
+    header('location:requestAdmin.php?Form_id=' . $_GET['Form_id'] . '');
+} else if ($_SESSION['status'] == 3) {
+    header('location:indexUser.php');
+} else {
     unset($_SESSION['Form_id']);
     unset($_SESSION['page_link']);
 }
@@ -29,7 +30,7 @@ $filter[3] = $sql->fetchAll();
 $Form_id = $_GET["Form_id"];
 
 if (isset($_POST['send_approve'])) {
-    if(count($_FILES['img_file']['name']) <= 5){
+    if (count($_FILES['img_file']['name']) <= 5) {
         $stmt = $conn->prepare("INSERT INTO itoss_sign VALUES ('', ?, NULL)");
         $stmt->bindParam(1, $_POST['Sign_image']);
         $stmt->execute();
@@ -50,37 +51,36 @@ if (isset($_POST['send_approve'])) {
         $stmt = $conn->prepare("UPDATE itoss_form SET Status_form_id = '$Status_form_id' where Form_id = '$Form_id'");
         $stmt->execute();
         $sql_img = $conn->query("SELECT itoss_img.img_file FROM itoss_img WHERE Report_id = $Report_id;");
-        while($img_row = $sql_img->fetch()){
-            $checkDel = unlink('./'.$img_row['img_file'].'');
+        while ($img_row = $sql_img->fetch()) {
+            $checkDel = unlink('./' . $img_row['img_file'] . '');
         }
         $sql_img = $conn->query("DELETE FROM itoss_img WHERE Report_id = $Report_id;");
 
         $count = count($_FILES['img_file']['name']);
-            $date1 = date("dmY_His");
-            foreach ($_FILES['img_file']['tmp_name'] as $key => $value) {
-                $file_names = $_FILES['img_file']['name'];
-                $type = strrchr($_FILES['img_file']['name'][$key], ".");
-                $new_name = $Report_id . "00" . $date1 . $key . $type;
-                if (move_uploaded_file($_FILES['img_file']['tmp_name'][$key], "img_work/" . $new_name)) {
-                    $path_link = "img_work/" . $new_name;
-                    $sql = "INSERT INTO itoss_img (img_file, date_img, Report_id) 
+        $date1 = date("dmY_His");
+        foreach ($_FILES['img_file']['tmp_name'] as $key => $value) {
+            $file_names = $_FILES['img_file']['name'];
+            $type = strrchr($_FILES['img_file']['name'][$key], ".");
+            $new_name = $Report_id . "00" . $date1 . $key . $type;
+            if (move_uploaded_file($_FILES['img_file']['tmp_name'][$key], "img_work/" . $new_name)) {
+                $path_link = "img_work/" . $new_name;
+                $sql = "INSERT INTO itoss_img (img_file, date_img, Report_id) 
                         VALUES ( :image , now() , $Report_id)";
-                    $stmt = $conn->prepare($sql);
-                    $params = array(
-                        'image' => $path_link
-                    );
-                    $stmt->execute($params);
-                }
+                $stmt = $conn->prepare($sql);
+                $params = array(
+                    'image' => $path_link
+                );
+                $stmt->execute($params);
             }
-            include("message.php");
-            $_SESSION['ch'] = $_POST["Report_Status"];
-            echo '<script language="javascript">';
-            echo 'location.href="indexUser.php"';
-            echo '</script>';
-    }else {
+        }
+        include("message.php");
+        $_SESSION['ch'] = $_POST["Report_Status"];
+        echo '<script language="javascript">';
+        echo 'location.href="indexUser.php"';
+        echo '</script>';
+    } else {
         echo '<script>toastr.warning("อัพโหลดได้ไม่เกิน 5 รูป");</script>';
     }
-    
 }
 
 $stmt = $conn->prepare("SELECT * FROM itoss_form
@@ -117,7 +117,7 @@ $signUser = $sql_user->fetch();
 <main>
     <p id="show"></p>
     <div class="row justify-content-center mt-5 ">
-        <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
+        <div class="col col-sm-12 col-xl-3 d-block mx-auto ">
             <p class="text-dark text-center fhead fw-bold">คำขอปฏิบัติงาน</p>
             <p class="text-end ftitle text-danger">สถานะ : <?= $row['Status_form_name'] ?></p>
 
@@ -133,7 +133,7 @@ $signUser = $sql_user->fetch();
     <div class="row mb-0 mb-xl-3 mb-xl-0 d-none" id="editBox">
         <div class="col-12 col-xl-12 mb-3">
             <p class="ftitle fw-bold mb-1">รายละเอียดการแก้ไขงาน</p>
-            <div class="form-control text-light" id="Detail" cols="30" rows="10">
+            <div class="form-control text-light text-break" id="Detail" cols="30" rows="10">
 
             </div>
         </div>
@@ -141,15 +141,15 @@ $signUser = $sql_user->fetch();
     </div>
 
     <div class="row justify-content-start mb-0 mb-xl-3" id="dsk">
-        <div class="col-12 col-xl-4 mb-2 mb-xl-3 mb-xl-0">
+        <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-3 mb-xl-0">
             <p class="ftitle fw-bold mb-0" id="demo">ชื่อผู้ติดต่อ</p>
             <input type="text" class="form-control ftitle" name="Form_Name" id="contact" value="<?= $row["Form_Name"] ?>" disabled>
         </div>
-        <div class="col-12 col-xl-4 mb-2 mb-xl-3 mb-xl-0">
+        <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-3 mb-xl-0">
             <p class="ftitle fw-bold mb-0">หน่วยงาน</p>
             <input type="text" class="form-control" name="" id="" value="<?= $agency ?>" disabled>
         </div>
-        <div class="col-12 col-xl-4 mb-2 mb-xl-3 mb-xl-0">
+        <div class="col-12 col-sm-6 col-xl-4 mb-2 mb-xl-3 mb-xl-0">
             <p class="ftitle fw-bold mb-0">เบอร์โทรศัพท์</p>
             <input type="text" class="data form-control ftitle" name="Form_Phone" value="<?= $row["Form_Phone"] ?>" disabled>
         </div>
@@ -202,40 +202,40 @@ $signUser = $sql_user->fetch();
     <div class="row mb-2 mb-xl-3 mb-xl-0">
         <div class="col-12 col-xl-12 mb-2 mb-xl-3">
             <p class="ftitle fw-bold mb-0">รายละเอียดงาน</p>
-            <div class="form-control text-light" name="Form_Work" id="detail" cols="30" rows="10">
+            <div class="form-control text-light text-break" name="Form_Work" id="detail" cols="30" rows="10">
                 <?= $row['Form_Work'] ?>
             </div>
         </div>
     </div>
     <div class="row mb-xl-5 ">
-            <div class="col-12 col-xl-6 mx-xl-auto" id="userSignBox">
-                <div class="col-12 col-xl-3 mx-xl-auto mb-3">
-                    <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
-                </div>
-                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
-                </div>
-                <div class="col-6 col-xl-6 mx-auto mb-5">
-                    <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $row['User_Name'] ?>" disabled>
-                </div>
+        <div class="col-12 col-sm-6 mx-xl-auto" id="userSignBox">
+            <div class="col-12 col-xl-3 mx-xl-auto mb-3">
+                <p class="ftitle fw-bold mb-1 text-center">เจ้าหน้าที่ผู้รับผิดชอบ</p>
             </div>
-            <div class="col-12 col-xl-6 mx-xl-auto">
-                <div class="col-12 col-xl-3 mx-xl-auto mb-3">
-                    <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
-                </div>
-                <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
-                    <img class="d-block mx-auto w-75 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
-                </div>
-                <div class="col-6 col-xl-6 mx-auto mb-5">
-                    <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $signAdmin['User_Name'] ?>" disabled>
-                </div>
+            <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                <img class="d-block mx-auto w-50 h-auto" src="data:<?= $signUser['Sign_image'] ?>" alt="">
+            </div>
+            <div class="col-6 col-xl-6 mx-auto mb-5">
+                <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $row['User_Name'] ?>" disabled>
             </div>
         </div>
+        <div class="col-12 col-sm-6 mx-xl-auto">
+            <div class="col-12 col-xl-3 mx-xl-auto mb-3">
+                <p class="ftitle fw-bold mb-1 text-center">ผู้มอบหมายงาน</p>
+            </div>
+            <div class="col-auto mx-auto col-xl-auto mx-xl-auto mb-xl-0 align-self-center">
+                <img class="d-block mx-auto w-50 h-auto" src="data:<?= $signAdmin['Sign_image'] ?>" alt="">
+            </div>
+            <div class="col-6 col-xl-6 mx-auto mb-5">
+                <input type="text" class="ftitle form-control text-center" id="name-user" value="<?= $signAdmin['User_Name'] ?>" disabled>
+            </div>
+        </div>
+    </div>
     <hr>
     <form action="" method="post" enctype="multipart/form-data">
 
         <div class="row justify-content-center mt-5 ">
-            <div class="col col-sm-3 col-xl-3 d-block mx-auto ">
+            <div class="col col-sm-6 col-xl-3 d-block mx-auto ">
                 <p class="text-dark text-center fhead fw-bold">รายงานการปฏิบัติงาน</p>
             </div>
         </div>
@@ -246,11 +246,11 @@ $signUser = $sql_user->fetch();
             </div>
         </div>
         <div class="row mb-3 mb-xl-5">
-            <div class="col-12 col-xl-4 mb-2">
+            <div class="col-12 col-sm-6 col-xl-4 mb-2">
                 <p class="ftilte fw-bold mb-0">เวลาเริ่มดำเนินงาน</p>
                 <input class="form-control" type="datetime-local" name="Report_Start_Date" value="<?= date("Y-m-d H:i") ?>" required>
             </div>
-            <div class="col-12 col-xl-4 mb-2">
+            <div class="col-12 col-sm-6 col-xl-4 mb-2">
                 <p class="ftilte fw-bold mb-0">เวลาเสร็จสิ้นการดำเนินงาน</p>
                 <input class="form-control" type="datetime-local" name="Report_Stop_Date" value="<?= date("Y-m-d H:i") ?>" required>
             </div>
@@ -283,28 +283,30 @@ $signUser = $sql_user->fetch();
             </div>
         </div>
         <div class="row mb-3 mb-xl-5 text-center">
-            <div class="col-xl-6 mx-auto">
-                <div class="mb-3" id="signature"></div>
-                <div class="col mt-xl-5" id="tools"></div>
+            <div class="col-sm-6 mx-auto">
+                <div class="row">
+                    <div class="mb-1" id="signature"></div>
+                </div>
+                <div class="col mt-xl-5 mt-sm-1" id="tools"></div>
                 <input type="hidden" name="Sign_image" id="Sign_image" value="..." required>
             </div>
         </div>
 
         <div class="row mb-5 justify-content-center">
-            <div class="col-10 col-xl-3 me-0 align-self-center">
+            <div class="col-10 col-sm-4 col-xl-3 me-0 align-self-center">
                 <label class="ftilte fw-bold text-end mb-0 mt-0" for="start">วันที่</label>
                 <input class="form-control ms-0 col-xl-1" type="date" name="Report_date_client" id="start" value="<?= date('Y-m-d') ?>" disabled>
             </div>
 
         </div>
         <div class="row">
-            <div class="col-xl-6 mx-xl-auto">
+            <div class="col-xl-6 col-6 col-sm-6 mx-auto mx-sm-auto mx-xl-auto">
                 <p class="ftitle fw-bold text-center">อัพโหลดรูปภาพ</p>
-                <input type="file" name="img_file[]" id="img_file" multiple="multiple" class="form-control" accept="image/*" required> <br>
+                <input type="file" name="img_file[]" id="img_file" multiple="multiple" class="form-control" accept="image/*" required>
                 <p class="fsub fw-bold text-danger">*กรุณาอัพโหลดรูปภาพ </p>
             </div>
         </div>
-        <div class="row justify-content-around mb-5 mt-xl-5">
+        <div class="row justify-content-around my-5 mt-xl-5">
             <div class="col-auto col-xl-3 d-flex">
                 <a class="btn btn-secondary me-2 mx-xl-auto ftitle" href="indexUser.php" id="home">กลับสู่หน้าหลัก</a>
             </div>
@@ -337,8 +339,8 @@ $signUser = $sql_user->fetch();
                 $("#Sign_image").val(data);
             });
             $('<input class="btn btn-secondary d-block mx-auto mt-3" type="button" value="ล้างลายเซ็น">').bind('click', function(e) {
-                    $sigdiv.jSignature('reset')
-                }).appendTo($tools)
+                $sigdiv.jSignature('reset')
+            }).appendTo($tools)
         })
 
     })(jQuery)

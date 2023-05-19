@@ -51,7 +51,7 @@
           }
 
         }
-      } else if ($_SESSION['status'] == 2 || $_SESSION['status'] == 3) {
+      } else if ($_SESSION['status'] == 2) {
         $_SESSION['navbar'] = 'navbar.php';
         if ($row1['Sign_image'] == NULL) {
           header('location: sent.php');
@@ -68,6 +68,8 @@
                     header('location: indexUser.php');
           }
         }
+      }else if($_SESSION['status'] == 3){
+        header('location: indexUser.php');
       }
     } else {
       echo '<script type="text/javascript">';
